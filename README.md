@@ -1,6 +1,8 @@
 ## Tastyworks Symbology
 This is a demo javascript app to demonstrate how to parse Tastyworks equity and equity option symbols and open a websocket connection with our quote provider.
 
+This code shall not be used in production applications. This is for learning purposes only.
+
 ### Equities
 Equity symbols contain only alphanumeric characters (A-Z, 0-9) with an occasional `/`. A few examples:
 `AAPL`
