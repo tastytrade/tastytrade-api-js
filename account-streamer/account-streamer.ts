@@ -11,7 +11,7 @@ export enum STREAMER_STATE {
 
 enum MessageAction {
   ACCOUNT_SUBSCRIBE = 'account-subscribe',
-  CONNECT = 'connect', // Send this instead of `account-subscribe` for CAWS V2
+  CONNECT = 'connect', // Send this instead of `account-subscribe`
   HEARTBEAT = 'heartbeat',
   PUBLIC_WATCHLISTS_SUBSCRIBE = 'public-watchlists-subscribe',
   QUOTE_ALERTS_SUBSCRIBE = 'quote-alerts-subscribe',
@@ -244,7 +244,7 @@ export class AccountStreamer {
 
     const value: JsonValue =
       accountNumbers.length > 1 ? accountNumbers : accountNumbers[0]
-    const requestId = this.subscribeTo(MessageAction.ACCOUNT_SUBSCRIBE, value)
+    const requestId = this.subscribeTo(MessageAction.CONNECT, value)
 
     return new Promise<string>((resolve, reject) => {
       this.requestPromises.set(requestId, [resolve, reject])
