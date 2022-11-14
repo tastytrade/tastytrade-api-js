@@ -12,3 +12,7 @@ a {
   color: inherit;
   text-decoration: none;
 }
+
+.navBar a {
+  margin-right: 1rem;
+}
