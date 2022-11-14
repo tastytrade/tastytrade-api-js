@@ -1,11 +1,7 @@
 import _ from 'lodash'
-// import { EndlessExponentialRetry } from '../../tastyworks/util/exponential-retry'
-// import type Logger from '../../tastyworks/logger'
-// import type { Disposer, RunLoop } from '../../tastyworks/util/runloop'
-// import type { WebsocketCreator } from '../../tastyworks/websocket'
 import type { JsonMap, JsonValue } from '../lib/json-util'
 import { JsonBuilder } from '../lib/json-util'
-// import { StreamerMessageType } from '../../tastyworks/account-streamer'
+import toast from 'react-hot-toast'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -24,10 +20,12 @@ enum MessageAction {
 
 const HEARTBEAT_INTERVAL = 20000 // 20 seconds
 
+export type Disposer = () => void
+
 export type StreamerStateObserver = (streamerState: STREAMER_STATE) => void
 
-export type ReconnectObserver = () => void
-
+// Message `type` will be the data model
+// i.e. a balance update message will be of type `AccountBalance`
 export enum StreamerMessageType {
   Any = '*' /* get all messages */,
   AcatRequest = 'AcatRequest',
@@ -47,10 +45,20 @@ export enum StreamerMessageType {
   TradingStatus = 'TradingStatus'
 }
 
+export type StreamerMessageObserver = (messageType: string, action: string, status: string) => void
+
 const REQUEST_ID = 'request-id'
 
+function removeElement<T>(array: T[], element: T): void {
+  const index = array.indexOf(element)
+  if (index < 0) {
+    return
+  }
+
+  array.splice(index, 1)
+}
+
 export class AccountStreamer {
-  autoReconnect = true
   private websocket: WebSocket | null = null
   private startResolve: ((result: boolean) => void) | null = null
   private startReject: ((reason?: any) => void) | null = null
@@ -65,7 +73,7 @@ export class AccountStreamer {
 
   private readonly streamerStateObservers: StreamerStateObserver[] = []
 
-  private readonly reconnectObservers: ReconnectObserver[] = []
+  private readonly streamerMessageObservers: StreamerMessageObserver[] = []
 
   private startPromise: Promise<boolean> | null = null
 
@@ -90,6 +98,14 @@ export class AccountStreamer {
     this.streamerStateObservers.forEach(observer => {
       observer(streamerState)
     })
+  }
+
+  addStreamerStateObserver(observer: StreamerStateObserver): Disposer {
+    this.streamerStateObservers.push(observer)
+
+    return () => {
+      removeElement(this.streamerStateObservers, observer)
+    }
   }
 
   get isOpen(): boolean {
@@ -118,7 +134,7 @@ export class AccountStreamer {
     websocket.addEventListener('error', this.handleError)
     websocket.addEventListener('message', this.handleMessage)
 
-    this.logger.info('AcctStream - starting')
+    this.logger.info('AccountStreamer - starting')
     this.startPromise = new Promise<boolean>((resolve, reject) => {
       this.startResolve = resolve
       this.startReject = reject
@@ -128,30 +144,10 @@ export class AccountStreamer {
   }
 
   stop() {
-    this.teardown(false)
+    this.teardown()
   }
 
-  reconnect(): boolean {
-    if (!this.autoReconnect) {
-      return false
-    }
-
-    this.logger.info('AcctStream - schedule reconnect')
-    // this.reconnectLooper.schedule()
-    return true
-  }
-
-  // Force disconnect and reconnect
-  reload() {
-    this.autoReconnect = true
-    if (this.websocket === null) {
-      this.reconnect()
-    } else {
-      this.teardown()
-    }
-  }
-
-  private teardown(autoReconnect = this.autoReconnect) {
+  private teardown() {
     const websocket = this.websocket
     if (websocket === null) {
       return
@@ -169,13 +165,8 @@ export class AccountStreamer {
 
     this.websocket = null
 
-    this.logger.info('AcctStream - teardown')
-
-    if (autoReconnect) {
-      this.reconnect()
-    } else {
-      // this.reconnectLooper.cancel()
-    }
+    this.logger.info('AccountStreamer - teardown')
+    this.streamerState = STREAMER_STATE.Closed // Manually update status for convenience
   }
 
   readonly sendHeartbeat = () => {
@@ -189,6 +180,7 @@ export class AccountStreamer {
       return
     }
 
+    this.logger.info('Scheduling heartbeat with interval: ', HEARTBEAT_INTERVAL)
     this.heartbeatTimerId = window.setTimeout(
       this.sendHeartbeat,
       HEARTBEAT_INTERVAL
@@ -273,14 +265,15 @@ export class AccountStreamer {
     this.queued = []
   }
 
-  private readonly handleOpen = (_event: Event) => {
+  private readonly handleOpen = (event: Event) => {
     if (this.startResolve === null) {
       return
     }
 
+    this.logger.info('AccountStreamer opened', event)
+
     this.startResolve(true)
     this.startResolve = this.startReject = null
-    // this.reconnectLooper.cancel()
 
     this.streamerState = STREAMER_STATE.Open
     this.sendQueuedMessages()
@@ -288,7 +281,7 @@ export class AccountStreamer {
   }
 
   private readonly handleClose = (event: CloseEvent) => {
-    this.logger.info('AcctStream handleClose', event)
+    this.logger.info('AccountStreamer closed', event)
     if (this.websocket === null) {
       return
     }
@@ -303,7 +296,7 @@ export class AccountStreamer {
       return
     }
 
-    this.logger.warn('AcctStream error', event)
+    this.logger.warn('AccountStreamer error', event)
 
     this.lastErrorEvent = event
     this.streamerState = STREAMER_STATE.Error
@@ -329,10 +322,20 @@ export class AccountStreamer {
     }
   }
 
+  addMessageObserver(observer: StreamerMessageObserver): Disposer {
+    this.streamerMessageObservers.push(observer)
+
+    return () => {
+      removeElement(this.streamerMessageObservers, observer)
+    }
+  }
+
   private readonly handleOneMessage = (json: JsonMap) => {
+    this.logger.info(json)
+
     const action = json.action as string
+    this.streamerMessageObservers.forEach(observer => observer(json.type as string, action, json.status as string))
     if (action) {
-      // Current only heartbeat and subscribe response
       if (action === MessageAction.HEARTBEAT) {
         // schedule next heartbeat
         this.scheduleHeartbeatTimer()
@@ -353,12 +356,6 @@ export class AccountStreamer {
 
       return
     }
-
-    const type = json.type as string
-    const timestampRaw = json.timestamp as string
-    const timestamp = timestampRaw ? parseInt(timestampRaw, 10) : 0
-
-    this.logger.info(json)
   }
 }
 
