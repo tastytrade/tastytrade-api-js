@@ -9,6 +9,8 @@ This code shall not be used in production applications. This is for learning pur
 
 Replace the demo `token` and `wsUrl` in `quote-streamer.tsx` with a tastyworks account streamer token and url.
 
+token and wsUrl are fetched from the `GET /quote-streamer-tokens` endpoint using your session token.
+
 To run the development server:
 
 ```bash
