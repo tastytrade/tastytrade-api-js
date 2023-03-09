@@ -8,6 +8,7 @@ export default function SubscribedSymbol(props: any) {
   const [askPrice, setAskPrice] = useState(NaN)
 
   const handleEvent = (event: any) => {
+    console.log(event)
     setBidPrice(event.bidPrice)
     setAskPrice(event.askPrice)
   }
