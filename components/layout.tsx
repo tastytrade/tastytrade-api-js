@@ -8,6 +8,7 @@ export default function Layout(props: any) {
       <div className="navBar">
         <Link href="/">Quote Data</Link>
         <Link href="/account-streamer">Account Data</Link>
+        <Link href = "/login">Login</Link>
       </div>
       <Toaster
         toastOptions={{
