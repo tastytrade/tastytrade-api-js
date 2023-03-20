@@ -2,7 +2,6 @@ import _ from 'lodash'
 
 export type BasicJsonValue = boolean | number | string | null | undefined
 export type JsonValue = BasicJsonValue | JsonArray | JsonMap
-// eslint-disable-next-line @typescript-eslint/consistent-indexed-object-style
 export interface JsonMap {
   [key: string]: JsonValue | undefined
 }

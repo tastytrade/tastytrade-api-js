@@ -8,10 +8,12 @@ export default class SessionService {
 
     }
     async login(login: string, password: string){
-        this.session.authToken = (await postData('/sessions', {login, password}, {})).data.data["session-token"]
+        const response = await postData('/sessions', {login, password})
+        this.session.authToken = response.data.data["session-token"]
+        return response
     }
     async validate() {
-        const response = await postData('/sessions/validate', {}, { Authorization: this.session.authToken });
+        const response = await postData('/sessions/validate');
         return response.data;
       }
       

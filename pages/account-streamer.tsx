@@ -87,7 +87,7 @@ const AccountStreamer: NextPage = () => {
         <h3>Websocket state is: {interpretStreamerState(streamerState)}</h3>
         <ol>
           <li>Login through the api (POST /sessions) to get a session token.</li>
-          <li>Enter the session token's value into the first input and start the streamer.</li>
+          <li>Enter the session token&apos;s value into the first input and start the streamer.</li>
           <li>Once the websocket is opened, you can input your account number to subscribe to account-related messages (order status updates, balance updates, etc).</li>
           <li>While subscribed, you can place trades in the account and receive update messages here.</li>
           <li>Websocket messages will be logged to the console.</li>
