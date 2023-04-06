@@ -1,10 +1,9 @@
 import type { NextPage } from 'next'
 import styles from '../styles/Home.module.css'
-import { accountStreamer, STREAMER_STATE } from '../account-streamer/account-streamer'
-import { useEffect, useState } from 'react'
+import { AccountStreamer, STREAMER_STATE } from 'tastytrade-api'
+import { useEffect, useMemo, useState } from 'react'
 import _ from 'lodash'
 import toast from 'react-hot-toast'
-
 
 function interpretStreamerState(state: STREAMER_STATE) {
   switch (state) {
@@ -19,11 +18,12 @@ function interpretStreamerState(state: STREAMER_STATE) {
   }
 }
 
-const AccountStreamer: NextPage = () => {
+const AccountStreamerPage: NextPage = () => {
   const [streamerState, setStreamerState] = useState(STREAMER_STATE.Closed)
   const [authToken, setAuthToken] = useState('')
   const [accountNumber, setAccountNumber] = useState('')
 
+  const accountStreamer = useMemo(() => new AccountStreamer('wss://streamer.cert.tastyworks.com'), [])
 
   useEffect(() => {
     setStreamerState(accountStreamer.streamerState)
@@ -106,4 +106,4 @@ const AccountStreamer: NextPage = () => {
   )
 }
 
-export default AccountStreamer
+export default AccountStreamerPage

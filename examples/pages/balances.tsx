@@ -1,16 +1,15 @@
 import React, {useState, useEffect, useContext} from 'react'
-import TastytradeClient from '../lib/service/tastytrade-api';
 import { AppContext } from '../contexts/context';
+import _ from 'lodash'
 
 export default function Balances() {
-    const [balances, setBalances] = useState([]);
+    const [balances, setBalances] = useState({});
     const context = useContext(AppContext);
-    console.log(context.account)
 
     useEffect(() => {
-        if (context.account) {
-            getBalances(context.account);
-        }
+      if (context.account) {
+        getBalances(context.account);
+      }
     }, []);
 
     async function getBalances(accountNumber: string[]) {
@@ -25,13 +24,13 @@ export default function Balances() {
         {balances ? 
         (
             <div>
-                Cash Balance: $ {balances["cash-balance"]}
+                Cash Balance: $ {_.get(balances, 'cash-balance')}
                 <br/>
-                Net Liquidating Value: ${balances["net-liquidating-value"]}
+                Net Liquidating Value: ${_.get(balances, 'net-liquidating-value')}
                 <br/>
-                Stock Buying Power: ${balances["equity-buying-power"]}
+                Stock Buying Power: ${_.get(balances, 'equity-buying-power')}
                 <br/>
-                Available Trading Funds: ${balances["available-trading-funds"]}
+                Available Trading Funds: ${_.get(balances, 'available-trading-funds')}
                 <br/>
                 Not sure which key to retrieve for options BP
             </div>

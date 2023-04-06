@@ -1,11 +1,9 @@
 import React, {useState, useEffect, useContext} from 'react'
-import TastytradeClient from '../lib/service/tastytrade-api';
 import { AppContext } from '../contexts/context';
+import _ from 'lodash'
 
 export default function Positions() {
     const [positions, setPositions] = useState([]);
-    const baseUrl = "https://api.cert.tastyworks.com"
-    const client = new TastytradeClient(baseUrl)
     const context = useContext(AppContext);
   
     useEffect(() => {
@@ -15,7 +13,7 @@ export default function Positions() {
     }, [context.account]);
 
     async function getPositions(accountNumber: string[]) {
-        const _positions = (await client.balancesAndPositionsService.getPositionsList(accountNumber[0])).data.data
+        const _positions = (await context.tastytradeApi.balancesAndPositionsService.getPositionsList(accountNumber[0])).data.data
         setPositions(_positions);
     }
 
@@ -43,9 +41,9 @@ export default function Positions() {
             <tbody>
                 {positions.map((position, index) => (
                     <tr key={index}>
-                        <td>{position.symbol}</td>
-                        <td>{position.quantity}</td>
-                        <td>{position["realized-day-gain-date"]}</td>
+                        <td>{_.get(position, 'symbol')}</td>
+                        <td>{_.get(position, 'quantity')}</td>
+                        <td>{_.get(position, 'realized-day-gain-date')}</td>
                     </tr>
                 ))}
             </tbody>

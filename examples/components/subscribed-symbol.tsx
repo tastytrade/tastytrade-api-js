@@ -1,5 +1,5 @@
 import styles from '../styles/SubscribedSymbol.module.css'
-import { streamer } from '../lib/quote-streamer'
+// import { streamer } from '../../lib/quote-streamer'
 import { useEffect, useState } from 'react'
 import _ from 'lodash'
 
@@ -13,8 +13,8 @@ export default function SubscribedSymbol(props: any) {
   }
 
   useEffect(() => {
-    const unsubscribe = streamer.subscribe(props.symbol, handleEvent)
-    return unsubscribe
+    // const unsubscribe = streamer.subscribe(props.symbol, handleEvent)
+    // return unsubscribe
   }, []);
 
   return (

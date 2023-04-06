@@ -1,6 +1,7 @@
 // src/context/state.ts
 import { createContext } from 'react';
-import TastytradeClient from '../lib/service/tastytrade-api';
+import TastytradeClient from 'tastytrade-api'
+// import TastytradeClient from '../../lib/tastytrade-api';
 
 class TastytradeContext {
     static Instance = new TastytradeContext('https://api.cert.tastyworks.com');
@@ -18,7 +19,7 @@ class TastytradeContext {
         try{
             await this.tastytradeApi.sessionService.login(credentials);
             const accountNum = await this.tastytradeApi.accountsAndCustomersService.getCustomerAccounts();
-            const extractedAccountNumbers = accountNum.map(item => item.account['account-number']);
+            const extractedAccountNumbers = accountNum.map((item: any) => item.account['account-number']);
 
             if(extractedAccountNumbers.length){
                 this.account = extractedAccountNumbers

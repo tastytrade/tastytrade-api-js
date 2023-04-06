@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import type { JsonMap, JsonValue } from '../lib/json-util'
-import { JsonBuilder } from '../lib/json-util'
+import type { JsonMap, JsonValue } from '../json-util'
+import { JsonBuilder } from '../json-util'
 import toast from 'react-hot-toast'
 
 export enum STREAMER_STATE {
