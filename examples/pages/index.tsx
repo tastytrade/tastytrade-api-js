@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import styles from '../styles/Home.module.css'
-import { streamer } from '../lib/quote-streamer'
+// import { streamer } from '../../lib/quote-streamer'
 import { useEffect, useState } from 'react'
 import SubscribedSymbol from '../components/subscribed-symbol'
 import _ from 'lodash'
@@ -16,9 +16,9 @@ const Home: NextPage = () => {
   const [symbolText, setSymbolText] = useState('')
 
   useEffect(() => {
-    streamer.connect()
-    setLoading(false)
-    return () => streamer.disconnect()
+    // streamer.connect()
+    // setLoading(false)
+    // return () => streamer.disconnect()
   }, []);
 
   const addSymbol = () => {

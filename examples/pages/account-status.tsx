@@ -1,11 +1,8 @@
 import React, {useState, useEffect, useContext} from 'react'
-import TastytradeClient from '../lib/service/tastytrade-api';
 import { AppContext } from '../contexts/context';
 
 export default function AccountStatus() {
-    const [accountStatus, setAccountStatus] = useState([]);
-    const baseUrl = "https://api.cert.tastyworks.com"
-    const client = new TastytradeClient(baseUrl)
+    const [accountStatus, setAccountStatus] = useState({});
     const context = useContext(AppContext);
 
     useEffect(() => {
@@ -15,7 +12,7 @@ export default function AccountStatus() {
     }, [context.account]);
 
     async function getAccountStatus(accountNumber: string[]) {
-        const _status = (await client.accountStatusService.getAccountStatus(accountNumber[0])).data.data
+        const _status = (await context.tastytradeApi.accountStatusService.getAccountStatus(accountNumber[0])).data.data
         setAccountStatus(_status);
     }
     
@@ -35,7 +32,7 @@ export default function AccountStatus() {
               {Object.entries(accountStatus).map(([key, value], index) => (
                 <tr key={index}>
                   <td>{key}</td>
-                  <td>{value.toString()}</td>
+                  <td>{(value as string).toString()}</td>
                 </tr>
               ))}
             </tbody>

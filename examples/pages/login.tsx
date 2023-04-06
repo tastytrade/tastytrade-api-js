@@ -1,5 +1,4 @@
 import React, {useState, useEffect, useContext} from 'react'
-import {Form} from 'react-bootstrap'
 import { useRouter } from 'next/router';
 import {AppContext} from '../contexts/context';
 
@@ -32,7 +31,7 @@ export default function Login() {
   const handleLogin = async (e: any) =>{
     e.preventDefault();
     setError("")
-    const isValidSession = appContext.tastytradeApi.sessionService.httpClient.session.isValid;
+    const isValidSession =  false//appContext.tastytradeApi.sessionService.httpClient.session.isValid;
 
     if(!isValidSession){
       try {
@@ -50,7 +49,7 @@ export default function Login() {
     e.preventDefault();
     try{
       const response = await appContext.handleLogout();
-      setError(response);
+      // setError(response);
     }catch(error: any){
       console.log(error)
       setError(error.message);
@@ -58,22 +57,29 @@ export default function Login() {
   }
 
   return (
-    <>
-        <h2 className = "text-center mb-4">Log In</h2>
-        <form onSubmit={handleLogin}>
-            <Form.Group id = "username">
-                <Form.Label>Email</Form.Label>
-                <Form.Control id="username"  placeholder="Username" name="username" value={login_information_object.login} onChange={(event) => setLogin_information_object({...login_information_object, login: event.target.value})} required/>
-            </Form.Group>
-            <Form.Group id = "password">
-                <Form.Label>Password</Form.Label>
-                <Form.Control type="password" id="password" placeholder="Password" name="password" value={login_information_object.password} onChange={(event) => setLogin_information_object({...login_information_object, password: event.target.value})} required/>
-            </Form.Group>
-            {error && <alert variant="danger">{error}</alert>}
-            <br/>
-            <button type = "submit" className="btn btn-primary w-100">Log In</button>
-        </form>
-        <button type = "submit" className = "btn btn-primary w-100" onClick = {handleLogout}>Logout</button>
-    </>
+    <div className='w-3/12'>
+        <h2 className="text-center mb-4">Log In</h2>
+        <div className="my-3">
+          <div>Email</div>
+          <input
+            type='text'
+            className="p-2 w-full border border-gray-400"
+            onChange={(event) => setLogin_information_object({...login_information_object, login: event.target.value})}
+            required
+          />
+        </div>
+        <div className="my-3">
+          <div>Password</div>
+          <input
+            type='password'
+            className="p-2 w-full border border-gray-400"
+            onChange={(event) => setLogin_information_object({...login_information_object, password: event.target.value})}
+            required
+          />
+        </div>
+        {error && <div className='text-red-500'>TEST</div>}
+        <button className="rounded cursor-pointer p-5 bg-black text-white" onClick={handleLogin}>Log In</button>
+        <button className="rounded cursor-pointer p-5 bg-black text-white ml-2" onClick={handleLogout}>Logout</button>
+    </div>
   )
 };
