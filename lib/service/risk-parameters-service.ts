@@ -1,4 +1,5 @@
-import TastytradeHttpClient from "../tastytrade-http-client";
+import extractResponseData from "../response-util";
+import TastytradeHttpClient from "./tastytrade-http-client";
 
 export default class RiskParametersService {
     constructor(private httpClient: TastytradeHttpClient) {
@@ -8,11 +9,11 @@ export default class RiskParametersService {
     async getEffectiveMarginRequirements(accountNumber: string, underlyingSymbol: string){
         //Get effective margin requirements for account
         const effectiveMarginRequirements = (await this.httpClient.getData(`/accounts/${accountNumber}/margin-requirements/${underlyingSymbol}`, {}, {}))
-        return effectiveMarginRequirements
+        return extractResponseData(effectiveMarginRequirements)
     }
     async getPositionLimit(accountNumber: string){
         //Get the position limit
         const positionLimit = (await this.httpClient.getData(`/accounts/${accountNumber}/position-limit`, {}, {}))
-        return positionLimit
+        return extractResponseData(positionLimit)
     }
 }

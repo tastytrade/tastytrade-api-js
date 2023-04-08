@@ -10,4 +10,4 @@ export default class TastytradeSession {
     clear() {
         this.authToken = null
     }
-};
+}

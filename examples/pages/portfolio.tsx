@@ -7,19 +7,19 @@ export default function Positions() {
     const context = useContext(AppContext);
   
     useEffect(() => {
-        if (context.account) {
-            getPositions(context.account);
+        if (context.accountNumbers) {
+            getPositions(context.accountNumbers[0]);
         }
-    }, [context.account]);
+    }, [context.accountNumbers]);
 
-    async function getPositions(accountNumber: string[]) {
-        const _positions = (await context.tastytradeApi.balancesAndPositionsService.getPositionsList(accountNumber[0])).data.data
+    async function getPositions(accountNumber: string) {
+        const _positions = (await context.tastytradeApi.balancesAndPositionsService.getPositionsList(accountNumber))
         setPositions(_positions);
     }
 
     return (
     <div>
-        {context.account? 
+        {context.accountNumbers? 
         (
             <h1>Portfolio</h1>
             // <h1>Positions for Account Number: {context.account![0]}</h1>

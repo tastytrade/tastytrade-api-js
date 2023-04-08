@@ -6,19 +6,19 @@ export default function Orders() {
     const context = useContext(AppContext);
 
     useEffect(() => {
-        if (context.account) {
-            getOrders(context.account);
+        if (context.accountNumbers) {
+            getOrders(context.accountNumbers[0]);
         }
-    }, [context.account]);
+    }, [context.accountNumbers]);
 
-    async function getOrders(accountNumber: string[]) {
-        const _liveOrders = (await context.tastytradeApi.orderService.getLiveOrders(accountNumber[0])).data.data
+    async function getOrders(accountNumber: string) {
+        const _liveOrders = (await context.tastytradeApi.orderService.getLiveOrders(accountNumber))
         setLiveOrders(_liveOrders);
     }
     
     return (
         <div>
-        {context.account ? 
+        {context.accountNumbers ? 
         (
             <h1>Activity</h1>
             // <h1>Positions for Account Number: {context.account![0]}</h1>

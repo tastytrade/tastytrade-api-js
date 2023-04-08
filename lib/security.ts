@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import DateHelper, { MONTHS } from './date-helper'
 import { CRYPTO_SYMBOL_REGEX } from './crypto-util'
 import {

@@ -1,17 +1,16 @@
-import TastytradeSession from "../../../lib/models/tastytrade-session";
 import SessionService from "../../../lib/service/session-service";
-import _ from 'lodash'
+import TastytradeHttpClient from "../../../lib/service/tastytrade-http-client";
 
 describe('login', () => {
   it('responds with a 401', async function() {
-    const session = new TastytradeSession()
-    const sessionService = new SessionService(session)
+    const client = new TastytradeHttpClient(process.env.BASE_URL!)
+    const sessionService = new SessionService(client)
     try {
       await sessionService.login('fakeusername', 'fakepassword')
       throw new Error('Expected 401 but none was thrown')
     } catch(error: any) {
       expect(error.response.status).toBe(401)
-      expect(session.isValid).toBeFalsy()
+      expect(client.session.isValid).toBeFalsy()
     }
   })
 })

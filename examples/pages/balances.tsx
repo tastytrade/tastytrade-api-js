@@ -7,14 +7,13 @@ export default function Balances() {
     const context = useContext(AppContext);
 
     useEffect(() => {
-      if (context.account) {
-        getBalances(context.account);
+      if (context.accountNumbers) {
+        getBalances(context.accountNumbers[0]);
       }
     }, []);
 
-    async function getBalances(accountNumber: string[]) {
-        const _balances = (await context.tastytradeApi.balancesAndPositionsService.getAccountBalanceValues(accountNumber[0])).data.data
-        console.log(_balances)
+    async function getBalances(accountNumber: string) {
+        const _balances = (await context.tastytradeApi.balancesAndPositionsService.getAccountBalanceValues(accountNumber))
         setBalances(_balances);
     }
     

@@ -6,13 +6,13 @@ export default function AccountStatus() {
     const context = useContext(AppContext);
 
     useEffect(() => {
-        if (context.account) {
-            getAccountStatus(context.account);
+        if (context.accountNumbers) {
+            getAccountStatus(context.accountNumbers[0]);
         }
-    }, [context.account]);
+    }, [context.accountNumbers]);
 
-    async function getAccountStatus(accountNumber: string[]) {
-        const _status = (await context.tastytradeApi.accountStatusService.getAccountStatus(accountNumber[0])).data.data
+    async function getAccountStatus(accountNumber: string) {
+        const _status = (await context.tastytradeApi.accountStatusService.getAccountStatus(accountNumber)).data.data
         setAccountStatus(_status);
     }
     

@@ -1,4 +1,5 @@
-import TastytradeHttpClient from "../tastytrade-http-client";
+import extractResponseData from "../response-util";
+import TastytradeHttpClient from "./tastytrade-http-client";
 
 // create the central class that aggregates all services from dmoss
 export default class AccountStatusService {
@@ -9,6 +10,6 @@ export default class AccountStatusService {
     async getAccountStatus(accountNumber: string){
         //Returns current trading status for an account.
         const accountStatus =  (await this.httpClient.getData(`/accounts/${accountNumber}/trading-status`, {}, {}))
-        return accountStatus
+        return extractResponseData(accountStatus)
     }
 }

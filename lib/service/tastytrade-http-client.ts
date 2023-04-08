@@ -15,7 +15,7 @@ export default class TastytradeHttpClient{
         };
     }
     private async executeRequest(method: string, url: string, data: object = {}, headers: object = {}, params: object = {}) {
-        return axios({
+        return axios.request({
             method,
             url,
             baseURL: this.baseUrl,
@@ -24,7 +24,7 @@ export default class TastytradeHttpClient{
             params
         })
     }
-    async getData(url: string, headers: object, queryParams: object): Promise<any> {
+    async getData(url: string, headers: object = {}, queryParams: object = {}): Promise<any> {
         return this.executeRequest('get', url, headers, queryParams);
     }
     async postData(url: string, data: object, headers: object): Promise<any> {
