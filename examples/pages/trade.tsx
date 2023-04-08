@@ -11,7 +11,7 @@ export default function Trade() {
         // }
     });
 
-    async function makeTrade(accountNumber: string[]){
+    async function makeTrade(accountNumber: string){
         
     }
 

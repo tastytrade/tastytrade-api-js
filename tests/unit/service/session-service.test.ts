@@ -1,6 +1,5 @@
-import TastytradeSession from "../../../lib/models/tastytrade-session";
 import SessionService from "../../../lib/service/session-service";
-import _ from 'lodash'
+import TastytradeHttpClient from "../../../lib/service/tastytrade-http-client";
 import axios from 'axios'
 
 jest.mock('axios')
@@ -22,10 +21,10 @@ describe('login', () => {
   it('sets the correct auth token', async function() {
     (axios.request as jest.Mock).mockResolvedValue({ data: responseData })
 
-    const session = new TastytradeSession()
-    const sessionService = new SessionService(session)
+    const client = new TastytradeHttpClient('fakeurl')
+    const sessionService = new SessionService(client)
     await sessionService.login('fakeusername', 'fakepassword')
-    expect(session.authToken).toBe(expectedToken)
-    expect(session.isValid).toBeTruthy()
+    expect(client.session.authToken).toBe(expectedToken)
+    expect(client.session.isValid).toBeTruthy()
   })
 })

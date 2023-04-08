@@ -1,7 +1,6 @@
 import _ from 'lodash'
 import type { JsonMap, JsonValue } from '../json-util'
 import { JsonBuilder } from '../json-util'
-import toast from 'react-hot-toast'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -62,7 +61,7 @@ export class AccountStreamer {
   private websocket: WebSocket | null = null
   private startResolve: ((result: boolean) => void) | null = null
   private startReject: ((reason?: any) => void) | null = null
-  private requestCounter = 0
+  private requestCounter: number = 0
   private queued: string[] = []
 
   private heartbeatTimerId = 0

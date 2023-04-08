@@ -1,6 +1,6 @@
 import React, {useState, useEffect, useContext} from 'react'
 import { useRouter } from 'next/router';
-import {AppContext} from '../contexts/context';
+import {AppContext, TastytradeContext} from '../contexts/context';
 
 function parseLoginError(error:any){
   if (error.message === 'Network Error'){
@@ -12,6 +12,17 @@ function parseLoginError(error:any){
   }else{
     console.log(error)
   }
+}
+
+async function fetchAccounts(appContext: TastytradeContext) {
+  const accounts = await appContext.tastytradeApi.accountsAndCustomersService.getCustomerAccounts();
+  const extractedAccountNumbers = accounts.map((item: any) => item.account['account-number']);
+
+  if(extractedAccountNumbers.length){
+    appContext.accountNumbers = extractedAccountNumbers
+  }
+
+  return accounts
 }
 
 export default function Login() {
@@ -35,7 +46,11 @@ export default function Login() {
 
     if(!isValidSession){
       try {
-        await appContext.handleLogin(login_information_object)
+        await appContext.tastytradeApi.sessionService.login(
+          login_information_object.login, login_information_object.password, login_information_object['remember-me']
+        )
+        await fetchAccounts(appContext)
+
         router.push('/balances')
       } catch (error: any) {
         setError(parseLoginError(error));
@@ -48,8 +63,13 @@ export default function Login() {
   const handleLogout = async (e: any) =>{
     e.preventDefault();
     try{
-      const response = await appContext.handleLogout();
-      // setError(response);
+      if(appContext.accountNumbers){
+        await appContext.tastytradeApi.sessionService.logout()
+        .then(appContext.accountNumbers = null);
+        setError('Logged out');
+      }else{
+        setError('Not Logged in')
+      }
     }catch(error: any){
       console.log(error)
       setError(error.message);

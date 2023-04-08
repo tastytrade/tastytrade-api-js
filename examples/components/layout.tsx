@@ -1,7 +1,7 @@
 import React from 'react'
 import { Toaster } from 'react-hot-toast'
 import Link from 'next/link'
-import VerticalNavBar from './vertical_nav'
+import VerticalNavBar from './vertical-nav'
 
 export default function Layout(props: any) {
   return (

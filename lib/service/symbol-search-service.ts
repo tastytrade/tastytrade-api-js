@@ -1,4 +1,5 @@
-import TastytradeHttpClient from "../tastytrade-http-client";
+import extractResponseData from "../response-util";
+import TastytradeHttpClient from "./tastytrade-http-client";
 
 export default class SymbolSearchService {
     constructor(private httpClient: TastytradeHttpClient) {
@@ -8,6 +9,6 @@ export default class SymbolSearchService {
     async getSymbolData(symbol: string){
         //Returns an array of symbol data.
         const symbolData =  (await this.httpClient.getData(`/symbols/search/${symbol}`, {}, {}))
-        return symbolData
+        return extractResponseData(symbolData)
     }
 }
