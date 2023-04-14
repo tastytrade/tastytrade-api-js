@@ -5,7 +5,7 @@ export default class AccountsAndCustomersService {
     constructor(private httpClient: TastytradeHttpClient) {
     }
     async getCustomerAccounts(){
-        const accountNumber = (await this.httpClient.getData('/customers/me/accounts', {}, {})).data.data.items
+        const accountNumber = (await this.httpClient.getData('/customers/me/accounts', {}, {}))
         return extractResponseData(accountNumber)
     }
 

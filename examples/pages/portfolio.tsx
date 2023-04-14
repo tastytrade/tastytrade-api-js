@@ -1,59 +1,39 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useContext} from 'react'
 import { AppContext } from '../contexts/context';
 import _ from 'lodash'
+import UseHttpRequest from '../components/use-http-request';
+import CustomTable from '../components/custom-table';
 
 export default function Positions() {
-    const [positions, setPositions] = useState([]);
-    const context = useContext(AppContext);
-  
-    useEffect(() => {
-        if (context.accountNumbers) {
-            getPositions(context.accountNumbers[0]);
-        }
-    }, [context.accountNumbers]);
+  const context = useContext(AppContext);
 
-    async function getPositions(accountNumber: string) {
-        const _positions = (await context.tastytradeApi.balancesAndPositionsService.getPositionsList(accountNumber))
-        setPositions(_positions);
+  const { isLoading, errorMessage, executeRequest, responseData } = UseHttpRequest(async () => (
+    context.tastytradeApi.balancesAndPositionsService.getPositionsList(context.accountNumbers![0])
+  ), true)
+
+  if (isLoading) {
+      return <div>Loading...</div>
     }
 
+  const positions = responseData
+
+  if (_.isNil(context.accountNumbers)) {
+    return <p>Loading...</p>
+  }
+
+  if (_.isEmpty(positions)) {
     return (
-    <div>
-        {context.accountNumbers? 
-        (
-            <h1>Portfolio</h1>
-            // <h1>Positions for Account Number: {context.account![0]}</h1>
-        ):
-        (
-            <p>Loading...</p>
-        )
-        }
-        {positions.length ? 
-        (
-            <table>
-            <thead>
-                <tr>
-                    <th>Symbol</th>
-                    <th>Quantity</th>
-                    <th>Day Gain</th>
-                </tr>
-            </thead>
-            <tbody>
-                {positions.map((position, index) => (
-                    <tr key={index}>
-                        <td>{_.get(position, 'symbol')}</td>
-                        <td>{_.get(position, 'quantity')}</td>
-                        <td>{_.get(position, 'realized-day-gain-date')}</td>
-                    </tr>
-                ))}
-            </tbody>
-        </table>
-            ):
-            (
-            <div>
-               No positions
-            </div>
-            )}
-    </div>
-    );
+      <div>
+        <h1>Transactions for {context.accountNumbers[0]}</h1>
+        No Positions
+        </div>
+      )
+    }
+
+  return (
+  <div>
+      <h1>Positions for {context.accountNumbers[0]}</h1>
+        <CustomTable tableInformation={positions}/>
+  </div>
+  );
 };
