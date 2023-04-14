@@ -1,6 +1,7 @@
-import React, {useState, useEffect, useContext} from 'react'
+import React, {useState, useContext} from 'react'
 import { useRouter } from 'next/router';
 import {AppContext, TastytradeContext} from '../contexts/context';
+import { observer } from 'mobx-react-lite'
 
 function parseLoginError(error:any){
   if (error.message === 'Network Error'){
@@ -14,42 +15,38 @@ function parseLoginError(error:any){
   }
 }
 
-async function fetchAccounts(appContext: TastytradeContext) {
-  const accounts = await appContext.tastytradeApi.accountsAndCustomersService.getCustomerAccounts();
+async function fetchAccounts(context: TastytradeContext) {
+  const accounts = await context.tastytradeApi.accountsAndCustomersService.getCustomerAccounts();
   const extractedAccountNumbers = accounts.map((item: any) => item.account['account-number']);
 
   if(extractedAccountNumbers.length){
-    appContext.accountNumbers = extractedAccountNumbers
+    context.accountNumbers = extractedAccountNumbers
   }
 
   return accounts
 }
 
-export default function Login() {
+const Login = observer(() =>{
   const [login_information_object, setLogin_information_object] = useState({
     "login":'',
     "password": '',
     "remember-me": true
   });
   const [error, setError] = useState("");
-  const appContext = useContext(AppContext);
+  const context = useContext(AppContext);
   const router = useRouter();
-
-  useEffect(()=>{
-    console.log('in login useEffect')
-  }, []);
   
   const handleLogin = async (e: any) =>{
     e.preventDefault();
     setError("")
-    const isValidSession =  false//appContext.tastytradeApi.sessionService.httpClient.session.isValid;
+    const isValidSession =  false//context.tastytradeApi.sessionService.httpClient.session.isValid;
 
     if(!isValidSession){
       try {
-        await appContext.tastytradeApi.sessionService.login(
+        await context.tastytradeApi.sessionService.login(
           login_information_object.login, login_information_object.password, login_information_object['remember-me']
         )
-        await fetchAccounts(appContext)
+        await fetchAccounts(context)
 
         router.push('/balances')
       } catch (error: any) {
@@ -63,9 +60,9 @@ export default function Login() {
   const handleLogout = async (e: any) =>{
     e.preventDefault();
     try{
-      if(appContext.accountNumbers){
-        await appContext.tastytradeApi.sessionService.logout()
-        .then(appContext.accountNumbers = null);
+      if(context.accountNumbers){
+        await context.tastytradeApi.sessionService.logout()
+        .then(context.accountNumbers = null);
         setError('Logged out');
       }else{
         setError('Not Logged in')
@@ -79,6 +76,7 @@ export default function Login() {
   return (
     <div className='w-3/12'>
         <h2 className="text-center mb-4">Log In</h2>
+        <div>Count: {context.count}</div>
         <div className="my-3">
           <div>Email</div>
           <input
@@ -102,4 +100,6 @@ export default function Login() {
         <button className="rounded cursor-pointer p-5 bg-black text-white ml-2" onClick={handleLogout}>Logout</button>
     </div>
   )
-};
+});
+
+export default Login

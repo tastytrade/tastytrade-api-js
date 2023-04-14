@@ -1,7 +1,7 @@
 // src/context/state.ts
 import { createContext } from 'react';
-import TastytradeClient from 'tastytrade-api'
-// import TastytradeClient from '../../lib/tastytrade-api';
+import TastytradeClient from "../../dist/tastytrade-api"
+import { makeAutoObservable } from 'mobx';
 
 class TastytradeContext {
     static Instance = new TastytradeContext('https://api.cert.tastyworks.com');
@@ -9,6 +9,7 @@ class TastytradeContext {
     public accountNumbers: string[] | null = null
     
     constructor(baseUrl: string) {
+      makeAutoObservable(this)
       this.tastytradeApi = new TastytradeClient(baseUrl)
     }
 }
