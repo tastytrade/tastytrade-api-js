@@ -8,7 +8,7 @@ export default class RiskParametersService {
     //Accounts: Operations about accounts
     async getEffectiveMarginRequirements(accountNumber: string, underlyingSymbol: string){
         //Get effective margin requirements for account
-        const effectiveMarginRequirements = (await this.httpClient.getData(`/accounts/${accountNumber}/margin-requirements/${underlyingSymbol}`, {}, {}))
+        const effectiveMarginRequirements = (await this.httpClient.getData(`/accounts/${accountNumber}/margin-requirements/${underlyingSymbol}/effective`, {}, {}))
         return extractResponseData(effectiveMarginRequirements)
     }
     async getPositionLimit(accountNumber: string){

@@ -1,5 +1,6 @@
 import extractResponseData from "../response-util";
 import TastytradeHttpClient from "./tastytrade-http-client";
+import _ from 'lodash'
 
 export default class InstrumentsService {
     constructor(private httpClient: TastytradeHttpClient) {
@@ -31,15 +32,20 @@ export default class InstrumentsService {
         const singleEquity = (await this.httpClient.getData(`/instruments/equities/${symbol}`, {}, {}))
         return extractResponseData(singleEquity)
     }
-    async getEquityOptions(queryParams = {}){
+    async getEquityOptions(symbols: string[], active = true, withExpired = false) {
+        if (_.isEmpty(symbols)) {
+          throw new Error('Symbols are required for InstrumentService.getEquityOptions')
+        }
+
         //Returns a set of equity options given one or more symbols
+        const queryParams = { symbols, active, withExpired }
         const equityOptions = (await this.httpClient.getData(`/instruments/equity-options`, {}, queryParams))
         return extractResponseData(equityOptions)
     }
     async getSingleEquityOption(symbol: string, queryParams = {}){
         //Get equity option by symbol
-        const singleOption = (await this.httpClient.getData(`/instruments/equity-options/${symbol}`, {}, queryParams))
-        return singleOption
+        const singleOption = await this.httpClient.getData(`/instruments/equity-options/${symbol}`, {}, queryParams)
+        return extractResponseData(singleOption)
     }
     async getFutures(queryParams = {}){
         //Returns a set of outright futures given an array of one or more symbols.
@@ -48,8 +54,8 @@ export default class InstrumentsService {
     }
     async getSingleFuture(symbol: string){
         //Returns an outright future given a symbol.
-        const singleFuture = (await this.httpClient.getData(`/instruments/futures/${symbol}`, {}, {}))
-        return singleFuture
+        const singleFuture = await this.httpClient.getData(`/instruments/futures/${symbol}`, {}, {})
+        return extractResponseData(singleFuture)
     }
     async getFutureOptionsProducts(){
         //Returns metadata for all supported future option products
@@ -69,8 +75,8 @@ export default class InstrumentsService {
     }
     async getSingleFutureOption(symbol: string){
         //Returns a future option given a symbol. Uses TW symbology: ./ESZ9 EW4U9 190927P2975
-        const singleFutureOption = (await this.httpClient.getData(`/instruments/future-options/${symbol}`, {}, {}))
-        return singleFutureOption
+        const singleFutureOption = await this.httpClient.getData(`/instruments/future-options/${symbol}`, {}, {})
+        return extractResponseData(singleFutureOption)
     }
     async getFuturesProducts(){
         //Returns metadata for all supported futures products

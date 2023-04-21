@@ -8,7 +8,7 @@ export default class MarginRequirementsService {
     //Margin-requirements: Allows a client to fetch margin-requirements for positions and orders
     async getMarginRequirements(accountNumber: string){
         //Fetch current margin/captial requirements report for an account
-        const marginRequirements = (await this.httpClient.getData(`/margin/accounts/${accountNumber}/requirements`, {}, {}))
+        const marginRequirements = (await this.httpClient.getData(`/margin/accounts/${accountNumber}/requirements`))
         return extractResponseData(marginRequirements)
     }
     async postMarginRequirements(accountNumber: string, order: object){

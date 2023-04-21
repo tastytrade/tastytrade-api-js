@@ -5,6 +5,14 @@ module.exports = {
   root: true,
   rules: {
     "@typescript-eslint/no-inferrable-types": "warn",
-    "@typescript-eslint/no-unused-vars": "error"
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { 
+        "argsIgnorePattern": "^_",
+        "varsIgnorePattern": "^_",
+        "caughtErrorsIgnorePattern": "^_"
+      }
+    ],
+    "@typescript-eslint/no-non-null-assertion": "off"
   }
 };

@@ -1,5 +1,14 @@
 import TastytradeSession from "../models/tastytrade-session"
-import axios from "axios";
+import axios from "axios"
+import qs from 'qs'
+import { recursiveDasherizeKeys } from "../json-util"
+import _ from 'lodash'
+
+const ParamsSerializer = {
+  serialize: function (queryParams: object) {
+    return qs.stringify(queryParams, { arrayFormat: 'brackets' })
+  }
+}
 
 export default class TastytradeHttpClient{
     public readonly session: TastytradeSession
@@ -7,35 +16,49 @@ export default class TastytradeHttpClient{
     constructor(private readonly baseUrl: string) {
       this.session = new TastytradeSession()
     }
+
     private getDefaultHeaders(): any {
         return {
-          "Content-type": "application/json",
+          "Content-Type": "application/json",
           "Accept": "application/json",
           "Authorization": this.session.authToken,
         };
     }
+
     private async executeRequest(method: string, url: string, data: object = {}, headers: object = {}, params: object = {}) {
-        return axios.request({
-            method,
-            url,
-            baseURL: this.baseUrl,
-            data,
-            headers: { ...headers, ...this.getDefaultHeaders() }, 
-            params
-        })
+      const dasherizedParams = recursiveDasherizeKeys(params)
+      const dasherizedData = recursiveDasherizeKeys(data)
+      const mergedHeaders = { ...headers, ...this.getDefaultHeaders() }
+
+      const config = _.omitBy({
+        method,
+        url,
+        baseURL: this.baseUrl,
+        data: dasherizedData,
+        headers: mergedHeaders, 
+        params: dasherizedParams,
+        paramsSerializer: ParamsSerializer
+       }, _.isEmpty)
+
+      return axios.request(config)
     }
+
     async getData(url: string, headers: object = {}, queryParams: object = {}): Promise<any> {
-        return this.executeRequest('get', url, headers, queryParams);
+        return this.executeRequest('get', url, {}, headers, queryParams);
     }
+
     async postData(url: string, data: object, headers: object): Promise<any> {
         return this.executeRequest('post', url, data, headers);
     }
+
     async putData(url: string, data: object, headers: object): Promise<any> {
         return this.executeRequest('put', url, data, headers);
     }
+
     async patchData(url: string, data: object, headers: object): Promise<any> {
         return this.executeRequest('patch', url, data, headers);
     }
+
     async deleteData(url: string, headers: object): Promise<any> {
         return this.executeRequest('delete', url, headers);
     }

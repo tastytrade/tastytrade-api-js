@@ -2,22 +2,22 @@ import extractResponseData from "../response-util";
 import TastytradeHttpClient from "./tastytrade-http-client";
 
 export default class SessionService {
-    constructor(private httpClient: TastytradeHttpClient) {
+    constructor(public httpClient: TastytradeHttpClient) {
     }
 
-    //Sessions: Allows an API client to interact with their session, or create a new one.
-    async login(usernameOrEmail: string, password: string, rememberMe: boolean = false) {
-        //Create a new user session.
-        const params = { login: usernameOrEmail, password, 'remember-me': rememberMe }
+    // Sessions: Allows an API client to interact with their session, or create a new one.
+    async login(usernameOrEmail: string, password: string, rememberMe = false) {
+        // Create a new user session.
+        const params = { login: usernameOrEmail, password, rememberMe }
         const sessionResponse = await this.httpClient.postData('/sessions', params, {})
         const sessionData = extractResponseData(sessionResponse)
         this.httpClient.session.authToken = sessionData["session-token"]
         return sessionData
     }
 
-    async loginWithRememberToken(username: string, rememberToken: string, rememberMe: boolean = false){
-      //Creates a session using the remember token.
-      const params = { username, 'remember-token': rememberToken, 'remember-me': rememberMe }
+    async loginWithRememberToken(usernameOrEmail: string, rememberToken: string, rememberMe = false){
+      // Creates a session using the remember token.
+      const params = { login: usernameOrEmail, rememberToken, rememberMe }
       const sessionData = extractResponseData(await this.httpClient.postData('/sessions', params, {}))
       this.httpClient.session.authToken = sessionData["session-token"]
       return sessionData
@@ -28,6 +28,8 @@ export default class SessionService {
         return extractResponseData(response);
     }
     async logout(){
+        const response = await this.httpClient.deleteData('/sessions', {});// added this for the integration tests?
         this.httpClient.session.clear()
+        return extractResponseData(response);
     }
 }
