@@ -19,3 +19,26 @@ export class JsonBuilder {
     return this
   }
 }
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function recursiveDasherizeKeys(body: any) {
+  let dasherized = _.mapKeys(body, (_value, key) => dasherize(key))
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  dasherized = _.mapValues(dasherized, (value: any) => {
+    if (_.isPlainObject(value)) {
+      return recursiveDasherizeKeys(value)
+    }
+
+    return value
+  })
+
+  return dasherized
+}
+
+export function dasherize(target: string): string {
+  // prettier-ignore
+  return target
+    .replace(/([A-Z])/g, (_match, p1: string, _offset, _whole) => `-${p1.toLowerCase()}`)
+    .replace(/\s/g, '-')
+}

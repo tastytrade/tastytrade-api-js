@@ -37,7 +37,7 @@ export function toOptionType(raw: string): OptionType {
 export const STRIKE_PRICE_FACTOR = 1000
 
 export const OCC_SYMBOL_GROUPS = 8
-export const OCC_SYMBOL_REGEX: RegExp = /^([A-Z]{1,5})(\d?)[ ]{0,5}(\d{2})(\d{2})(\d{2})([CP])(\d{8})$/
+export const OCC_SYMBOL_REGEX = /^([A-Z]{1,5})(\d?)[ ]{0,5}(\d{2})(\d{2})(\d{2})([CP])(\d{8})$/
 
 export const NORMALIZED_UNDERLYING_SYMBOLS = Object.freeze(
   new Map([

@@ -6,19 +6,19 @@ export default class OrderService {
     }
 
     //Orders: Allows an API client to view, filter, create, cancel and replace orders.
-    async postReconfirmOrder(accountNumber: string, orderId: string){
+    async postReconfirmOrder(accountNumber: string, orderId: number){
         //Reconfirm an order
         const reconfirmOrder = await this.httpClient.postData(`/accounts/${accountNumber}/orders/${orderId}/reconfirm`, {}, {})
         return extractResponseData(reconfirmOrder)
     }
 
-    async replacementOrderDryRun(accountNumber: string, orderId: string, replacementOrder: object){
+    async replacementOrderDryRun(accountNumber: string, orderId: number, replacementOrder: object){
         //Runs through preflights for cancel-replace and edit without routing
         const replacementOrderDryRun = await this.httpClient.postData(`/accounts/${accountNumber}/orders/${orderId}/dry-run`, replacementOrder, {})
         return extractResponseData(replacementOrderDryRun)
     }
 
-    async getOrder(accountNumber: string, orderId: string){
+    async getOrder(accountNumber: string, orderId: number){
         //Returns an order based on the orderId
         const order = await this.httpClient.getData(`/accounts/${accountNumber}/orders/${orderId}`, {}, {})
         return extractResponseData(order)
@@ -30,13 +30,13 @@ export default class OrderService {
         return extractResponseData(order)
     }
 
-    async replaceOrder(accountNumber: string, orderId: string, replacementOrder : object){
+    async replaceOrder(accountNumber: string, orderId: number, replacementOrder : object){
         //Replaces a live order with a new one. Subsequent fills of the original order will abort the replacement.
         const order = await this.httpClient.putData(`/accounts/${accountNumber}/orders/${orderId}`, replacementOrder , {})
         return extractResponseData(order)
     }
 
-    async editOrder(accountNumber: string, orderId: string, order : object){
+    async editOrder(accountNumber: string, orderId: number, order : object){
         //Edit price and execution properties of a live order by replacement. Subsequent fills of the original order will abort the replacement.
         const orderResponse = await this.httpClient.patchData(`/accounts/${accountNumber}/orders/${orderId}`, order , {})
         return extractResponseData(orderResponse)
