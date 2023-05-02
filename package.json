@@ -4,6 +4,9 @@
   "private": true,
   "main": "dist/tastytrade-api.js",
   "typings": "dist/tastytrade-api.d.ts",
+  "repository": "https://github.com/tastytrade/tastytrade-api-js",
+  "license": "MIT",
+  "description": "Typescript impelementation of tastytrade api",
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "jest -i --restoreMocks",
