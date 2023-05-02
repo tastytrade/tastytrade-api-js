@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { AppContext } from '../contexts/context';
 import UseHttpRequest from '../components/use-http-request';
 import _ from "lodash"
-import CustomTable from '../components/custom-table';
+import { ObjectPropertiesTable } from '../components/custom-table';
 
 export default function AccountStatus() {
   const context = useContext(AppContext);
@@ -31,9 +31,9 @@ export default function AccountStatus() {
   
   return (
   <div>
-      <h1>Account Statuses for {context.accountNumbers![0]}</h1>
+      <div className='text-lg font-bold mb-4'>Account Statuses for {context.accountNumbers![0]}</div>
       {errorMessage && <div>{errorMessage}</div>}
-      <CustomTable tableInformation={accountStatus}/>
+      <ObjectPropertiesTable item={accountStatus}/>
   </div>
   );
 };

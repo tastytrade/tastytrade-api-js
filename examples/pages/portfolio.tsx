@@ -27,13 +27,17 @@ export default function Positions() {
         <h1>Transactions for {context.accountNumbers[0]}</h1>
         No Positions
         </div>
-      )
-    }
+    )
+  }
+
+  const renderPositionRow = (position: any) => (
+    <div>{position['quantity-direction']} {position.quantity} {position.symbol} {position['instrument-type']}</div>
+  )
 
   return (
   <div>
-      <h1>Positions for {context.accountNumbers[0]}</h1>
-        <CustomTable tableInformation={positions}/>
+      <div className='text-lg font-bold mb-4'>Positions for {context.accountNumbers[0]}</div>
+        <CustomTable rows={positions} renderItem={renderPositionRow}/>
   </div>
   );
 };

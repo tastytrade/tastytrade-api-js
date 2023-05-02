@@ -1,7 +1,13 @@
 import Feed, { EventType, IEvent } from '@dxfeed/api'
-import { toDxSymbol } from './dx-util'
-import { parseSecurity } from './security'
 import _ from 'lodash'
+
+export const SupportedEventTypes = [
+  EventType.Quote,
+  EventType.Trade,
+  EventType.Summary,
+  EventType.Greeks,
+  EventType.Profile
+]
 
 export default class QuoteStreamer {
   private feed: Feed | null = null
@@ -20,26 +26,15 @@ export default class QuoteStreamer {
     }
   }
 
-  subscribe(twSymbol: string, eventHandler: (event: IEvent) => void): () => void {
+  subscribe(dxfeedSymbol: string, eventHandler: (event: IEvent) => void): () => void {
     if (_.isNil(this.feed)) {
       return _.noop
     }
 
-    const security = parseSecurity(twSymbol)
-    if (_.isNil(security)) {
-      throw `Unable to parse ${twSymbol}`
-    }
-
-    const dxSymbol = toDxSymbol(security)
     return this.feed.subscribe(
-      [EventType.Quote],
-      [dxSymbol],
+      SupportedEventTypes,
+      [dxfeedSymbol],
       eventHandler
     )
   }
 }
-
-const token = 'dGFzdHksbGl2ZSwsMTY1MDk5NTQzOCwxNjUwOTA5MDM4LFUwMDAwMDM3MTg0.w3OJ6sG0P93nTL4hPu7xwtb-cUuY8EgUdHKQuTU_kxw'
-const wsUrl = 'wss://tools.dxfeed.com/webservice/cometd'
-
-export const streamer = new QuoteStreamer(token, wsUrl)

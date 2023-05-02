@@ -1,61 +1,82 @@
-import type { NextPage } from 'next'
-import styles from '../styles/Home.module.css'
-// import { streamer } from '../../lib/quote-streamer'
-import { useEffect, useState } from 'react'
-import SubscribedSymbol from '../components/subscribed-symbol'
-import _ from 'lodash'
+import React, {useState, useContext} from 'react'
+import { useRouter } from 'next/router';
+import {AppContext, TastytradeContext} from '../contexts/context';
+import { observer } from 'mobx-react-lite'
+import Button from '../components/button';
 
-const twSymbols = [
-  'AAPL',
-  'SPY 220617C00438000'
-]
-
-const Home: NextPage = () => {
-  const [symbols, setSymbols] = useState(twSymbols)
-  const [loading, setLoading] = useState(true)
-  const [symbolText, setSymbolText] = useState('')
-
-  useEffect(() => {
-    // streamer.connect()
-    // setLoading(false)
-    // return () => streamer.disconnect()
-  }, []);
-
-  const addSymbol = () => {
-    const symbol = symbolText.trim().toUpperCase()
-    if (symbols.includes(symbol)) {
-      return
-    }
-
-    setSymbols([...symbols, symbol])
+function parseLoginError(error:any){
+  if (error.message === 'Network Error'){
+    console.log('network error')
+    return(error.message);
+  }else if (error.code === "ERR_BAD_REQUEST"){
+    console.log(error)
+    return(error.response.data.error.code);
+  }else{
+    console.log(error)
   }
-
-  const removeSymbol = (symbol: string) => {
-    setSymbols(_.without(symbols, symbol))
-  }
-
-  const handleChange = (event: any) => {
-    setSymbolText(event.target.value);
-  }
-
-  return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          DxFeed Quotes Demo
-        </h1>
-
-        <div>
-          <input type="text" onChange={handleChange} />
-          <button onClick={addSymbol}>Add Symbol</button>
-        </div>
-
-        {!loading && symbols.map(twSymbol => (
-          <SubscribedSymbol key={twSymbol} symbol={twSymbol} onRemove={removeSymbol} />
-        ))}
-      </main>
-    </div>
-  )
 }
 
-export default Home
+async function fetchAccounts(context: TastytradeContext) {
+  const accounts = await context.tastytradeApi.accountsAndCustomersService.getCustomerAccounts();
+  const extractedAccountNumbers = accounts.map((item: any) => item.account['account-number']);
+
+  if(extractedAccountNumbers.length){
+    context.accountNumbers = extractedAccountNumbers
+  }
+
+  return accounts
+}
+
+const Login = observer(() =>{
+  const [login_information_object, setLogin_information_object] = useState({
+    "login":'',
+    "password": '',
+    "remember-me": true
+  });
+  const [error, setError] = useState("");
+  const context = useContext(AppContext);
+  const router = useRouter();
+  
+  const handleLogin = async () => {
+    setError("")
+
+    try {
+      await context.tastytradeApi.sessionService.login(
+        login_information_object.login, login_information_object.password, login_information_object['remember-me']
+      )
+      await fetchAccounts(context)
+
+      router.push('/balances')
+    } catch (error: any) {
+      setError(parseLoginError(error));
+    }
+  };
+
+  return (
+    <div className='w-3/12'>
+        <h2 className="text-center mb-4">Log In</h2>
+        <div className="my-3">
+          <div>Email</div>
+          <input
+            type='text'
+            className="p-2 w-full border border-gray-400"
+            onChange={(event) => setLogin_information_object({...login_information_object, login: event.target.value})}
+            required
+          />
+        </div>
+        <div className="my-3">
+          <div>Password</div>
+          <input
+            type='password'
+            className="p-2 w-full border border-gray-400"
+            onChange={(event) => setLogin_information_object({...login_information_object, password: event.target.value})}
+            required
+          />
+        </div>
+        {error && <div className='text-red-500'>TEST</div>}
+        <Button title="Log In" onClick={handleLogin} />
+    </div>
+  )
+});
+
+export default Login

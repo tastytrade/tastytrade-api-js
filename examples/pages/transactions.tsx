@@ -29,12 +29,18 @@ export default function Transactions() {
         </div>
       )
     }
+
+    const renderTransactionRow = (transaction: any) => {
+      return (
+        <div>{transaction.description} ({transaction['transaction-sub-type']})</div>
+      )
+    }
     
     return (
       <div>
-        <h1>Transactions for {context.accountNumbers[0]}</h1>
-          {errorMessage && <div>{errorMessage}</div>}
-          <CustomTable tableInformation={transactions}/>
+        <div className='text-lg font-bold mb-4'>Transactions for {context.accountNumbers[0]}</div>
+        {errorMessage && <div>{errorMessage}</div>}
+        <CustomTable rows={transactions} renderItem={renderTransactionRow}/>
       </div>
     );
 };

@@ -1,6 +1,7 @@
 import _ from 'lodash'
-import type { JsonMap, JsonValue } from '../json-util'
-import { JsonBuilder } from '../json-util'
+import type { JsonMap, JsonValue } from './utils/json-util'
+import { JsonBuilder } from './utils/json-util'
+import TastytradeSession from './models/tastytrade-session'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -19,30 +20,11 @@ enum MessageAction {
 
 const HEARTBEAT_INTERVAL = 20000 // 20 seconds
 
+const SOURCE = 'tastytrade-api-js-sdk'
+
 export type Disposer = () => void
 
 export type StreamerStateObserver = (streamerState: STREAMER_STATE) => void
-
-// Message `type` will be the data model
-// i.e. a balance update message will be of type `AccountBalance`
-export enum StreamerMessageType {
-  Any = '*' /* get all messages */,
-  AcatRequest = 'AcatRequest',
-  AccountBalance = 'AccountBalance',
-  AchRelationship = 'AchRelationship',
-  BankingPreRegistration = 'BankingPreRegistration',
-  CashAward = 'CashAward',
-  CurrentPosition = 'CurrentPosition',
-  CustomerAccountCreatedMessage = 'CustomerAccountCreatedMessage',
-  DividendReinvestmentRequest = 'DividendReinvestmentRequest',
-  ExternalInstitution = 'ExternalInstitution',
-  ExternalTransaction = 'ExternalTransaction',
-  FeatureEntitlement = 'FeatureEntitlement',
-  Order = 'Order',
-  PendingCashEntry = 'PendingCashEntry',
-  StockAward = 'StockAward',
-  TradingStatus = 'TradingStatus'
-}
 
 export type StreamerMessageObserver = (messageType: string, action: string, status: string) => void
 
@@ -64,7 +46,7 @@ export class AccountStreamer {
   private requestCounter: number = 0
   private queued: string[] = []
 
-  private heartbeatTimerId = 0
+  private heartbeatTimerId: number | NodeJS.Timeout | null = null
 
   lastCloseEvent: any = null
   lastErrorEvent: any = null
@@ -83,9 +65,11 @@ export class AccountStreamer {
 
   private readonly logger = console
 
-  public authToken: string = ''
-
-  constructor(private readonly url: string) {}
+  /**
+   * 
+   * @param url Url of the account streamer service
+   */
+  constructor(private readonly url: string, private readonly session: TastytradeSession) {}
 
   get streamerState(): STREAMER_STATE {
     return this._streamerState
@@ -99,6 +83,15 @@ export class AccountStreamer {
     })
   }
 
+  private get authToken() {
+    return this.session.authToken
+  }
+
+  /**
+   * Adds a custom callback that fires when the streamer state changes
+   * @param observer 
+   * @returns 
+   */
   addStreamerStateObserver(observer: StreamerStateObserver): Disposer {
     this.streamerStateObservers.push(observer)
 
@@ -119,8 +112,12 @@ export class AccountStreamer {
     return this.streamerState === STREAMER_STATE.Error
   }
 
-  async start(authToken: string): Promise<boolean> {
-    this.authToken = authToken
+  /**
+   * Entrypoint for beginning a websocket session
+   * You must have a valid tastytrade authToken before calling this method
+   * @returns Promise that resolves when the "opened" message is received (see handleOpen)
+   */
+  async start(): Promise<boolean> {
     if (this.startPromise !== null) {
       return this.startPromise
     }
@@ -169,34 +166,56 @@ export class AccountStreamer {
   }
 
   readonly sendHeartbeat = () => {
-    this.heartbeatTimerId = 0
+    this.clearHeartbeatTimerId()
     this.send(new JsonBuilder({ action: MessageAction.HEARTBEAT }))
   }
 
   private scheduleHeartbeatTimer() {
-    if (this.heartbeatTimerId > 0) {
+    if (this.isHeartbeatScheduled) {
       // Heartbeat already scheduled
       return
     }
 
     this.logger.info('Scheduling heartbeat with interval: ', HEARTBEAT_INTERVAL)
-    this.heartbeatTimerId = window.setTimeout(
+    const scheduler = typeof window === 'undefined' ? setTimeout : window.setTimeout
+    this.heartbeatTimerId = scheduler(
       this.sendHeartbeat,
       HEARTBEAT_INTERVAL
     )
   }
 
-  private cancelHeartbeatTimer() {
-    if (this.heartbeatTimerId > 0) {
-      clearTimeout(this.heartbeatTimerId)
-      this.heartbeatTimerId = 0
-    }
+  get isHeartbeatScheduled() {
+    return !_.isNil(this.heartbeatTimerId)
   }
 
+  private cancelHeartbeatTimer() {
+    if (!this.isHeartbeatScheduled) {
+      return // Nothing to cancel
+    }
+
+    if (typeof window === 'undefined') {
+      clearTimeout(this.heartbeatTimerId! as number)
+    } else {
+      clearTimeout(this.heartbeatTimerId! as NodeJS.Timeout)
+    }
+
+    this.clearHeartbeatTimerId()
+  }
+
+  private clearHeartbeatTimerId() {
+    this.heartbeatTimerId = null
+  }
+
+  /**
+   * Send a message via websocket
+   * @param json JsonBuilder
+   * @param includeSessionToken Attaches session token to message if true
+   * @returns 
+   */
   send(json: JsonBuilder, includeSessionToken = true): number {
     this.requestCounter += 1
     json.add(REQUEST_ID, this.requestCounter)
-    json.add('source', 'demo')
+    json.add('source', SOURCE)
 
     if (includeSessionToken) {
       const sessionToken = this.authToken
@@ -219,6 +238,12 @@ export class AccountStreamer {
     return this.requestCounter
   }
 
+  /**
+   * Used by other methods to send a specific `action` message
+   * @param action 
+   * @param value 
+   * @returns 
+   */
   public subscribeTo(action: string, value?: JsonValue): number {
     const json = new JsonBuilder()
     json.add('action', action)
@@ -228,6 +253,11 @@ export class AccountStreamer {
     return this.send(json)
   }
 
+  /**
+   * Subscribes to all user-level messages for given user external id
+   * @param userExternalId "external-id" from login response
+   * @returns Promise that resolves when ack is received
+   */
   public subscribeToUser(userExternalId: string) {
     if (!userExternalId) {
       return
@@ -236,6 +266,11 @@ export class AccountStreamer {
     this.subscribeTo(MessageAction.USER_MESSAGE_SUBSCRIBE, userExternalId)
   }
 
+  /**
+   * Subscribes to all account-level messages for given account numbers
+   * @param accountNumbers List of account numbers to subscribe to
+   * @returns Promise that resolves when an ack is received
+   */
   public async subscribeToAccounts(accountNumbers: string[]): Promise<string> {
     if (accountNumbers.length === 0) {
       return Promise.reject('no account numbers')
@@ -357,7 +392,3 @@ export class AccountStreamer {
     }
   }
 }
-
-export const wsUrl = 'wss://streamer.cert.tastyworks.com'
-
-export const accountStreamer = new AccountStreamer(wsUrl)

@@ -1,9 +1,10 @@
 import type { NextPage } from 'next'
-import styles from '../styles/Home.module.css'
-import { AccountStreamer, STREAMER_STATE } from 'tastytrade-api'
-import { useEffect, useMemo, useState } from 'react'
+import { STREAMER_STATE } from 'tastytrade-api'
+import { useContext, useEffect, useState } from 'react'
 import _ from 'lodash'
 import toast from 'react-hot-toast'
+import { AppContext } from '../contexts/context'
+import Button from '../components/button'
 
 function interpretStreamerState(state: STREAMER_STATE) {
   switch (state) {
@@ -19,20 +20,28 @@ function interpretStreamerState(state: STREAMER_STATE) {
 }
 
 const AccountStreamerPage: NextPage = () => {
+  const context = useContext(AppContext);
+  const accountStreamer = context.tastytradeApi.accountStreamer
   const [streamerState, setStreamerState] = useState(STREAMER_STATE.Closed)
-  const [authToken, setAuthToken] = useState('')
-  const [accountNumber, setAccountNumber] = useState('')
-
-  const accountStreamer = useMemo(() => new AccountStreamer('wss://streamer.cert.tastyworks.com'), [])
 
   useEffect(() => {
     setStreamerState(accountStreamer.streamerState)
     const streamerStateDisposer = accountStreamer.addStreamerStateObserver((accountStreamerState) => {
-      if (accountStreamerState === STREAMER_STATE.Closed) {
-        toast.error('Account streamer has been closed.')
+      switch (accountStreamerState) {
+        case STREAMER_STATE.Closed:
+          toast.error('Account streamer has been closed.')
+          break
+        case STREAMER_STATE.Open:
+          toast.success('Account streamer has been opened.')
+          break
+        case STREAMER_STATE.Error:
+          toast.error('Account streamer experienced an error.')
+          break
       }
-      setStreamerState(accountStreamerState)
+
+      setStreamerState(accountStreamer.streamerState)
     })
+
     const streamerMessageDisposer = accountStreamer.addMessageObserver((type, action, status) => {
       if (!_.isNil(type)) {
         toast.success(`Received ${type} message`)
@@ -40,6 +49,7 @@ const AccountStreamerPage: NextPage = () => {
         toast(`Received message with action: ${action}, status: ${status}`)
       }
     })
+
     return () => {
       accountStreamer.stop()
       streamerMessageDisposer()
@@ -47,60 +57,58 @@ const AccountStreamerPage: NextPage = () => {
     }
   }, []);
 
-  const handleAuthTokenChange = (event: any) => {
-    setAuthToken(event.target.value.trim());
+  const startStreamer = () => {
+    context.tastytradeApi.accountStreamer.start()
   }
 
-  const handleAccountNumberChange = (event: any) => {
-    setAccountNumber(event.target.value.trim())
+  const stopStreamer = () => {
+    context.tastytradeApi.accountStreamer.stop()
   }
 
-  const doSubscribe = () => {
-    accountStreamer.start(authToken)
+  const subscribeToAccounts = () => {
+    accountStreamer.subscribeToAccounts(context.accountNumbers)
   }
 
-  const doSubscribeAccount = () => {
-    accountStreamer.subscribeToAccounts([accountNumber])
+  const _renderStartStop = () => {
+    const streamerAction = streamerState === STREAMER_STATE.Open ? stopStreamer : startStreamer
+    const buttonText = streamerState === STREAMER_STATE.Open ? 'Close' : 'Open'
+    return (
+      <div className="my-3">
+        <Button onClick={streamerAction} title={`${buttonText} Connection`} />
+      </div>
+    )
   }
 
   const _renderSubscribe = () => {
     const disabled = streamerState !== STREAMER_STATE.Open
 
     return (
-      <div className={styles.inputSection}>
-        <div>
-          <label htmlFor="sessionTokenInput">Account Number: </label>
-          <input type="text" onChange={handleAccountNumberChange} />
-        </div>
-        <button disabled={disabled} onClick={doSubscribeAccount}>Subscribe Account Number</button>
+      <div>
+        <Button disabled={disabled} onClick={subscribeToAccounts} title="Subscribe To Account Messages" />
         {disabled && <div>Unable to subscribe. Streamer is not open.</div>}
       </div>
     )
   }
 
   return (
-    <div className={styles.container}>
-      <main className={styles.main}>
-        <h1 className={styles.title}>
-          Tastyworks Account Websocket Demo
+    <div className="">
+      <main className="">
+        <h1 className="my-2 text-xl font-bold">
+          Tastytrade Account Websocket Demo
         </h1>
-        <h3>Websocket state is: {interpretStreamerState(streamerState)}</h3>
-        <ol>
-          <li>Login through the api (POST /sessions) to get a session token.</li>
-          <li>Enter the session token&apos;s value into the first input and start the streamer.</li>
-          <li>Once the websocket is opened, you can input your account number to subscribe to account-related messages (order status updates, balance updates, etc).</li>
-          <li>While subscribed, you can place trades in the account and receive update messages here.</li>
-          <li>Websocket messages will be logged to the console.</li>
-        </ol>
-
-        <div className={styles.inputSection}>
-          <div>
-            <label htmlFor="sessionTokenInput">Session Token: </label>
-            <input id="sessionTokenInput" type="text" onChange={handleAuthTokenChange} />
-          </div>
-          <button onClick={doSubscribe}>Start Heartbeat</button>
-          {_renderSubscribe()}
+        <h3 className='my-2 text-lg font-bold'>Websocket state is: {interpretStreamerState(streamerState)}</h3>
+        <div>To begin, you must open a connection to the account streamer service. Once opened, the websocket will begin sending/receiving heartbeat messages.</div>
+        <div>Once the connection is open, you may send a subscribe message to receive notifications for your account(s).</div>
+        <div>While the connection is open, you can place trades in the account(s) and receive update messages here.</div>
+        <div className='mb-2'>All messages will be logged to the console.</div>
+        {_renderStartStop()}
+        <div className='my-5'>
+          <div>Your account numbers:</div>
+          {context.accountNumbers!.map((accountNumber) => (
+            <div>{accountNumber}</div>
+          ))}
         </div>
+        {_renderSubscribe()}
       </main>
     </div>
   )

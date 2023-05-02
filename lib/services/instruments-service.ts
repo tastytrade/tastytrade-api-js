@@ -1,4 +1,4 @@
-import extractResponseData from "../response-util";
+import extractResponseData from "../utils/response-util";
 import TastytradeHttpClient from "./tastytrade-http-client";
 import _ from 'lodash'
 
