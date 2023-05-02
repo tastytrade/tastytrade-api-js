@@ -2,7 +2,7 @@ import React, {useContext} from 'react'
 import { AppContext } from '../contexts/context';
 import _ from 'lodash'
 import UseHttpRequest from '../components/use-http-request';
-import CustomTable from '../components/custom-table';
+import { ObjectPropertiesTable } from '../components/custom-table';
 
 export default function Balances() {
     const context = useContext(AppContext);
@@ -32,9 +32,9 @@ export default function Balances() {
   
     return (
     <div>
-        <h1>Balances for {context.accountNumbers[0]}</h1>
+        <div className='text-lg font-bold mb-4'>Balances for {context.accountNumbers[0]}</div>
         {errorMessage && <div>{errorMessage}</div>}
-        <CustomTable tableInformation={balances}/>
+        <ObjectPropertiesTable item={balances}/>
     </div>
     );
 };

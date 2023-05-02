@@ -1,20 +1,34 @@
 // src/context/state.ts
 import { createContext } from 'react';
-import TastytradeClient from "../../dist/tastytrade-api"
+import TastytradeClient, { QuoteStreamer } from "tastytrade-api"
 import { makeAutoObservable } from 'mobx';
+import _ from 'lodash'
 
 class TastytradeContext {
-    static Instance = new TastytradeContext('https://api.cert.tastyworks.com');
+    static Instance = new TastytradeContext('https://api.tastyworks.com', 'wss://streamer.tastyworks.com');
     public tastytradeApi: TastytradeClient
-    public accountNumbers: string[] | null = null
+    public accountNumbers: string[] = []
+    public quoteStreamer: QuoteStreamer | null = null
     
-    constructor(baseUrl: string) {
+    constructor(baseUrl: string, accountStreamerUrl: string) {
       makeAutoObservable(this)
-      this.tastytradeApi = new TastytradeClient(baseUrl)
+      this.tastytradeApi = new TastytradeClient(baseUrl, accountStreamerUrl)
+      makeAutoObservable(this.tastytradeApi.session)
+    }
+
+    setupQuoteStreamer(token: string, url: string) {
+      if (_.isNil(this.quoteStreamer)) {
+        this.quoteStreamer = new QuoteStreamer(token, url)
+      }
+
+      return this.quoteStreamer
+    }
+
+    get isLoggedIn() {
+      return this.tastytradeApi.session.isValid
     }
 }
 
 const AppContext = createContext(TastytradeContext.Instance)
-const tastytradeInstance = new TastytradeContext('https://api.cert.tastyworks.com');
 
-export {AppContext,tastytradeInstance, TastytradeContext};
+export { AppContext, TastytradeContext };

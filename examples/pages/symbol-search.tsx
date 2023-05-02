@@ -3,6 +3,7 @@ import {AppContext} from '../contexts/context';
 import UseHttpRequest from '../components/use-http-request';
 import _ from 'lodash'
 import CustomTable from '../components/custom-table';
+import Button from '../components/button';
 
 function parseError(error:any){
     if (error.message === 'Network Error'){
@@ -26,8 +27,7 @@ export default function symbolSearch() {
       context.tastytradeApi.symbolSearchService.getSymbolData(symbol)
     ), false);
   
-    const handleSearch = async (e: any) => {
-      e.preventDefault();
+    const handleSearch = async () => {
       setError("")
       try{
         const metricsResults = await executeRequest(symbol);
@@ -41,7 +41,7 @@ export default function symbolSearch() {
         if(event.target.value){
           setSymbol(event.target.value)
           if (event.key === 'Enter') {
-            handleSearch(event);
+            handleSearch();
           }
         }
       }
@@ -82,12 +82,12 @@ export default function symbolSearch() {
         <div>Enter symbol</div>
         <input
             type='text'
-            className="p-2 w-full border border-gray-400"
+            className="p-2 w-full border border-gray-400 mb-2"
             onKeyUp={handleKeyPress}
             required
           />
-          <button className="rounded cursor-pointer p-5 bg-black text-white" onClick={handleSearch}>Search!</button>
-            {error && <div>{error}</div>}
+        <Button onClick={handleSearch} title="Search" />
+        {error && <div>{error}</div>}
         {renderResults()}
     </div>
   )

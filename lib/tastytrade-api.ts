@@ -1,39 +1,46 @@
-import TastytradeHttpClient from "./service/tastytrade-http-client"
+import TastytradeHttpClient from "./services/tastytrade-http-client"
+import { AccountStreamer, STREAMER_STATE, Disposer, StreamerStateObserver } from './account-streamer'
+import QuoteStreamer from "./quote-streamer"
+
 //Services:
-import SessionService from "./service/session-service"
-import AccountStatusService from "./service/account-status-service"
-import AccountsAndCustomersService from "./service/accounts-and-customers-service"
-import BalancesAndPositionsService from "./service/balances-and-positions-service"
-import InstrumentsService from "./service/instruments-service"
-import MarginRequirementsService from "./service/margin-requirements-service"
-import MarketMetricsService from "./service/market-metrics-service"
-import NetLiquidatingValueHistoryService from "./service/net-liquidating-value-history-service"
-import OrderService from "./service/orders-service"
-import RiskParametersService from "./service/risk-parameters-service"
-import SymbolSearchService from "./service/symbol-search-service"
-import TransactionsService from "./service/transactions-service"
-import WatchlistsService from "./service//watchlists-service"
-import { AccountStreamer, STREAMER_STATE, Disposer, StreamerStateObserver } from './account-streamer/account-streamer'
+import SessionService from "./services/session-service"
+import AccountStatusService from "./services/account-status-service"
+import AccountsAndCustomersService from "./services/accounts-and-customers-service"
+import BalancesAndPositionsService from "./services/balances-and-positions-service"
+import InstrumentsService from "./services/instruments-service"
+import MarginRequirementsService from "./services/margin-requirements-service"
+import MarketMetricsService from "./services/market-metrics-service"
+import NetLiquidatingValueHistoryService from "./services/net-liquidating-value-history-service"
+import OrderService from "./services/orders-service"
+import RiskParametersService from "./services/risk-parameters-service"
+import SymbolSearchService from "./services/symbol-search-service"
+import TransactionsService from "./services/transactions-service"
+import WatchlistsService from "./services/watchlists-service"
+import TastytradeSession from "./models/tastytrade-session"
 
 export default class TastytradeClient {
-  private httpClient: TastytradeHttpClient | null = null
+  public readonly httpClient: TastytradeHttpClient
 
-  public sessionService: SessionService
-  public accountStatusService: AccountStatusService
-  public accountsAndCustomersService: AccountsAndCustomersService
-  public balancesAndPositionsService: BalancesAndPositionsService
-  public instrumentsService: InstrumentsService
-  public marginRequirementsService: MarginRequirementsService
-  public marketMetricsService: MarketMetricsService
-  public netLiquidatingValueHistoryService: NetLiquidatingValueHistoryService
-  public orderService: OrderService
-  public riskParametersService: RiskParametersService
-  public symbolSearchService: SymbolSearchService
-  public transactionsService: TransactionsService
-  public watchlistsService: WatchlistsService
+  public readonly accountStreamer: AccountStreamer
 
-  constructor(baseUrl: string) {
+  public readonly sessionService: SessionService
+  public readonly accountStatusService: AccountStatusService
+  public readonly accountsAndCustomersService: AccountsAndCustomersService
+  public readonly balancesAndPositionsService: BalancesAndPositionsService
+  public readonly instrumentsService: InstrumentsService
+  public readonly marginRequirementsService: MarginRequirementsService
+  public readonly marketMetricsService: MarketMetricsService
+  public readonly netLiquidatingValueHistoryService: NetLiquidatingValueHistoryService
+  public readonly orderService: OrderService
+  public readonly riskParametersService: RiskParametersService
+  public readonly symbolSearchService: SymbolSearchService
+  public readonly transactionsService: TransactionsService
+  public readonly watchlistsService: WatchlistsService
+
+  constructor(readonly baseUrl: string, readonly accountStreamerUrl: string) {
     this.httpClient = new TastytradeHttpClient(baseUrl)
+    this.accountStreamer = new AccountStreamer(accountStreamerUrl, this.session)
+
     this.sessionService = new SessionService(this.httpClient)
     this.accountStatusService = new AccountStatusService(this.httpClient)
     this.accountsAndCustomersService = new AccountsAndCustomersService(this.httpClient)
@@ -48,6 +55,11 @@ export default class TastytradeClient {
     this.transactionsService = new TransactionsService(this.httpClient)
     this.watchlistsService = new WatchlistsService(this.httpClient)
   }
+
+  get session(): TastytradeSession {
+    return this.httpClient.session
+  }
 }
 
+export { QuoteStreamer }
 export { AccountStreamer, STREAMER_STATE, Disposer, StreamerStateObserver }

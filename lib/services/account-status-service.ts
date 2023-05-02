@@ -1,4 +1,4 @@
-import extractResponseData from "../response-util";
+import extractResponseData from "../utils/response-util";
 import TastytradeHttpClient from "./tastytrade-http-client";
 
 // create the central class that aggregates all services from dmoss

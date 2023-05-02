@@ -21,20 +21,34 @@ export default function Orders() {
       return <p>Loading...</p>
     }
 
-    if (_.isEmpty(liveOrders)) {
+    const renderEmpty = () => {
+      return <div>No live Orders</div>
+    }
+
+    const renderOrderRow = (order: any) => {
       return (
         <div>
-          <h1>Transactions for {context.accountNumbers[0]}</h1>
-          No live Orders
-          </div>
-        )
+          <div>{order.price} {order['price-effect']}</div>
+          {order.legs.map((leg: any) => {
+            <div>{leg.action} {leg.symbol}</div>
+          })}
+        </div>
+      )
+    }
+
+    const renderOrders = () => {
+      if (_.isEmpty(liveOrders)) {
+        return renderEmpty()
       }
+
+      <CustomTable rows={liveOrders} renderItem={renderOrderRow}/>
+    }
     
     return (
       <div>
-        <h1>Live Orders for {context.accountNumbers[0]}</h1>
-          {errorMessage && <div>{errorMessage}</div>}
-          <CustomTable tableInformation={liveOrders}/>
+        <div className='text-lg font-bold mb-4'>Live Orders for {context.accountNumbers[0]}</div>
+        {errorMessage && <div>{errorMessage}</div>}
+        {renderOrders()}
       </div>
     );
 };

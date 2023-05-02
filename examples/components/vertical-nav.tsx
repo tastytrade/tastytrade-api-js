@@ -12,8 +12,9 @@ export default function VerticalNavBar() {
         <VerticalNavLink href = "/orders" title = "Orders"/>
         <VerticalNavLink href = "/transactions" title = "Transactions"/>
         <VerticalNavLink href = "/account-status" title = "Account Status"/>
-        {/* <VerticalNavLink href = "/market-metrics" title = "Market Metrics"/> */}
         <VerticalNavLink href = "/symbol-search" title = "Symbol Search"/>
+        <VerticalNavLink href = "/quote-streamer" title = "Quote Data"/>
+        <VerticalNavLink href = "/account-streamer" title = "Account Data"/>
       </ul>
   </nav>
   )
