@@ -1,6 +1,6 @@
-import RiskParametersService from "../../../lib/service/risk-parameters-service"
-import TastytradeHttpClient from "../../../lib/service/tastytrade-http-client";
-import SessionService from "../../../lib/service/session-service";
+import RiskParametersService from "../../../lib/services/risk-parameters-service"
+import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
+import SessionService from "../../../lib/services/session-service";
 import * as dotenv from 'dotenv'
 dotenv.config()
 

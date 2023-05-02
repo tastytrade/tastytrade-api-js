@@ -1,6 +1,6 @@
-import SymbolSearchService from "../../../lib/service/symbol-search-service"
-import TastytradeHttpClient from "../../../lib/service/tastytrade-http-client";
-import SessionService from "../../../lib/service/session-service";
+import SymbolSearchService from "../../../lib/services/symbol-search-service"
+import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
+import SessionService from "../../../lib/services/session-service";
 import * as dotenv from 'dotenv'
 dotenv.config()
 
