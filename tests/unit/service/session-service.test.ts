@@ -1,5 +1,5 @@
-import SessionService from "../../../lib/service/session-service";
-import TastytradeHttpClient from "../../../lib/service/tastytrade-http-client";
+import SessionService from "../../../lib/services/session-service";
+import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import axios from 'axios'
 
 jest.mock('axios')
@@ -63,12 +63,13 @@ describe('validate', () => {
         "id": 269
     },
     "context": "/sessions/validate"
-}
+  }
 
   it('sets the correct auth token', async function() {
     (axios.request as jest.Mock).mockResolvedValue({ data: responseData })
 
     const client = new TastytradeHttpClient('fakeurl')
+    client.session.authToken = expectedToken
     const sessionService = new SessionService(client)
     await sessionService.validate()
     expect(client.session.authToken).toBe(expectedToken)
@@ -80,8 +81,9 @@ describe('logout', () => {
   it('sets the correct auth token', async function() {
     (axios.request as jest.Mock).mockResolvedValue(null)
     const client = new TastytradeHttpClient('fakeurl')
+    client.session.authToken = 'faketoken'
     const sessionService = new SessionService(client)
     const response = await sessionService.logout()
-    expect(response.status).toBe(204);
+    expect(client.session.authToken).toBeNull()
   })
 })

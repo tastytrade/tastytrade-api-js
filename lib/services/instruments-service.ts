@@ -7,14 +7,16 @@ export default class InstrumentsService {
     }
 
     //Instruments: Allows an API client to fetch data about instruments.
-    async getCryptocurrencies(queryParams = {}){
+    async getCryptocurrencies(symbols: string[] = []){
         //Retrieve a set of cryptocurrencies given an array of one or more symbols.
+        const queryParams = { symbol: symbols }
         const cryptocurrencies = (await this.httpClient.getData(`/instruments/cryptocurrencies`, {}, queryParams))
         return extractResponseData(cryptocurrencies)
     }
     async getSingleCryptocurrency(symbol: string){
         //Retrieve a cryptocurrency given a symbol.
-        const singleCryptocurrency = (await this.httpClient.getData(`/instruments/cryptocurrencies/${symbol}`, {}, {}))
+        const encodedSymbol = encodeURIComponent(symbol)
+        const singleCryptocurrency = (await this.httpClient.getData(`/instruments/cryptocurrencies/${encodedSymbol}`, {}, {}))
         return extractResponseData(singleCryptocurrency)
     }
     async getActiveEquities(queryParams = {}){

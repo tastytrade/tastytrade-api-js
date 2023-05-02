@@ -1,6 +1,6 @@
-import InstrumentsService from "../../../lib/service/instruments-service"
-import TastytradeHttpClient from "../../../lib/service/tastytrade-http-client"
-import SessionService from "../../../lib/service/session-service"
+import InstrumentsService from "../../../lib/services/instruments-service"
+import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client"
+import SessionService from "../../../lib/services/session-service"
 import _ from 'lodash'
 import * as dotenv from 'dotenv'
 dotenv.config()
@@ -23,7 +23,7 @@ describe('getCryptocurrencies', () => {
 describe('getSingleCryptocurrency', () => {
   it('responds with the correct data', async function() {
     const cryptocurrencySymbol = 'BTC/USD'
-    const response = await instrumentsService.getCryptocurrencies(cryptocurrencySymbol)
+    const response = await instrumentsService.getSingleCryptocurrency(cryptocurrencySymbol)
     expect(response.symbol).toBe(cryptocurrencySymbol)
   })
 })
