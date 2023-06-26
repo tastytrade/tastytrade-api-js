@@ -17,7 +17,7 @@ import SymbolSearchService from "./services/symbol-search-service"
 import TransactionsService from "./services/transactions-service"
 import WatchlistsService from "./services/watchlists-service"
 import TastytradeSession from "./models/tastytrade-session"
-
+import PopService from "./services/pop-service"
 export default class TastytradeClient {
   public readonly httpClient: TastytradeHttpClient
 
@@ -36,6 +36,7 @@ export default class TastytradeClient {
   public readonly symbolSearchService: SymbolSearchService
   public readonly transactionsService: TransactionsService
   public readonly watchlistsService: WatchlistsService
+  public readonly popService: PopService
 
   constructor(readonly baseUrl: string, readonly accountStreamerUrl: string) {
     this.httpClient = new TastytradeHttpClient(baseUrl)
@@ -54,6 +55,7 @@ export default class TastytradeClient {
     this.symbolSearchService = new SymbolSearchService(this.httpClient)
     this.transactionsService = new TransactionsService(this.httpClient)
     this.watchlistsService = new WatchlistsService(this.httpClient)
+    this.popService = new PopService(this.httpClient)
   }
 
   get session(): TastytradeSession {
