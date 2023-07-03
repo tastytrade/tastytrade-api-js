@@ -22,14 +22,14 @@ describe('getCustomerAccounts', () => {
 
 describe('getCustomerResource', () => {
   it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getCustomerResource('me')
+    const response = await accountsAndCustomersService.getCustomerResource()
     expect(response.id).toBe('me')
   })
 })
 
 describe('getCustomerAccountResources', () => {
   it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getCustomerAccountResources('me')
+    const response = await accountsAndCustomersService.getCustomerAccountResources()
     expect(response.length).toBeGreaterThan(0)
     expect(response[0].account["account-number"]).toBeDefined();
     expect(response[0].account["margin-or-cash"]).toBeDefined();
@@ -39,7 +39,7 @@ describe('getCustomerAccountResources', () => {
 
 describe('getFullCustomerAccountResource', () => {
   it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getFullCustomerAccountResource('me', process.env.API_ACCOUNT_NUMBER!)
+    const response = await accountsAndCustomersService.getFullCustomerAccountResource(process.env.API_ACCOUNT_NUMBER!)
     expect(response["account-number"]).toBeDefined();
     expect(response["margin-or-cash"]).toBeDefined();
     expect(response["investment-objective"]).toBeDefined();
