@@ -26,7 +26,7 @@ export type Disposer = () => void
 
 export type StreamerStateObserver = (streamerState: STREAMER_STATE) => void
 
-export type StreamerMessageObserver = (messageType: string, action: string, status: string) => void
+export type StreamerMessageObserver = (json: object) => void
 
 const REQUEST_ID = 'request-id'
 
@@ -368,7 +368,7 @@ export class AccountStreamer {
     this.logger.info(json)
 
     const action = json.action as string
-    this.streamerMessageObservers.forEach(observer => observer(json.type as string, action, json.status as string))
+    this.streamerMessageObservers.forEach(observer => observer(json))
     if (action) {
       if (action === MessageAction.HEARTBEAT) {
         // schedule next heartbeat
