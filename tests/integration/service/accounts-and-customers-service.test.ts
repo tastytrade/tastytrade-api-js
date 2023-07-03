@@ -1,8 +1,6 @@
 import AccountsAndCustomersService from "../../../lib/services/accounts-and-customers-service";
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import SessionService from "../../../lib/services/session-service";
-import * as dotenv from 'dotenv'
-dotenv.config()
 
 const client = new TastytradeHttpClient(process.env.BASE_URL!)
 const accountsAndCustomersService = new AccountsAndCustomersService(client)
@@ -24,14 +22,14 @@ describe('getCustomerAccounts', () => {
 
 describe('getCustomerResource', () => {
   it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getCustomerResource(process.env.API_CUSTOMER_ID!)
-    expect(response.id).toBe(process.env.API_CUSTOMER_ID!)
+    const response = await accountsAndCustomersService.getCustomerResource('me')
+    expect(response.id).toBe('me')
   })
 })
 
 describe('getCustomerAccountResources', () => {
   it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getCustomerAccountResources(process.env.API_CUSTOMER_ID!)
+    const response = await accountsAndCustomersService.getCustomerAccountResources('me')
     expect(response.length).toBeGreaterThan(0)
     expect(response[0].account["account-number"]).toBeDefined();
     expect(response[0].account["margin-or-cash"]).toBeDefined();
@@ -41,7 +39,7 @@ describe('getCustomerAccountResources', () => {
 
 describe('getFullCustomerAccountResource', () => {
   it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getFullCustomerAccountResource(process.env.API_CUSTOMER_ID!, process.env.API_ACCOUNT_NUMBER!)
+    const response = await accountsAndCustomersService.getFullCustomerAccountResource('me', process.env.API_ACCOUNT_NUMBER!)
     expect(response["account-number"]).toBeDefined();
     expect(response["margin-or-cash"]).toBeDefined();
     expect(response["investment-objective"]).toBeDefined();
