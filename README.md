@@ -79,6 +79,16 @@ global.window = { WebSocket, setTimeout, clearTimeout }
 `npm run build`
 Outputs everything to `dist/`
 
+## Running tests locally
+Add a `.env` file with the following keys (you'll have to fill in the values yourself):
+
+```
+BASE_URL=https://api.cert.tastyworks.com
+API_USERNAME=<your cert username>
+API_PASSWORD=<your cert password>
+API_ACCOUNT_NUMBER=<your cert account number>
+```
+
 ## Running example app
 ```sh
 npm run build
