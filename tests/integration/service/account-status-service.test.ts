@@ -1,8 +1,6 @@
 import AccountStatusService from "../../../lib/services/account-status-service";
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import SessionService from "../../../lib/services/session-service";
-import * as dotenv from 'dotenv'
-dotenv.config()
 
 const client = new TastytradeHttpClient(process.env.BASE_URL!)
 const accountStatusService = new AccountStatusService(client)

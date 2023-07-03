@@ -10,19 +10,19 @@ export default class AccountsAndCustomersService {
     }
 
     //Customers: Operations about customers
-    async getCustomerResource(customerId: string){
+    async getCustomerResource(){
         //Get a full customer resource.
-        const customerResource = (await this.httpClient.getData(`/customers/${customerId}`, {}, {}))
+        const customerResource = (await this.httpClient.getData(`/customers/me`, {}, {}))
         return extractResponseData(customerResource)
     }
-    async getCustomerAccountResources(customerId: string){
+    async getCustomerAccountResources(){
         //Get a list of all the customer account resources attached to the current customer.
-        const customerAccountResources = (await this.httpClient.getData(`/customers/${customerId}/accounts`, {}, {}))
+        const customerAccountResources = (await this.httpClient.getData(`/customers/me/accounts`, {}, {}))
         return extractResponseData(customerAccountResources)
     }
-    async getFullCustomerAccountResource(customerId: string, accountNumber: string){
+    async getFullCustomerAccountResource(accountNumber: string){
         //Get a full customer account resource.
-        const fullCustomerAccountResource = (await this.httpClient.getData(`/customers/${customerId}/accounts/${accountNumber}`, {}, {}))
+        const fullCustomerAccountResource = (await this.httpClient.getData(`/customers/me/accounts/${accountNumber}`, {}, {}))
         return extractResponseData(fullCustomerAccountResource)
     }
 
