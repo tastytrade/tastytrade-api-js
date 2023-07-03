@@ -2,8 +2,6 @@ import InstrumentsService from "../../../lib/services/instruments-service"
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client"
 import SessionService from "../../../lib/services/session-service"
 import _ from 'lodash'
-import * as dotenv from 'dotenv'
-dotenv.config()
 
 const client = new TastytradeHttpClient(process.env.BASE_URL!)
 const instrumentsService = new InstrumentsService(client)
