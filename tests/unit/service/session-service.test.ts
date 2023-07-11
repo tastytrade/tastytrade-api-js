@@ -83,7 +83,7 @@ describe('logout', () => {
     const client = new TastytradeHttpClient('fakeurl')
     client.session.authToken = 'faketoken'
     const sessionService = new SessionService(client)
-    const response = await sessionService.logout()
+    await sessionService.logout()
     expect(client.session.authToken).toBeNull()
   })
 })

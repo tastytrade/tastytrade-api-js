@@ -37,9 +37,57 @@ const optionChain = await tastytradeClient.instrumentsService.getOptionChain('AA
 quoteStreamer.subscribe(optionChain[0]['streamer-symbol'], handleMarketDataReceived)
 ```
 
+### Account Streamer
+```js
+const TastytradeApi = require("@tastytrade/api")
+const TastytradeClient = TastytradeApi.default
+const { AccountStreamer, QuoteStreamer } = TastytradeApi
+const _ = require('lodash')
+
+function handleStreamerMessage(json) {
+  console.log('streamer message received: ', json)
+}
+
+function handleStreamerStateChange(streamerState) {
+  console.log('streamer state changed: ', streamerState)
+}
+
+const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
+const accountStreamer = tastytradeClient.accountStreamer
+const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, password)
+const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
+const accountNumbers = _.map(accounts, account => _.get(account, 'account.account-number'))
+await accountStreamer.start()
+await accountStreamer.subscribeToAccounts(accountNumbers)
+accountStreamer.addMessageObserver(handleStreamerMessage)
+accountStreamer.addStreamerStateObserver(handleStreamerStateChange)
+```
+
+You should then be able to place a trade and see live status updates for the order come through via `handleStreamerMessage`.
+
+## Running in Node
+The `cometd` package has an explicit reference to `window`, so there's not a perfect way to run this code in a NodeJs. You could fake the `window` object to get it running. You'll have to `npm install ws` and do this:
+
+```js
+const WebSocket = require('ws')
+
+global.WebSocket = WebSocket
+global.window = { WebSocket, setTimeout, clearTimeout }
+```
+
 ## Building Locally
 `npm run build`
 Outputs everything to `dist/`
+
+## Running tests locally
+Add a `.env` file with the following keys (you'll have to fill in the values yourself):
+
+```
+BASE_URL=https://api.cert.tastyworks.com
+API_USERNAME=<your cert username>
+API_PASSWORD=<your cert password>
+API_ACCOUNT_NUMBER=<your cert account number>
+```
 
 ## Running example app
 ```sh
