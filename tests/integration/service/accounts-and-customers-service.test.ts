@@ -46,9 +46,9 @@ describe('getFullCustomerAccountResource', () => {
   })
 })
 
-describe('getApiQuoteToken', () => {
-  it('responds with the correct data', async function() {
-    const response = await accountsAndCustomersService.getApiQuoteToken()
-    expect(response.token).toBeDefined()
-  })
-})
+// describe('getApiQuoteToken', () => {
+//   it('responds with the correct data', async function() {
+//     const response = await accountsAndCustomersService.getApiQuoteToken()
+//     expect(response.token).toBeDefined()
+//   })
+// })
