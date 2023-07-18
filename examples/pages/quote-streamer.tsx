@@ -13,18 +13,17 @@ const Home: NextPage = () => {
   const appContext = useContext(AppContext)
 
   useEffect(() => {
-    appContext.tastytradeApi.accountsAndCustomersService.getQuoteStreamerTokens()
+    appContext.tastytradeApi.accountsAndCustomersService.getApiQuoteToken()
       .then(response => {
-        const url = `${response['websocket-url']}/cometd`
-        const quoteStreamer = appContext.setupQuoteStreamer(response.token, url)
-        quoteStreamer.connect()
+        if (appContext.marketDataStreamer.isConnected) {
+          return
+        }
+        appContext.marketDataStreamer.connect(response['dxlink-url'], response.token)
         setLoading(false)
       })
 
     return () => {
-      if (!_.isNil(appContext.quoteStreamer)) {
-        appContext.quoteStreamer.disconnect()
-      }
+      appContext.marketDataStreamer.disconnect()
     }
   }, []);
 
@@ -48,7 +47,7 @@ const Home: NextPage = () => {
   return (
     <div>
       <h1 className="my-3 text-xl font-bold">
-        DxFeed Quotes Demo
+        DxLink Quotes Demo
       </h1>
       <div className='my-1'>Type a symbol into the input and click 'Add Symbol'</div>
 

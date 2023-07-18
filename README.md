@@ -18,30 +18,36 @@ const accountPositions = await tastytradeClient.balancesAndPositionsService.getP
 
 ### Market Data
 ```js
-import TastytradeClient, { QuoteStreamer } from "@tastytrade-api"
+import TastytradeClient, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade-api"
 const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
 await tastytradeClient.sessionService.login(usernameOrEmail, pasword)
-const tokenResponse = await tastytradeClient.AccountsAndCustomersService.getQuoteStreamerTokens()
-const quoteStreamer = new QuoteStreamer(tokenResponse.token, `${tokenResponse['websocket-url']}/cometd`)
-quoteStreamer.connect()
+const tokenResponse = await tastytradeClient.AccountsAndCustomersService.getApiQuoteToken()
+const streamer = new MarketDataStreamer()
+streamer.connect(tokenResponse['dxlink-url'], tokenResponse.token)
 
-function handleMarketDataReceived(event) {
+function handleMarketDataReceived(data) {
   // Triggers every time market data event occurs
-  console.log(event)
+  console.log(data)
 }
+
+// Add a listener for incoming market data. Returns a remove() function that removes the listener from the quote streamer
+const removeDataListener = streamer.addDataListener(handleMarketDataReceived)
+
 // Subscribe to a single equity quote
-quoteStreamer.subscribe('AAPL', handleMarketDataReceived)
+streamer.addSubscription('AAPL')
+// Optionally specify which market data events you want to subscribe to
+streamer.addSubscription('SPY', { subscriptionTypes: [MarketDataSubscriptionType.Quote] })
 
 // Subscribe to a single equity option quote
 const optionChain = await tastytradeClient.instrumentsService.getOptionChain('AAPL')
-quoteStreamer.subscribe(optionChain[0]['streamer-symbol'], handleMarketDataReceived)
+streamer.addSubscription(optionChain[0]['streamer-symbol'])
 ```
 
 ### Account Streamer
 ```js
 const TastytradeApi = require("@tastytrade/api")
 const TastytradeClient = TastytradeApi.default
-const { AccountStreamer, QuoteStreamer } = TastytradeApi
+const { AccountStreamer } = TastytradeApi
 const _ = require('lodash')
 
 function handleStreamerMessage(json) {

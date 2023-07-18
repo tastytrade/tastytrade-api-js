@@ -1,6 +1,6 @@
 import TastytradeHttpClient from "./services/tastytrade-http-client"
 import { AccountStreamer, STREAMER_STATE, Disposer, StreamerStateObserver } from './account-streamer'
-import QuoteStreamer from "./quote-streamer"
+import MarketDataStreamer, { MarketDataSubscriptionType, MarketDataListener } from "./market-data-streamer"
 
 //Services:
 import SessionService from "./services/session-service"
@@ -61,5 +61,5 @@ export default class TastytradeClient {
   }
 }
 
-export { QuoteStreamer }
+export { MarketDataStreamer, MarketDataSubscriptionType, MarketDataListener }
 export { AccountStreamer, STREAMER_STATE, Disposer, StreamerStateObserver }

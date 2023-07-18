@@ -26,10 +26,9 @@ export default class AccountsAndCustomersService {
         return extractResponseData(fullCustomerAccountResource)
     }
 
-    //Quote-streamer-tokens: Operations about quote-streamer-tokens
-    async getQuoteStreamerTokens(){
-        //Returns the appropriate quote streamer endpoint, level and identification token for the current customer to receive market data.
-        const quoteStreamerTokens = (await this.httpClient.getData('/quote-streamer-tokens', {}, {}))
-        return extractResponseData(quoteStreamerTokens)
+    //Returns the appropriate quote streamer endpoint, level and identification token for the current customer to receive market data.
+    async getApiQuoteToken() {
+        const apiQuoteToken = (await this.httpClient.getData('/api-quote-tokens', {}, {}))
+        return extractResponseData(apiQuoteToken)
     }
 }

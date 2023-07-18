@@ -1,8 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import _ from 'lodash'
 import { AppContext } from '../contexts/context'
-import Button from './button'
-import { EventType } from '@dxfeed/api'
+import { MarketDataSubscriptionType } from "tastytrade-api"
 
 export default function SubscribedSymbol(props: any) {
   const [bidPrice, setBidPrice] = useState(NaN)
@@ -10,17 +9,24 @@ export default function SubscribedSymbol(props: any) {
 
   const appContext = useContext(AppContext)
 
-  const handleEvent = (event: any) => {
-    console.log(event)
-    if (event.eventType === EventType.Quote) {
-      setBidPrice(event.bidPrice)
-      setAskPrice(event.askPrice)
-    }
-  }
-
   useEffect(() => {
-    const unsubscribe = appContext.quoteStreamer!.subscribe(props.symbol, handleEvent)
-    return unsubscribe
+    const removeListener = appContext.marketDataStreamer.addDataListener((event: any) => {
+      const eventData = _.find(event.data, data =>
+        data.eventType === MarketDataSubscriptionType.Quote &&
+        data.eventSymbol === props.symbol
+      )
+
+      if (!_.isNil(eventData)) {
+        setBidPrice(eventData.bidPrice)
+        setAskPrice(eventData.askPrice)
+      }
+    })
+
+    appContext.marketDataStreamer.addSubscription(props.symbol)
+    return () => {
+      appContext.marketDataStreamer.removeSubscription(props.symbol)
+      removeListener()
+    }
   }, []);
 
   return (
