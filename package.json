@@ -1,6 +1,6 @@
 {
   "name": "@tastytrade/api",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "main": "dist/tastytrade-api.js",
   "typings": "dist/tastytrade-api.d.ts",
   "repository": "https://github.com/tastytrade/tastytrade-api-js",
