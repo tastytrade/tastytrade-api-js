@@ -1,3 +1,4 @@
+import WebSocket from 'isomorphic-ws'
 import _ from 'lodash'
 import type { JsonMap, JsonValue } from './utils/json-util'
 import { JsonBuilder } from './utils/json-util'
