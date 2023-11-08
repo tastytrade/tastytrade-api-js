@@ -6,6 +6,10 @@
   "repository": "https://github.com/tastytrade/tastytrade-api-js",
   "license": "MIT",
   "description": "Typescript impelementation of tastytrade api",
+  "engines" : { 
+    "npm" : ">=9.0.0",
+    "node" : ">=20.0.0"
+  },
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "jest -i --restoreMocks",
