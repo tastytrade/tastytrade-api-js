@@ -16,7 +16,7 @@
     "unit-test": "jest --testPathPattern=tests/unit",
     "integration-test": "jest --testPathPattern=tests/integration",
     "lint": "eslint lib/** tests/**",
-    "prepublishOnly": "npm run test && npm run build",
+    "prepublishOnly": "npm run unit-test && npm run build",
     "postpack": "git tag -a $npm_package_version -m $npm_package_version && git push origin $npm_package_version"
   },
   "dependencies": {
