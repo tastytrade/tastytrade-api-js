@@ -143,7 +143,7 @@ export default class MarketDataStreamer {
    * @param options Period and Type are the grouping you want to apply to the candle data
    * For example, a period/type of 5/m means you want each candle to represent 5 minutes of data
    * From there, setting fromTime to 24 hours ago would give you 24 hours of data grouped in 5 minute intervals
-   * @returns 
+   * @returns
    */
   addCandleSubscription(streamerSymbol: string, fromTime: number, options: CandleSubscriptionOptions) {
     const subscriptionTypes = [MarketDataSubscriptionType.Candle]
@@ -200,6 +200,18 @@ export default class MarketDataStreamer {
         "contract": "AUTO"
       }
     })
+
+    // Dirk added ...
+    this.sendMessage({
+      "type": "FEED_SETUP",
+      "channel": 1,
+      "acceptAggregationPeriod": 15,
+      "acceptDataFormat": "COMPACT",
+      "acceptEventFields": {
+        "Quote": ["eventType", "eventSymbol", "bidPrice", "askPrice", "bidSize", "askSize"]
+      }
+    })
+
   }
 
   isChannelOpened(channelId: number) {
@@ -236,7 +248,7 @@ export default class MarketDataStreamer {
       queue = []
       this.subscriptionsQueue.set(channelId, queue)
     }
-    
+
     queue.push({ symbol, subscriptionTypes, subscriptionArgs })
   }
 
@@ -263,10 +275,10 @@ export default class MarketDataStreamer {
   }
 
   /**
-   * 
-   * @param {*} symbol 
-   * @param {*} subscriptionTypes 
-   * @param {*} channelId 
+   *
+   * @param {*} symbol
+   * @param {*} subscriptionTypes
+   * @param {*} channelId
    * @param {*} direction add or remove
    */
   private sendSubscriptionMessage(symbol: string, subscriptionTypes: MarketDataSubscriptionType[], channelId: number, direction: string, subscriptionArgs: any = {}) {
