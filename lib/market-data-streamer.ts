@@ -332,7 +332,19 @@ export default class MarketDataStreamer {
 
     if (this.isDxLinkAuthorized) {
       this.openFeedChannel(DefaultChannelId)
-    } else {
+
+    // Dirk added ...
+    this.sendMessage({
+      "type": "FEED_SETUP",
+      "channel": 1,
+      "acceptAggregationPeriod": 15,
+      "acceptDataFormat": "COMPACT",
+      "acceptEventFields": {
+        "Quote": ["eventType", "eventSymbol", "bidPrice", "askPrice", "bidSize", "askSize"]
+      }
+    })
+
+  } else {
       this.sendMessage({
         "type": "AUTH",
         "channel": 0,
