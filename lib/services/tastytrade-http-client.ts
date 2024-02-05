@@ -26,6 +26,7 @@ export default class TastytradeHttpClient{
           "Content-Type": "application/json",
           "Accept": "application/json",
           "Authorization": this.session.authToken,
+          "User-Agent": 'tastytrade-sdk-js'
         };
     }
 
