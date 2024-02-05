@@ -9,7 +9,7 @@ describe('login', () => {
   const responseData = {
     "data": {
         "user": {
-            "email": "devin.moss@tastytrade.com",
+            "email": "fake-user@tastytrade.com",
             "external-id": "U8aacecd2-545f-4077-9d55-7ccd04cbbfea"
         },
         "session-token": expectedToken
@@ -33,7 +33,7 @@ describe('loginWithRememberToken', () => {
   const responseData = {
     "data": {
         "user": {
-            "email": "devin.moss@tastytrade.com",
+            "email": "fake-user@tastytrade.com",
             "external-id": "U8aacecd2-545f-4077-9d55-7ccd04cbbfea"
         },
         "remember-token": "AK-rKgllt-H-IBQ-kUa2cA8rt1j4a-nmc46AyVa6HrjPyF4oARrHPA",
