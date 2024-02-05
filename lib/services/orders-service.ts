@@ -30,6 +30,12 @@ export default class OrderService {
         return extractResponseData(order)
     }
 
+    async cancelComplexOrder(accountNumber: string, orderId: number){
+        //Requests order cancellation
+        const order = await this.httpClient.deleteData(`/accounts/${accountNumber}/complex-orders/${orderId}`, {})
+        return extractResponseData(order)
+    }
+
     async replaceOrder(accountNumber: string, orderId: number, replacementOrder : object){
         //Replaces a live order with a new one. Subsequent fills of the original order will abort the replacement.
         const order = await this.httpClient.putData(`/accounts/${accountNumber}/orders/${orderId}`, replacementOrder , {})
@@ -57,6 +63,12 @@ export default class OrderService {
     async createOrder(accountNumber: string, order: object){
         //Accepts a json document containing parameters to create an order for the client.
         const orderResponse = await this.httpClient.postData(`/accounts/${accountNumber}/orders`, order , {})
+        return extractResponseData(orderResponse)
+    }
+
+    async createComplexOrder(accountNumber: string, order: object){
+        //Accepts a json document containing parameters to create an order for the client.
+        const orderResponse = await this.httpClient.postData(`/accounts/${accountNumber}/complex-orders`, order , {})
         return extractResponseData(orderResponse)
     }
 
