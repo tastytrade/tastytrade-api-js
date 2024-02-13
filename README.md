@@ -95,6 +95,8 @@ API_PASSWORD=<your cert password>
 API_ACCOUNT_NUMBER=<your cert account number>
 ```
 
+These values should match whatever username/password/account you set up in the tastytrade sandbox environment. Head to developer.tastyworks.com to get that set up.
+
 ## Running example app
 ```sh
 npm run build

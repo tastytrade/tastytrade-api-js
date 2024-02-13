@@ -1,7 +1,7 @@
 import extractResponseData from "../utils/response-util";
 import TastytradeHttpClient from "./tastytrade-http-client";
 
-// create the central class that aggregates all services from dmoss
+// create the central class that aggregates all services
 export default class AccountStatusService {
     constructor(private httpClient: TastytradeHttpClient) {
     }
