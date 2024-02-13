@@ -14,11 +14,16 @@ const ParamsSerializer = {
 
 export default class TastytradeHttpClient{
     public readonly session: TastytradeSession
-    private readonly httpsAgent: https.Agent
+    private readonly httpsAgent: https.Agent | null
 
     constructor(private readonly baseUrl: string) {
       this.session = new TastytradeSession()
-      this.httpsAgent = new https.Agent({ minVersion: MinTlsVersion })
+      try {
+        this.httpsAgent = new https.Agent({ minVersion: MinTlsVersion })
+      } catch (e) {
+        // Browsers should adhere to the min version, so allow the agent to be null
+        this.httpsAgent = null
+      }
     }
 
     private getDefaultHeaders(): any {
