@@ -3,8 +3,6 @@ import axios from "axios"
 import qs from 'qs'
 import { recursiveDasherizeKeys } from "../utils/json-util"
 import _ from 'lodash'
-import https from 'https'
-import { MinTlsVersion } from "../utils/constants"
 
 const ParamsSerializer = {
   serialize: function (queryParams: object) {
@@ -14,16 +12,9 @@ const ParamsSerializer = {
 
 export default class TastytradeHttpClient{
     public readonly session: TastytradeSession
-    private readonly httpsAgent: https.Agent | null
 
     constructor(private readonly baseUrl: string) {
       this.session = new TastytradeSession()
-      try {
-        this.httpsAgent = new https.Agent({ minVersion: MinTlsVersion })
-      } catch (e) {
-        // Browsers should adhere to the min version, so allow the agent to be null
-        this.httpsAgent = null
-      }
     }
 
     private getDefaultHeaders(): any {
@@ -53,8 +44,7 @@ export default class TastytradeHttpClient{
         data: dasherizedData,
         headers: mergedHeaders, 
         params: dasherizedParams,
-        paramsSerializer: ParamsSerializer,
-        httpsAgent: this.httpsAgent
+        paramsSerializer: ParamsSerializer
        }, _.isEmpty)
 
       return axios.request(config)
