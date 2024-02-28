@@ -11,7 +11,7 @@ yarn:
 ```js
 import TastytradeClient from "@tastytrade/api"
 const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
-const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, pasword)
+const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, password)
 const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
 const accountPositions = await tastytradeClient.balancesAndPositionsService.getPositionsList(accounts[0].accounts['account-number'])
 ```
@@ -20,7 +20,7 @@ const accountPositions = await tastytradeClient.balancesAndPositionsService.getP
 ```js
 import TastytradeClient, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade-api"
 const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
-await tastytradeClient.sessionService.login(usernameOrEmail, pasword)
+await tastytradeClient.sessionService.login(usernameOrEmail, password)
 const tokenResponse = await tastytradeClient.AccountsAndCustomersService.getApiQuoteToken()
 const streamer = new MarketDataStreamer()
 streamer.connect(tokenResponse['dxlink-url'], tokenResponse.token)
