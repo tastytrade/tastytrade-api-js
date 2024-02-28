@@ -22,12 +22,18 @@ export default class TastytradeHttpClient{
     }
 
     private getDefaultHeaders(): any {
-        return {
-          "Content-Type": "application/json",
-          "Accept": "application/json",
-          "Authorization": this.session.authToken,
-          "User-Agent": 'tastytrade-sdk-js'
-        };
+      const headers: { [key: string]: any } = {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+        "Authorization": this.session.authToken
+      };
+
+      // Only set user agent if running in node
+      if (typeof window === 'undefined') {
+        headers["User-Agent"] = 'tastytrade-sdk-js'
+      }
+
+      headers
     }
 
     private async executeRequest(method: string, url: string, data: object = {}, headers: object = {}, params: object = {}) {
