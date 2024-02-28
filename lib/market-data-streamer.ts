@@ -54,6 +54,10 @@ export default class MarketDataStreamer {
   private errorListeners = new Map()
   private authStateListeners = new Map()
 
+  constructor() {
+    console.warn('MarketDataStreamer is deprecated and will be removed in a future release of @tastytrade/api. Use @dxfeed/dxlink-api instead.')
+  }
+
   addDataListener(dataListener: MarketDataListener, channelId: number | null = null): Remover {
     if (_.isNil(dataListener)) {
       return _.noop
