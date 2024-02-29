@@ -1,7 +1,7 @@
 import WebSocket from 'isomorphic-ws'
 import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
-import { MinTlsVersion } from './utils/constants'
+import { MinTlsVersion } from './utils/constants.js'
 
 export enum MarketDataSubscriptionType {
   Candle = 'Candle',

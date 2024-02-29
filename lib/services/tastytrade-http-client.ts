@@ -1,7 +1,7 @@
-import TastytradeSession from "../models/tastytrade-session"
+import TastytradeSession from "../models/tastytrade-session.js"
 import axios from "axios"
 import qs from 'qs'
-import { recursiveDasherizeKeys } from "../utils/json-util"
+import { recursiveDasherizeKeys } from "../utils/json-util.js"
 import _ from 'lodash'
 
 const ParamsSerializer = {
