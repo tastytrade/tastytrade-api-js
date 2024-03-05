@@ -29,7 +29,7 @@ export default class TastytradeHttpClient{
         headers["User-Agent"] = 'tastytrade-sdk-js'
       }
 
-      headers
+      return headers
     }
 
     private async executeRequest(method: string, url: string, data: object = {}, headers: object = {}, params: object = {}) {
