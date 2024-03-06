@@ -1,10 +1,15 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
+const config = {
   preset: 'ts-jest',
-  setupFiles: ["dotenv/config"],
+  setupFiles: ['dotenv/config'],
   testEnvironment: 'node',
   transform: {
     '^.+\\.ts?$': 'ts-jest',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/']
+  moduleNameMapper: {
+    '(.+)\\.js': '$1',
+  },
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
 };
+
+export default config;

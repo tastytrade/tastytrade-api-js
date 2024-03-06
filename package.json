@@ -1,8 +1,13 @@
 {
   "name": "@tastytrade/api",
   "version": "3.1.0",
-  "main": "dist/tastytrade-api.js",
-  "typings": "dist/tastytrade-api.d.ts",
+  "type": "module",
+  "module": "dist/tastytrade-api.js",
+  "types": "dist/tastytrade-api.d.ts",
+  "exports": {
+    "types": "./dist/tastytrade-api.d.ts",
+    "default": "./dist/tastytrade-api.js"
+  },
   "repository": "https://github.com/tastytrade/tastytrade-api-js",
   "license": "MIT",
   "description": "Typescript impelementation of tastytrade api",

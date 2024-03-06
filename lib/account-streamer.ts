@@ -1,9 +1,9 @@
 import WebSocket from 'isomorphic-ws'
 import _ from 'lodash'
-import type { JsonMap, JsonValue } from './utils/json-util'
-import { JsonBuilder } from './utils/json-util'
-import TastytradeSession from './models/tastytrade-session'
-import { MinTlsVersion } from './utils/constants'
+import type { JsonMap, JsonValue } from './utils/json-util.js'
+import { JsonBuilder } from './utils/json-util.js'
+import TastytradeSession from './models/tastytrade-session.js'
+import { MinTlsVersion } from './utils/constants.js'
 
 export enum STREAMER_STATE {
   Open = 0,
