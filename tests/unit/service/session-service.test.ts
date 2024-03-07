@@ -1,7 +1,5 @@
 import SessionService from "../../../lib/services/session-service";
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
-import axios from 'axios'
-import {jest} from '@jest/globals';
 import nock from 'nock'
 
 jest.mock('axios')
@@ -9,7 +7,7 @@ jest.mock('axios')
 const BaseUrl = 'https://fakeurl.org'
 
 function stubLogin(responseData: any) {
-  const scope = nock(BaseUrl)
+  nock(BaseUrl)
   .post('/sessions')
   .reply(200, responseData)
 }
@@ -65,15 +63,6 @@ describe('loginWithRememberToken', () => {
 
 describe('validate', () => {
   const expectedToken = "qFgr7sNaa5XtjRJiDu_efPIfthK_UJ6Wr0OQLyPa_MF-a353CWP5wA+C"
-  const responseData = {
-    "data": {
-        "email": "tastyworksmobileapp@gmail.com",
-        "username": "tastyworksmobileapp",
-        "external-id": "Ubbae143e-4def-4331-bd4f-c3fe51fbf766",
-        "id": 269
-    },
-    "context": "/sessions/validate"
-  }
 
   it('sets the correct auth token', async function() {
     nock(BaseUrl)
