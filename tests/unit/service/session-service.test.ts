@@ -1,8 +1,18 @@
 import SessionService from "../../../lib/services/session-service";
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import axios from 'axios'
+import {jest} from '@jest/globals';
+import nock from 'nock'
 
 jest.mock('axios')
+
+const BaseUrl = 'https://fakeurl.org'
+
+function stubLogin(responseData: any) {
+  const scope = nock(BaseUrl)
+  .post('/sessions')
+  .reply(200, responseData)
+}
 
 describe('login', () => {
   const expectedToken = "uyGnM9HETekp4rgUMdAAhRgodUQ02oAW3gGN2h61e4gqxkSk0_ajqQ+C"
@@ -18,9 +28,9 @@ describe('login', () => {
   }
 
   it('sets the correct auth token', async function() {
-    (axios.request as jest.Mock).mockResolvedValue({ data: responseData })
+    stubLogin(responseData)
 
-    const client = new TastytradeHttpClient('fakeurl')
+    const client = new TastytradeHttpClient(BaseUrl)
     const sessionService = new SessionService(client)
     await sessionService.login('fakeusername', 'fakepassword')
     expect(client.session.authToken).toBe(expectedToken)
@@ -43,9 +53,9 @@ describe('loginWithRememberToken', () => {
   }
 
   it('sets the correct auth token', async function() {
-    (axios.request as jest.Mock).mockResolvedValue({ data: responseData })
+    stubLogin(responseData)
 
-    const client = new TastytradeHttpClient('fakeurl')
+    const client = new TastytradeHttpClient(BaseUrl)
     const sessionService = new SessionService(client)
     await sessionService.loginWithRememberToken('fakeUsername', 'fakeRememberToken')
     expect(client.session.authToken).toBe(expectedToken)
@@ -66,9 +76,18 @@ describe('validate', () => {
   }
 
   it('sets the correct auth token', async function() {
-    (axios.request as jest.Mock).mockResolvedValue({ data: responseData })
+    nock(BaseUrl)
+      .post('/sessions/validate')
+      .reply(200, {
+        "data": {
+            "email": "fakeuser",
+            "username": "fakeuser",
+            "external-id": "U12345",
+            "is-confirmed": true
+        }
+    })
 
-    const client = new TastytradeHttpClient('fakeurl')
+    const client = new TastytradeHttpClient(BaseUrl)
     client.session.authToken = expectedToken
     const sessionService = new SessionService(client)
     await sessionService.validate()
@@ -79,8 +98,10 @@ describe('validate', () => {
 
 describe('logout', () => {
   it('sets the correct auth token', async function() {
-    (axios.request as jest.Mock).mockResolvedValue(null)
-    const client = new TastytradeHttpClient('fakeurl')
+    nock(BaseUrl)
+      .delete('/sessions')
+      .reply(204, {})
+    const client = new TastytradeHttpClient(BaseUrl)
     client.session.authToken = 'faketoken'
     const sessionService = new SessionService(client)
     await sessionService.logout()
