@@ -1,5 +1,5 @@
-import extractResponseData from "../utils/response-util";
-import TastytradeHttpClient from "./tastytrade-http-client";
+import extractResponseData from "../utils/response-util.js";
+import TastytradeHttpClient from "./tastytrade-http-client.js";
 import _ from 'lodash'
 
 export default class InstrumentsService {

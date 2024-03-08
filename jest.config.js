@@ -1,10 +1,23 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-module.exports = {
-  preset: 'ts-jest',
-  setupFiles: ["dotenv/config"],
+const config = {
+  preset: 'ts-jest/presets/default-esm',
+  setupFiles: ['dotenv/config'],
   testEnvironment: 'node',
-  transform: {
-    '^.+\\.ts?$': 'ts-jest',
+  extensionsToTreatAsEsm: ['.ts'],
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/']
+  transform: {
+    // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
+    // '^.+\\.m?[tj]sx?$' to process js/ts/mjs/mts with `ts-jest`
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        useESM: true,
+      },
+    ],
+  },
+  transformIgnorePatterns: ['<rootDir>/node_modules/'],
 };
+
+export default config;
