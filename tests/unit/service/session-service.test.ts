@@ -2,8 +2,6 @@ import SessionService from "../../../lib/services/session-service";
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import nock from 'nock'
 
-jest.mock('axios')
-
 const BaseUrl = 'https://fakeurl.org'
 
 function stubLogin(responseData: any) {
