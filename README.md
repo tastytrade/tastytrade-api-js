@@ -18,7 +18,7 @@ const accountPositions = await tastytradeClient.balancesAndPositionsService.getP
 
 ### Market Data
 ```js
-import TastytradeClient, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade-api"
+import TastytradeClient, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade/api"
 const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
 await tastytradeClient.sessionService.login(usernameOrEmail, password)
 const tokenResponse = await tastytradeClient.AccountsAndCustomersService.getApiQuoteToken()
