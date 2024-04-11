@@ -13,7 +13,7 @@ import TastytradeClient from "@tastytrade/api"
 const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
 const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, password)
 const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
-const accountPositions = await tastytradeClient.balancesAndPositionsService.getPositionsList(accounts[0].accounts['account-number'])
+const accountPositions = await tastytradeClient.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
 ```
 
 ### Market Data
