@@ -9,19 +9,23 @@ yarn:
 
 ## Quickstart
 ```js
-import TastytradeClient from "@tastytrade/api"
-const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
-const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, password)
-const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
-const accountPositions = await tastytradeClient.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
+import TastytradeApi from "@tastytrade/api"
+
+const tastytradeApi = new TastytradeApi(baseUrl, accountStreamerUrl)
+const loginResponse = await tastytradeApi.sessionService.login(usernameOrEmail, password)
+const accounts = await tastytradeApi.accountsAndCustomersService.getCustomerAccounts()
+const accountPositions = await tastytradeApi.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
 ```
 
 ### Market Data
+The MarketDataStreamer is deprecated. We recommend using DxFeed's [@dxfeed/dxlink-api](https://github.com/dxFeed/dxLink/blob/main/dxlink-javascript/dxlink-api/README.md) instead.
+
 ```js
-import TastytradeClient, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade-api"
-const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
-await tastytradeClient.sessionService.login(usernameOrEmail, password)
-const tokenResponse = await tastytradeClient.AccountsAndCustomersService.getApiQuoteToken()
+import TastytradeApi, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade-api"
+
+const tastytradeApi = new TastytradeApi(baseUrl, accountStreamerUrl)
+await tastytradeApi.sessionService.login(usernameOrEmail, password)
+const tokenResponse = await tastytradeApi.AccountsAndCustomersService.getApiQuoteToken()
 const streamer = new MarketDataStreamer()
 streamer.connect(tokenResponse['dxlink-url'], tokenResponse.token)
 
@@ -39,16 +43,14 @@ streamer.addSubscription('AAPL')
 streamer.addSubscription('SPY', { subscriptionTypes: [MarketDataSubscriptionType.Quote] })
 
 // Subscribe to a single equity option quote
-const optionChain = await tastytradeClient.instrumentsService.getOptionChain('AAPL')
+const optionChain = await tastytradeApi.instrumentsService.getOptionChain('AAPL')
 streamer.addSubscription(optionChain[0]['streamer-symbol'])
 ```
 
 ### Account Streamer
 ```js
-const TastytradeApi = require("@tastytrade/api")
-const TastytradeClient = TastytradeApi.default
-const { AccountStreamer } = TastytradeApi
-const _ = require('lodash')
+import TastytradeApi from "@tastytrade/api"
+import _ from 'lodash'
 
 function handleStreamerMessage(json) {
   console.log('streamer message received: ', json)
@@ -58,7 +60,7 @@ function handleStreamerStateChange(streamerState) {
   console.log('streamer state changed: ', streamerState)
 }
 
-const tastytradeClient = new TastytradeClient(baseUrl, accountStreamerUrl)
+const tastytradeClient = new TastytradeApi(baseUlr, accountStreamerUrl)
 const accountStreamer = tastytradeClient.accountStreamer
 const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, password)
 const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
