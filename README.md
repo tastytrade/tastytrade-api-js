@@ -2,7 +2,7 @@
 
 ## Installation
 npm:
-`npm -i @tastytrade/api`
+`npm i @tastytrade/api`
 
 yarn:
 `yarn add @tastytrade/api`
