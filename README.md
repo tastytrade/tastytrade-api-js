@@ -18,34 +18,63 @@ const accountPositions = await tastytradeApi.balancesAndPositionsService.getPosi
 ```
 
 ### Market Data
-The MarketDataStreamer is deprecated. We recommend using DxFeed's [@dxfeed/dxlink-api](https://github.com/dxFeed/dxLink/blob/main/dxlink-javascript/dxlink-api/README.md) instead.
+The MarketDataStreamer in this package is deprecated. We recommend using DxFeed's [@dxfeed/dxlink-api](https://github.com/dxFeed/dxLink/blob/main/dxlink-javascript/dxlink-api/README.md) instead.
 
+Here's a node example of how you can subscribe to some future option quotes using `@dxfeed/dxlink-api`:
 ```js
-import TastytradeApi, { MarketDataStreamer, MarketDataSubscriptionType } from "@tastytrade-api"
+/**
+ * Below code assumes you've hit GET /api-quote-tokens and received a token
+ * You should also hit GET /futures-option-chains/{future_contract_code}/nested to get the future options you want to subscribe to
+ * There is an equivalent GET /option-chains/{underlying_ticker_symbol}/nested for equity options
+ */
 
-const tastytradeApi = new TastytradeApi(baseUrl, accountStreamerUrl)
-await tastytradeApi.sessionService.login(usernameOrEmail, password)
-const tokenResponse = await tastytradeApi.AccountsAndCustomersService.getApiQuoteToken()
-const streamer = new MarketDataStreamer()
-streamer.connect(tokenResponse['dxlink-url'], tokenResponse.token)
+const WebSocket = require('isomorphic-ws')
+const { DXLinkWebSocketClient, DXLinkFeed, FeedDataFormat } = require('@dxfeed/dxlink-api')
+global.WebSocket = WebSocket
 
-function handleMarketDataReceived(data) {
-  // Triggers every time market data event occurs
-  console.log(data)
-}
+const token = '<api quote token>'
+const client = new DXLinkWebSocketClient()
+client.connect('wss://tasty-openapi-ws.dxfeed.com/realtime')
+client.setAuthToken(token)
 
-// Add a listener for incoming market data. Returns a remove() function that removes the listener from the quote streamer
-const removeDataListener = streamer.addDataListener(handleMarketDataReceived)
+const feed = new DXLinkFeed(client, 'AUTO')
 
-// Subscribe to a single equity quote
-streamer.addSubscription('AAPL')
-// Optionally specify which market data events you want to subscribe to
-streamer.addSubscription('SPY', { subscriptionTypes: [MarketDataSubscriptionType.Quote] })
+// Note: Calling feed.configure is optional - omitting it means DxLink will return all fields
+feed.configure({
+  acceptAggregationPeriod: 10,
+  acceptDataFormat: FeedDataFormat.COMPACT,
+  acceptEventFields: {
+    Quote: ['eventSymbol', 'askPrice', 'bidPrice']
+  },
+})
 
-// Subscribe to a single equity option quote
-const optionChain = await tastytradeApi.instrumentsService.getOptionChain('AAPL')
-streamer.addSubscription(optionChain[0]['streamer-symbol'])
+feed.addEventListener((events) => {
+  events.map(event => {
+    console.log(event)
+  })
+})
+
+feed.addSubscriptions({
+  type: 'Quote',
+  symbol: './EW4Q24C5750:XCME', // Please note: we don't update this README daily. This symbol may be expired. You'll have to find an unexpired symbol.
+})
 ```
+
+To run the above code, save it to a file and run `node <filename>.js` in a terminal.
+
+When adding a subscription, the `symbol` value should be the `put-streamer-symbol` or `call-streamer-symbol` returned by the `GET /futures-option-chains/{future_contract_code}/nested` endpoint. For example:
+```js
+// GET /futures-option-chains/ES/nested response:
+{
+  "strike-price": "5750.0",
+  "call": "./ESU4 EW4Q4 240823C5750",
+  "call-streamer-symbol": "./EW4Q24C5750:XCME", <-- use this value
+  "put": "./ESU4 EW4Q4 240823P5750",
+  "put-streamer-symbol": "./EW4Q24P5750:XCME" <-- or this value
+}
+```
+
+To subscribe to equities quotes, the `symbol` is just the ticker symbol, like `AAPL`.
 
 ### Account Streamer
 ```js
