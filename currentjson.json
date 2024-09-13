@@ -1,0 +1,5607 @@
+{
+  "info": {
+    "title": "Instruments",
+    "version": "8.28.0"
+  },
+  "swagger": "2.0",
+  "produces": [
+    "application/json"
+  ],
+  "host": "api.tastyworks.com",
+  "tags": [
+    {
+      "name": "reference-corporate-actions",
+      "description": "Operations about reference-corporate-actions"
+    },
+    {
+      "name": "surveillance-symbols",
+      "description": "Operations about surveillance-symbols"
+    },
+    {
+      "name": "instruments",
+      "description": "Allows an API client to fetch data about instruments."
+    },
+    {
+      "name": "futures-option-chains",
+      "description": "Allows an API client to fetch futures option chains."
+    },
+    {
+      "name": "option-chains",
+      "description": "Allows an API client to fetch equity options chains."
+    }
+  ],
+  "paths": {
+    "/reference-corporate-actions": {
+      "get": {
+        "description": "Fetches all reference corporate actions with the specified execution date and vendor",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "ex-date",
+            "description": "The date on which the reference corporate action is to be executed",
+            "type": "string",
+            "format": "date",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "vendor",
+            "description": "The vendor to fetch reference corporate actions for",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "unprocessed-only",
+            "description": "Boolean for returning unprocessed reference corporate actions only",
+            "type": "boolean",
+            "default": false,
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetches all reference corporate actions with the specified execution date and vendor"
+          }
+        },
+        "tags": [
+          "reference-corporate-actions"
+        ],
+        "operationId": "getReferenceCorporateActions"
+      }
+    },
+    "/reference-corporate-actions/{reference_corporate_action_id}/process": {
+      "post": {
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference_corporate_action_id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "created Process"
+          }
+        },
+        "tags": [
+          "reference-corporate-actions"
+        ],
+        "operationId": "postReferenceCorporateActionsReferenceCorporateActionIdProcess"
+      }
+    },
+    "/reference-corporate-actions/{reference_corporate_action_id}": {
+      "patch": {
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference_corporate_action_id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          },
+          {
+            "name": "patchReferenceCorporateActionsReferenceCorporateActionId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchReferenceCorporateActionsReferenceCorporateActionId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "patched ReferenceCorporateAction"
+          }
+        },
+        "tags": [
+          "reference-corporate-actions"
+        ],
+        "operationId": "patchReferenceCorporateActionsReferenceCorporateActionId"
+      },
+      "get": {
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "reference_corporate_action_id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "get ReferenceCorporateAction(s)"
+          }
+        },
+        "tags": [
+          "reference-corporate-actions"
+        ],
+        "operationId": "getReferenceCorporateActionsReferenceCorporateActionId"
+      }
+    },
+    "/instruments": {
+      "post": {
+        "description": "Returns a set of instruments given one or more symbols. Symbols may be of heterogeneous instrument types.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstruments",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstruments"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Returns a set of instruments given one or more symbols. Symbols may be of heterogeneous instrument types.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/NestedInstrumentDeserializer"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstruments"
+      }
+    },
+    "/instruments/oel-publish": {
+      "post": {
+        "description": "OelPublish",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsOelPublish",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsOelPublish"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "OelPublish"
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsOelPublish"
+      }
+    },
+    "/instruments/bonds": {
+      "get": {
+        "description": "Returns a set of bonds",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "clearing-firm-name",
+            "description": "The clearing firm name",
+            "type": "string",
+            "enum": [
+              "apex"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "clearing-identifier",
+            "description": "The clearing internal symbol identifier(s) of the bond(s) (example: clearing-identifier[]={value1}&clearing-identifier[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "maturity-date",
+            "description": "Date bond matures",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The unique identifier(s) for the bond(s) (cusip) (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of bonds",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Bond"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsBonds"
+      }
+    },
+    "/instruments/bonds/{symbol}": {
+      "patch": {
+        "description": "Update a bond instrument",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsBondsSymbol",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsBondsSymbol"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update a bond instrument",
+            "schema": {
+              "$ref": "#/definitions/Bond"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsBondsSymbol"
+      },
+      "get": {
+        "description": "Retrieve a bond given a symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve a bond given a symbol",
+            "schema": {
+              "$ref": "#/definitions/Bond"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsBondsSymbol"
+      }
+    },
+    "/instruments/cryptocurrencies": {
+      "get": {
+        "description": "Retrieve a set of cryptocurrencies given an array of one or more symbols.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "Symbol(s) (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve a set of cryptocurrencies given an array of one or more symbols.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Cryptocurrency"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsCryptocurrencies"
+      }
+    },
+    "/instruments/cryptocurrencies/{symbol}": {
+      "get": {
+        "description": "Retrieve a cryptocurrency given a symbol.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "Symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve a cryptocurrency given a symbol.",
+            "schema": {
+              "$ref": "#/definitions/Cryptocurrency"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsCryptocurrenciesSymbol"
+      }
+    },
+    "/instruments/currency-pairs": {
+      "get": {
+        "description": "Retrieves all currency pairs.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieves all currency pairs.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/CurrencyPair"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsCurrencyPairs"
+      }
+    },
+    "/instruments/equities": {
+      "post": {
+        "description": "Create a new equity",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsEquities",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsEquities"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create a new equity",
+            "schema": {
+              "$ref": "#/definitions/Equity"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsEquities"
+      },
+      "get": {
+        "description": "Returns a set of equity definitions given an array of one or more symbols",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The symbol of the equity(s), i.e `AAPL` (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "lendability",
+            "description": "Lendability",
+            "type": "string",
+            "enum": [
+              "Easy To Borrow",
+              "Locate Required",
+              "Preborrow"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "is-index",
+            "description": "Flag indicating if equity is an index instrument",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "is-etf",
+            "description": "Flag indicating if equity is an etf instrument",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of equity definitions given an array of one or more symbols",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Equity"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquities"
+      }
+    },
+    "/instruments/equities/active": {
+      "get": {
+        "description": "Returns all active equities in a paginated fashion",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "per-page",
+            "type": "integer",
+            "format": "int32",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 5000,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page-offset",
+            "type": "integer",
+            "format": "int32",
+            "default": 0,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "lendability",
+            "description": "Lendability. i.e. `Easy To Borrow`, `Locate Required` or `Preborrow`",
+            "type": "string",
+            "enum": [
+              "Easy To Borrow",
+              "Locate Required",
+              "Preborrow"
+            ],
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns all active equities in a paginated fashion",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Equity"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquitiesActive"
+      }
+    },
+    "/instruments/equities/{symbol}": {
+      "patch": {
+        "description": "Update an equity defition",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the equity",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsEquitiesSymbol",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsEquitiesSymbol"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update an equity defition",
+            "schema": {
+              "$ref": "#/definitions/Equity"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsEquitiesSymbol"
+      },
+      "get": {
+        "description": "Returns a single equity definition for the provided symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the equity, i.e. `AAPL`",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single equity definition for the provided symbol",
+            "schema": {
+              "$ref": "#/definitions/Equity"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquitiesSymbol"
+      }
+    },
+    "/instruments/equity-offerings": {
+      "post": {
+        "description": "Create an equity offering",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsEquityOfferings",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsEquityOfferings"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create an equity offering",
+            "schema": {
+              "$ref": "#/definitions/EquityOffering"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsEquityOfferings"
+      },
+      "get": {
+        "description": "Retrieve a set of equity offerings",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "per-page",
+            "type": "integer",
+            "format": "int32",
+            "default": 100,
+            "minimum": 1,
+            "maximum": 100,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page-offset",
+            "type": "integer",
+            "format": "int32",
+            "default": 0,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "Symbol(s) (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "marketplace",
+            "description": "Marketplace. i.e. `CLICKIPO`",
+            "type": "string",
+            "enum": [
+              "CLICKIPO"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "external-id",
+            "description": "External ID",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Active",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "current",
+            "description": "Current (Active and recently closed or cancelled)",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve a set of equity offerings",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EquityOffering"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquityOfferings"
+      }
+    },
+    "/instruments/equity-offerings/active/{symbol}": {
+      "get": {
+        "description": "Get an active equity offering by symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get an active equity offering by symbol",
+            "schema": {
+              "$ref": "#/definitions/EquityOffering"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquityOfferingsActiveSymbol"
+      }
+    },
+    "/instruments/equity-offerings/{id}": {
+      "delete": {
+        "description": "Cancel an equity offering",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cancel an equity offering",
+            "schema": {
+              "$ref": "#/definitions/EquityOffering"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "deleteInstrumentsEquityOfferingsId"
+      },
+      "patch": {
+        "description": "Update an equity offering",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsEquityOfferingsId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsEquityOfferingsId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update an equity offering",
+            "schema": {
+              "$ref": "#/definitions/EquityOffering"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsEquityOfferingsId"
+      },
+      "get": {
+        "description": "Retrieve an equity offering",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve an equity offering",
+            "schema": {
+              "$ref": "#/definitions/EquityOffering"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquityOfferingsId"
+      }
+    },
+    "/instruments/equity-options": {
+      "get": {
+        "description": "Returns a set of equity options given one or more symbols",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The symbol of the equity option(s) using OCC Symbology, i.e. `[FB    180629C00200000]` (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Whether an option is available for trading with the broker.
+                 Terminology is somewhat misleading as this is generally used to filter non-standard / flex options out.",
+            "type": "boolean",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "with-expired",
+            "description": "Include expired options",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of equity options given one or more symbols",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EquityOption"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquityOptions"
+      }
+    },
+    "/instruments/equity-options/{symbol}": {
+      "patch": {
+        "description": "Update an equity option",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the equity-option(s)",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsEquityOptionsSymbol",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsEquityOptionsSymbol"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update an equity option",
+            "schema": {
+              "$ref": "#/definitions/EquityOption"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsEquityOptionsSymbol"
+      },
+      "get": {
+        "description": "Get equity option by symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the equity option using OCC Symbology, i.e. `FB    180629C00200000`",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "active",
+            "description": "Whether an option is available for trading with the broker.
+                   Terminology is somewhat misleading as this is generally used to filter non-standard / flex options out.",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get equity option by symbol",
+            "schema": {
+              "$ref": "#/definitions/EquityOption"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquityOptionsSymbol"
+      }
+    },
+    "/instruments/equity-deliverables": {
+      "post": {
+        "description": "Create an equity deliverable",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsEquityDeliverables",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsEquityDeliverables"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create an equity deliverable",
+            "schema": {
+              "$ref": "#/definitions/EquityDeliverable"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsEquityDeliverables"
+      },
+      "get": {
+        "description": "Retrive equity deliverables for a root symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "root-symbol",
+            "description": "Root symbol (example: root-symbol[]={value1}&root-symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrive equity deliverables for a root symbol",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EquityDeliverable"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsEquityDeliverables"
+      }
+    },
+    "/instruments/equity-deliverables/{id}": {
+      "delete": {
+        "description": "Delete an equity deliverable",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Delete an equity deliverable",
+            "schema": {
+              "$ref": "#/definitions/EquityDeliverable"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "deleteInstrumentsEquityDeliverablesId"
+      },
+      "patch": {
+        "description": "Update an equity deliverable",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsEquityDeliverablesId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsEquityDeliverablesId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update an equity deliverable",
+            "schema": {
+              "$ref": "#/definitions/EquityDeliverable"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsEquityDeliverablesId"
+      }
+    },
+    "/instruments/destination-venue-symbols": {
+      "get": {
+        "description": "Retrieves a set of destination venue symbols",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "per-page",
+            "type": "integer",
+            "format": "int32",
+            "default": 100,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page-offset",
+            "type": "integer",
+            "format": "int32",
+            "default": 0,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "destination-venue",
+            "description": "The destination venue to filter by",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieves a set of destination venue symbols",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/DestinationVenueSymbol"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsDestinationVenueSymbols"
+      }
+    },
+    "/instruments/destination-venue-symbols/{symbol}": {
+      "get": {
+        "description": "Returns a destination venue symbol mode based on a destination_venue and symbol.
+              This endpoint is used to translate from OEL to the TW symbology",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "destination-venue",
+            "description": "The destination venue from which the symbol originated from",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a destination venue symbol mode based on a destination_venue and symbol.
+              This endpoint is used to translate from OEL to the TW symbology",
+            "schema": {
+              "$ref": "#/definitions/DestinationVenueSymbol"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsDestinationVenueSymbolsSymbol"
+      }
+    },
+    "/instruments/futures": {
+      "get": {
+        "description": "Returns a set of outright futures given an array of one or more symbols.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The symbol of the future(s), i.e. `symbol[]=ESZ9`. Leading forward slash is not required. (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "product-code",
+            "description": "The product code of the future(s), i.e. `product-code[]=ES&product-code[]=6A`. Ignored if `symbol` parameter is given. (example: product-code[]={value1}&product-code[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of outright futures given an array of one or more symbols.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Future"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutures"
+      }
+    },
+    "/instruments/futures/{symbol}": {
+      "get": {
+        "description": "Returns an outright future given a symbol.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the future, i.e. `ESZ9`. Leading forward slash is not required.",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an outright future given a symbol.",
+            "schema": {
+              "$ref": "#/definitions/Future"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFuturesSymbol"
+      }
+    },
+    "/instruments/future-option-products": {
+      "get": {
+        "description": "Returns metadata for all supported future option products",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns metadata for all supported future option products",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FutureOptionProduct"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureOptionProducts"
+      }
+    },
+    "/instruments/future-option-products/{exchange}/{root_symbol}": {
+      "get": {
+        "description": "Get a future option product by exchange and root symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "exchange",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "root_symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a future option product by exchange and root symbol",
+            "schema": {
+              "$ref": "#/definitions/FutureOptionProduct"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureOptionProductsExchangeRootSymbol"
+      }
+    },
+    "/instruments/future-option-products/{root_symbol}": {
+      "get": {
+        "description": "Get a future option product by root symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "root_symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get a future option product by root symbol",
+            "schema": {
+              "$ref": "#/definitions/FutureOptionProduct"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureOptionProductsRootSymbol",
+        "deprecated": true
+      }
+    },
+    "/instruments/future-option-products/{id}": {
+      "patch": {
+        "description": "Changes attributes of a future option product",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsFutureOptionProductsId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsFutureOptionProductsId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changes attributes of a future option product",
+            "schema": {
+              "$ref": "#/definitions/FutureOptionProduct"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsFutureOptionProductsId"
+      }
+    },
+    "/instruments/future-options": {
+      "get": {
+        "description": "Returns a set of future option(s) given an array of one or more symbols.
+        Uses TW symbology: `[./ESZ9 EW4U9 190927P2975]`",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The symbol of the future option(s) (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "option-root-symbol",
+            "description": "Future option root, i.e. EW3 or SO",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "expiration-date",
+            "description": "Expiration date",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "option-type",
+            "description": "P(ut) or C(all)",
+            "type": "string",
+            "enum": [
+              "C",
+              "P"
+            ],
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "strike-price",
+            "description": "Strike price using display factor",
+            "type": "number",
+            "format": "double",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of future option(s) given an array of one or more symbols.
+        Uses TW symbology: `[./ESZ9 EW4U9 190927P2975]`",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FutureOption"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureOptions"
+      }
+    },
+    "/instruments/future-options/{symbol}": {
+      "get": {
+        "description": "Returns a future option given a symbol. Uses TW symbology: `./ESZ9 EW4U9 190927P2975`",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the future option",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a future option given a symbol. Uses TW symbology: `./ESZ9 EW4U9 190927P2975`",
+            "schema": {
+              "$ref": "#/definitions/FutureOption"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureOptionsSymbol"
+      }
+    },
+    "/instruments/future-products": {
+      "get": {
+        "description": "Returns metadata for all supported futures products",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns metadata for all supported futures products",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FutureProduct"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureProducts"
+      }
+    },
+    "/instruments/future-products/{exchange}/{code}": {
+      "get": {
+        "description": "Get future product from exchange and product code",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "exchange",
+            "description": "The exchange code",
+            "type": "string",
+            "enum": [
+              "CME",
+              "SMALLS",
+              "CFE",
+              "CBOED",
+              "SMFE"
+            ],
+            "required": true
+          },
+          {
+            "in": "path",
+            "name": "code",
+            "description": "The product code, i.e. `ES`",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get future product from exchange and product code",
+            "schema": {
+              "$ref": "#/definitions/FutureProduct"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureProductsExchangeCode"
+      }
+    },
+    "/instruments/future-products/{code}": {
+      "get": {
+        "description": "Get future product from product code",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "description": "The product code, i.e. `ES`",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get future product from product code",
+            "schema": {
+              "$ref": "#/definitions/FutureProduct"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureProductsCode",
+        "deprecated": true
+      }
+    },
+    "/instruments/future-products/{id}": {
+      "patch": {
+        "description": "Changes attributes of a future product",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsFutureProductsId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsFutureProductsId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Changes attributes of a future product",
+            "schema": {
+              "$ref": "#/definitions/FutureProduct"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsFutureProductsId"
+      }
+    },
+    "/instruments/future-spreads": {
+      "get": {
+        "description": "Returns a set of futures spreads given an array of one or more symbols",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The symbol of the future spread(s) (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of futures spreads given an array of one or more symbols",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FutureSpread"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureSpreads"
+      }
+    },
+    "/instruments/future-spreads/{symbol}": {
+      "get": {
+        "description": "Returns a single futures spread definition given a symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "description": "The symbol of the future spread",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single futures spread definition given a symbol",
+            "schema": {
+              "$ref": "#/definitions/FutureSpread"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFutureSpreadsSymbol"
+      }
+    },
+    "/instruments/price-markups": {
+      "get": {
+        "description": "Returns a set of price markups matching instrument type i.e. 'Equity' and an optional symbol i.e. 'AAPL'",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "Instrument symbol",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "instrument-type",
+            "description": "Instrument type",
+            "type": "string",
+            "enum": [
+              "Bond",
+              "Cryptocurrency",
+              "Currency Pair",
+              "Equity",
+              "Equity Offering",
+              "Equity Option",
+              "Future",
+              "Future Option",
+              "Index",
+              "Unknown",
+              "Warrant"
+            ],
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of price markups matching instrument type i.e. 'Equity' and an optional symbol i.e. 'AAPL'",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/PriceMarkup"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsPriceMarkups"
+      }
+    },
+    "/instruments/quantity-decimal-precisions": {
+      "get": {
+        "description": "Retrieve all quantity decimal precisions.",
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Retrieve all quantity decimal precisions.",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/QuantityDecimalPrecision"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsQuantityDecimalPrecisions"
+      }
+    },
+    "/instruments/spread-definitions": {
+      "post": {
+        "description": "Creates a spread definition from components. This spread definition can be used to route package orders to the Chicago Mercantile Exchange. Unsupported products will be rejected.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsSpreadDefinitions",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsSpreadDefinitions"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a spread definition from components. This spread definition can be used to route package orders to the Chicago Mercantile Exchange. Unsupported products will be rejected.",
+            "schema": {
+              "$ref": "#/definitions/SpreadDefinition"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsSpreadDefinitions"
+      },
+      "get": {
+        "description": "Returns a future spread that matches the components passed in or matches it inverted. This symbol can be used to route package orders on the Chicago Mercantile Exchange.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "per-page",
+            "type": "integer",
+            "format": "int32",
+            "default": 1000,
+            "minimum": 1,
+            "maximum": 5000,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "page-offset",
+            "type": "integer",
+            "format": "int32",
+            "default": 0,
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "spread-definition-legs[quantity]",
+            "description": "The quantity of the contract for this leg.",
+            "type": "array",
+            "required": true,
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "in": "query",
+            "name": "spread-definition-legs[symbol]",
+            "description": "The tastyworks symbol for this spread leg.",
+            "type": "array",
+            "required": true,
+            "items": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "spread-definition-legs[action]",
+            "description": "The action of the leg. Buy or Sell, do not include open or close.",
+            "type": "array",
+            "required": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "Buy",
+                "Sell"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a future spread that matches the components passed in or matches it inverted. This symbol can be used to route package orders on the Chicago Mercantile Exchange.",
+            "schema": {
+              "$ref": "#/definitions/SpreadDefinition"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsSpreadDefinitions"
+      }
+    },
+    "/instruments/spread-definitions/{symbol}": {
+      "delete": {
+        "description": "Deletes a spread definition.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Deletes a spread definition.",
+            "schema": {
+              "$ref": "#/definitions/SpreadDefinition"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "deleteInstrumentsSpreadDefinitionsSymbol"
+      }
+    },
+    "/instruments/spread-definition-creation-requests/{id}": {
+      "get": {
+        "description": "Fetch spread definition creation by id.",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Fetch spread definition creation by id."
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsSpreadDefinitionCreationRequestsId"
+      }
+    },
+    "/instruments/spread-definition-creation-requests": {
+      "post": {
+        "description": "Sends a spread definition request to CME. Returns status of the creation request. Schedules a job which checks if the spread was created.",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsSpreadDefinitionCreationRequests",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsSpreadDefinitionCreationRequests"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Sends a spread definition request to CME. Returns status of the creation request. Schedules a job which checks if the spread was created."
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsSpreadDefinitionCreationRequests"
+      }
+    },
+    "/instruments/settlement-prices/closing-year": {
+      "get": {
+        "description": "Returns a closing year SettlementPrice",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "Symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "instrument-type",
+            "description": "Instrument type. i.e. `Bond`, `Cryptocurrency`, `Currency Pair`, `Equity`, `Equity Offering`, `Equity Option`, `Future`, `Future Option`, `Index`, `Unknown` or `Warrant`",
+            "type": "string",
+            "enum": [
+              "Bond",
+              "Cryptocurrency",
+              "Currency Pair",
+              "Equity",
+              "Equity Offering",
+              "Equity Option",
+              "Future",
+              "Future Option",
+              "Index",
+              "Unknown",
+              "Warrant"
+            ],
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "closing-year",
+            "description": "Closing year",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a closing year SettlementPrice",
+            "schema": {
+              "$ref": "#/definitions/SettlementPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsSettlementPricesClosingYear"
+      }
+    },
+    "/instruments/settlement-prices/previous-day": {
+      "get": {
+        "description": "Returns the previous day SettlementPrice",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "Symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "instrument-type",
+            "description": "Instrument type. i.e. `Bond`, `Cryptocurrency`, `Currency Pair`, `Equity`, `Equity Offering`, `Equity Option`, `Future`, `Future Option`, `Index`, `Unknown` or `Warrant`",
+            "type": "string",
+            "enum": [
+              "Bond",
+              "Cryptocurrency",
+              "Currency Pair",
+              "Equity",
+              "Equity Offering",
+              "Equity Option",
+              "Future",
+              "Future Option",
+              "Index",
+              "Unknown",
+              "Warrant"
+            ],
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the previous day SettlementPrice",
+            "schema": {
+              "$ref": "#/definitions/SettlementPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsSettlementPricesPreviousDay"
+      }
+    },
+    "/instruments/settlement-prices": {
+      "post": {
+        "description": "Create a new settlement price",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsSettlementPrices",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsSettlementPrices"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create a new settlement price",
+            "schema": {
+              "$ref": "#/definitions/SettlementPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsSettlementPrices"
+      },
+      "get": {
+        "description": "Returns the Settlement Price of the specific instrument(s) for a date or closing year",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "Settlement symbol(s). instrument-type and date are required if this is an array",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Settlement date",
+            "type": "string",
+            "format": "date",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "closing-year",
+            "description": "Settlement closing year(s)",
+            "type": "integer",
+            "format": "int32",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "instrument-type",
+            "description": "Instrument type",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "is-am-settlement",
+            "description": "Boolean for filtering by AM settlement prices",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the Settlement Price of the specific instrument(s) for a date or closing year",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SettlementPrice"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsSettlementPrices"
+      }
+    },
+    "/instruments/settlement-prices/{symbol}": {
+      "patch": {
+        "description": "Update a settlement price",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsSettlementPricesSymbol",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsSettlementPricesSymbol"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update a settlement price",
+            "schema": {
+              "$ref": "#/definitions/SettlementPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsSettlementPricesSymbol"
+      },
+      "get": {
+        "description": "Returns the SettlementPrice for a date or closing year",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "Settlement date",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "closing-year",
+            "description": "Settlement closing year",
+            "type": "integer",
+            "format": "int32",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "instrument-type",
+            "description": "Instrument type",
+            "type": "string",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "is-am-settlement",
+            "description": "Boolean for filtering by am settlement prices",
+            "type": "boolean",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the SettlementPrice for a date or closing year",
+            "schema": {
+              "$ref": "#/definitions/SettlementPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsSettlementPricesSymbol",
+        "deprecated": true
+      }
+    },
+    "/instruments/fixing-prices": {
+      "post": {
+        "description": "Create a new fixing price",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postInstrumentsFixingPrices",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postInstrumentsFixingPrices"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Create a new fixing price",
+            "schema": {
+              "$ref": "#/definitions/FixingPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "postInstrumentsFixingPrices"
+      },
+      "get": {
+        "description": "Returns the FixingPrice of the specific instrument for a date or closing year",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "fixing price symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "in": "query",
+            "name": "date",
+            "description": "fixing price date",
+            "type": "string",
+            "format": "date",
+            "required": false
+          },
+          {
+            "in": "query",
+            "name": "instrument-type",
+            "description": "Instrument type",
+            "type": "string",
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns the FixingPrice of the specific instrument for a date or closing year",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FixingPrice"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsFixingPrices"
+      }
+    },
+    "/instruments/fixing-prices/{id}": {
+      "delete": {
+        "description": "delete a fixing price",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "delete a fixing price"
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "deleteInstrumentsFixingPricesId"
+      },
+      "patch": {
+        "description": "Update a fixing price",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsFixingPricesId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsFixingPricesId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update a fixing price",
+            "schema": {
+              "$ref": "#/definitions/FixingPrice"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsFixingPricesId"
+      }
+    },
+    "/instruments/warrants": {
+      "get": {
+        "description": "Returns a set of warrant definitions that can be filtered by parameters",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "symbol",
+            "description": "The symbol of the warrant(s), i.e `NKLAW` (example: symbol[]={value1}&symbol[]={value2})",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a set of warrant definitions that can be filtered by parameters",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/Warrant"
+              }
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsWarrants"
+      }
+    },
+    "/instruments/warrants/{symbol}": {
+      "patch": {
+        "description": "Update a warrant definition",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "patchInstrumentsWarrantsSymbol",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchInstrumentsWarrantsSymbol"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update a warrant definition",
+            "schema": {
+              "$ref": "#/definitions/Warrant"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "patchInstrumentsWarrantsSymbol"
+      },
+      "get": {
+        "description": "Returns a single warrant definition for the provided symbol",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a single warrant definition for the provided symbol",
+            "schema": {
+              "$ref": "#/definitions/Warrant"
+            }
+          }
+        },
+        "tags": [
+          "instruments"
+        ],
+        "operationId": "getInstrumentsWarrantsSymbol"
+      }
+    },
+    "/futures-option-chains/{symbol}/nested": {
+      "get": {
+        "description": "Returns a futures option chain given a futures product code in a nested form to minimize redundant processing",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a futures option chain given a futures product code in a nested form to minimize redundant processing",
+            "schema": {
+              "$ref": "#/definitions/FuturesNestedOptionChainSerializer"
+            }
+          }
+        },
+        "tags": [
+          "futures-option-chains"
+        ],
+        "operationId": "getFuturesOptionChainsSymbolNested"
+      }
+    },
+    "/futures-option-chains/{symbol}": {
+      "get": {
+        "description": "Returns a futures option chain given a futures product code, i.e. `ES`",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns a futures option chain given a futures product code, i.e. `ES`",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/FutureOption"
+              }
+            }
+          }
+        },
+        "tags": [
+          "futures-option-chains"
+        ],
+        "operationId": "getFuturesOptionChainsSymbol"
+      }
+    },
+    "/option-chains/{symbol}/nested": {
+      "get": {
+        "description": "Returns an option chain given an underlying symbol, i.e. `AAPL` in a nested form to minimize redundant processing",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an option chain given an underlying symbol, i.e. `AAPL` in a nested form to minimize redundant processing",
+            "schema": {
+              "$ref": "#/definitions/NestedOptionChainSerializer"
+            }
+          }
+        },
+        "tags": [
+          "option-chains"
+        ],
+        "operationId": "getOptionChainsSymbolNested"
+      }
+    },
+    "/option-chains/{symbol}/compact": {
+      "get": {
+        "description": "Returns an option chain given an underlying symbol, i.e. `AAPL` in a compact form to minimize content size",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an option chain given an underlying symbol, i.e. `AAPL` in a compact form to minimize content size",
+            "schema": {
+              "$ref": "#/definitions/CompactOptionChainSerializer"
+            }
+          }
+        },
+        "tags": [
+          "option-chains"
+        ],
+        "operationId": "getOptionChainsSymbolCompact"
+      }
+    },
+    "/option-chains/{symbol}": {
+      "get": {
+        "description": "Returns an option chain given an underlying symbol, i.e. `AAPL`",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "symbol",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns an option chain given an underlying symbol, i.e. `AAPL`",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/EquityOption"
+              }
+            }
+          }
+        },
+        "tags": [
+          "option-chains"
+        ],
+        "operationId": "getOptionChainsSymbol"
+      }
+    },
+    "/surveillance-symbols": {
+      "get": {
+        "description": "Returns requested surveillance symbol records",
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "description": "Status",
+            "type": "string",
+            "enum": [
+              "Active",
+              "Inactive"
+            ],
+            "required": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns requested surveillance symbol records",
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/SurveillanceSymbol"
+              }
+            }
+          }
+        },
+        "tags": [
+          "surveillance-symbols"
+        ],
+        "operationId": "getSurveillanceSymbols"
+      },
+      "post": {
+        "description": "Creates a new surveillance symbol record from the request parameters",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "postSurveillanceSymbols",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/postSurveillanceSymbols"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Creates a new surveillance symbol record from the request parameters",
+            "schema": {
+              "$ref": "#/definitions/SurveillanceSymbol"
+            }
+          }
+        },
+        "tags": [
+          "surveillance-symbols"
+        ],
+        "operationId": "postSurveillanceSymbols"
+      }
+    },
+    "/surveillance-symbols/{id}": {
+      "patch": {
+        "description": "Update monitoring status of a surveillance symbol record",
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "type": "integer",
+            "format": "int32",
+            "required": true
+          },
+          {
+            "name": "patchSurveillanceSymbolsId",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/patchSurveillanceSymbolsId"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Update monitoring status of a surveillance symbol record",
+            "schema": {
+              "$ref": "#/definitions/SurveillanceSymbol"
+            }
+          }
+        },
+        "tags": [
+          "surveillance-symbols"
+        ],
+        "operationId": "patchSurveillanceSymbolsId"
+      }
+    }
+  },
+  "definitions": {
+    "patchReferenceCorporateActionsReferenceCorporateActionId": {
+      "type": "object",
+      "properties": {
+        "ex-date": {
+          "type": "string",
+          "format": "date",
+          "description": "The date on which the reference corporate action is to be executed"
+        },
+        "corporate-action-type": {
+          "type": "string",
+          "description": "The corporate action type"
+        },
+        "underlying-symbol": {
+          "type": "string",
+          "description": "The underlying symbol to be modified"
+        },
+        "resulting-underlying": {
+          "type": "string",
+          "description": "The resulting underlying after the corporate action is processed"
+        },
+        "resulting-root": {
+          "type": "string",
+          "description": "The resulting root after the corporate action is processed"
+        },
+        "strike-divisor": {
+          "type": "number",
+          "format": "double",
+          "description": "The divisor used to modify the quantity of corresponding positions"
+        },
+        "multiplier": {
+          "type": "number",
+          "format": "double",
+          "description": "The multiplier used to modify the quantity of corresponding positions"
+        },
+        "dividend-amount": {
+          "type": "number",
+          "format": "double",
+          "description": "The dividend amount used to adjust strikes on option positions"
+        },
+        "acquisition-price": {
+          "type": "number",
+          "format": "double",
+          "description": "The acquisition price used for cash mergers"
+        },
+        "conversion-ratio": {
+          "type": "number",
+          "format": "double",
+          "description": "The conversion ratio used for stock mergers"
+        },
+        "round-up": {
+          "type": "boolean",
+          "description": "Flag for rounding up quantity for reverse splits or stock mergers"
+        },
+        "include-non-standard": {
+          "type": "boolean",
+          "description": "Flag for additionally processing non-standard positions"
+        },
+        "preserve-non-standard": {
+          "type": "boolean",
+          "description": "Flag for preserving non-standard positions"
+        },
+        "positions": {
+          "type": "boolean",
+          "description": "Flag for if TW positions exist for underlying"
+        },
+        "uneven_split": {
+          "type": "boolean",
+          "description": "Flag for if split is uneven"
+        },
+        "options_indicator": {
+          "type": "boolean",
+          "description": "Flag for if underlying has options"
+        },
+        "precedence": {
+          "type": "integer",
+          "format": "int32",
+          "description": "relative order to import reference corporate action"
+        },
+        "complete": {
+          "type": "boolean",
+          "description": "Flag for if corporate action is ready for import"
+        },
+        "independent": {
+          "type": "boolean",
+          "description": "Flag for if corporate action is independent - no nested corporate actions"
+        },
+        "reviewed": {
+          "type": "boolean",
+          "description": "Flag for if corporate action is reviewed"
+        },
+        "details": {
+          "type": "string",
+          "description": "Details about the reference corporate action"
+        },
+        "additional-details": {
+          "type": "string",
+          "description": "Additional details about the reference corporate action"
+        },
+        "notes": {
+          "type": "string",
+          "description": "Multipurpose column used for notes and process rejection reasons"
+        }
+      }
+    },
+    "postInstruments": {
+      "type": "object",
+      "properties": {
+        "per-page": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 1,
+          "maximum": 100,
+          "default": 100
+        },
+        "page-offset": {
+          "type": "integer",
+          "format": "int32",
+          "default": 0
+        },
+        "symbols": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "symbols"
+      ],
+      "description": "Returns a set of instruments given one or more symbols. Symbols may be of heterogeneous instrument types."
+    },
+    "NestedInstrumentDeserializer": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "description": "",
+          "type": "string"
+        },
+        "data": {
+          "description": "",
+          "type": "object"
+        }
+      },
+      "description": "NestedInstrumentDeserializer model"
+    },
+    "postInstrumentsOelPublish": {
+      "type": "object",
+      "properties": {
+        "symbols": {
+          "type": "array",
+          "description": "The symbol of the instrument(s), i.e `AAPL`",
+          "items": {
+            "type": "string"
+          }
+        },
+        "instrument-type": {
+          "type": "string",
+          "description": "Instrument type",
+          "enum": [
+            "Bond",
+            "Cryptocurrency",
+            "Currency Pair",
+            "Equity",
+            "Equity Offering",
+            "Equity Option",
+            "Future",
+            "Future Option",
+            "Index",
+            "Unknown",
+            "Warrant"
+          ]
+        }
+      },
+      "required": [
+        "instrument-type"
+      ],
+      "description": "OelPublish"
+    },
+    "Bond": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "clearing-firm-name": {
+          "description": "",
+          "type": "string"
+        },
+        "clearing-identifier": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "face-value": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "instrument-sub-type": {
+          "description": "",
+          "type": "string"
+        },
+        "issue-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "issuer": {
+          "description": "",
+          "type": "string"
+        },
+        "margin-eligible": {
+          "description": "",
+          "type": "boolean"
+        },
+        "maturity-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "Bond model"
+    },
+    "patchInstrumentsBondsSymbol": {
+      "type": "object",
+      "properties": {
+        "margin-eligible": {
+          "type": "boolean",
+          "description": "Margin eligible"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description"
+        }
+      },
+      "description": "Update a bond instrument"
+    },
+    "Cryptocurrency": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "short-description": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "is-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "tick-size": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "streamer-symbol": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "Cryptocurrency model"
+    },
+    "CurrencyPair": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "dx-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "CurrencyPair model"
+    },
+    "postInstrumentsEquities": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "Equity symbol"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description"
+        },
+        "short-description": {
+          "type": "string",
+          "description": "Short description"
+        },
+        "listed-market": {
+          "type": "string",
+          "description": "Listed market",
+          "enum": [
+            "XASE",
+            "ARCX",
+            "BATS",
+            "XBOX",
+            "BATO",
+            "XCBO",
+            "C2OX",
+            "CME",
+            "EDGX",
+            "GMNI",
+            "XISX",
+            "MCRY",
+            "MIHI",
+            "MPRL",
+            "XNAS",
+            "XB",
+            "XNYS",
+            "OTC",
+            "XPHO",
+            "TALP"
+          ]
+        },
+        "lendability": {
+          "type": "string",
+          "description": "Lendability",
+          "enum": [
+            "Easy To Borrow",
+            "Locate Required",
+            "Preborrow"
+          ]
+        },
+        "is-index": {
+          "type": "boolean",
+          "description": "Flag indicating if equity is an index instrument"
+        },
+        "is-etf": {
+          "type": "boolean",
+          "description": "Flag indicating if equity is an etf instrument"
+        }
+      },
+      "required": [
+        "symbol",
+        "description"
+      ],
+      "description": "Create a new equity"
+    },
+    "Equity": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "short-description": {
+          "description": "",
+          "type": "string"
+        },
+        "is-index": {
+          "description": "",
+          "type": "boolean"
+        },
+        "listed-market": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "lendability": {
+          "description": "",
+          "type": "string"
+        },
+        "borrow-rate": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "halted-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "stops-trading-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "market-time-instrument-collection": {
+          "description": "",
+          "type": "string"
+        },
+        "is-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-options-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-fractional-quantity-eligible": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-illiquid": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-etf": {
+          "description": "",
+          "type": "boolean"
+        },
+        "streamer-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "tick-sizes": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "threshold": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        },
+        "option-tick-sizes": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "threshold": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Equity model"
+    },
+    "patchInstrumentsEquitiesSymbol": {
+      "type": "object",
+      "properties": {
+        "is-halted": {
+          "type": "string",
+          "description": "if instrument is halted or not"
+        },
+        "is-closing-only": {
+          "type": "string",
+          "description": "Will set an equity and all options to closing only"
+        },
+        "is-options-closing-only": {
+          "type": "string",
+          "description": "Will set an equity's options to closing only"
+        },
+        "cusip": {
+          "type": "string",
+          "description": "Committee on Uniform Security Identification Procedures alpha numeric string"
+        },
+        "listed-market": {
+          "type": "string",
+          "description": "ISO code of home exchange",
+          "enum": [
+            "XASE",
+            "ARCX",
+            "BATS",
+            "XBOX",
+            "BATO",
+            "XCBO",
+            "C2OX",
+            "CME",
+            "EDGX",
+            "GMNI",
+            "XISX",
+            "MCRY",
+            "MIHI",
+            "MPRL",
+            "XNAS",
+            "XB",
+            "XNYS",
+            "OTC",
+            "XPHO",
+            "TALP"
+          ]
+        },
+        "fractional-quantity-eligible": {
+          "type": "boolean",
+          "description": "Indicates whether equity can be traded at fractional quantities"
+        },
+        "is-etf": {
+          "type": "boolean",
+          "description": "Flag indicating if equity is an etf instrument"
+        },
+        "is-illiquid": {
+          "type": "boolean",
+          "description": "Flag indicating if equity is illiquid"
+        },
+        "is-fraud-risk": {
+          "type": "boolean",
+          "description": "Flag indicating if equity has potential to be used in account fraud"
+        },
+        "audit-notes": {
+          "type": "string",
+          "description": "Notes provided for the audit trail"
+        },
+        "compound-restrictions-properties": {
+          "type": "object",
+          "description": "Compound restrictions tracking data",
+          "properties": {
+            "subject-reason": {
+              "type": "string",
+              "description": "Compound restriction subject reason"
+            },
+            "notes": {
+              "type": "string",
+              "description": "Notes for restriction change"
+            },
+            "occurred-at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When restriction change occurred"
+            },
+            "expires-at": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When restriction change expires"
+            }
+          },
+          "required": [
+            "subject-reason",
+            "notes"
+          ]
+        }
+      },
+      "description": "Update an equity defition"
+    },
+    "postInstrumentsEquityOfferings": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "Symbol"
+        },
+        "offering-type": {
+          "type": "string",
+          "description": "Offering type. i.e. `IPO`",
+          "enum": [
+            "IPO"
+          ]
+        },
+        "marketplace": {
+          "type": "string",
+          "description": "Marketplace. i.e. `CLICKIPO`",
+          "enum": [
+            "CLICKIPO"
+          ]
+        },
+        "external-id": {
+          "type": "string",
+          "description": "External ID"
+        },
+        "active": {
+          "type": "boolean",
+          "description": "Active"
+        },
+        "is-update-only": {
+          "type": "boolean",
+          "description": "Is update only"
+        },
+        "order-window-closes-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Order window closes at"
+        },
+        "ticket-type": {
+          "type": "string",
+          "description": "Ticket type. i.e. `Notional`",
+          "enum": [
+            "Notional"
+          ]
+        },
+        "min-ticket-size": {
+          "type": "number",
+          "format": "double",
+          "description": "Min ticket size"
+        },
+        "max-ticket-size": {
+          "type": "number",
+          "format": "double",
+          "description": "Max ticket size"
+        },
+        "unit-increment": {
+          "type": "number",
+          "format": "double",
+          "description": "Unit increment"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description"
+        },
+        "industry": {
+          "type": "string",
+          "description": "Industry"
+        },
+        "trade-date": {
+          "type": "string",
+          "format": "date",
+          "description": "Trade date"
+        },
+        "settlement-date": {
+          "type": "string",
+          "format": "date",
+          "description": "Settlement date"
+        },
+        "anticipated-shares": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Anticipated shares"
+        },
+        "min-price": {
+          "type": "number",
+          "format": "double",
+          "description": "Min price"
+        },
+        "max-price": {
+          "type": "number",
+          "format": "double",
+          "description": "Max price"
+        },
+        "prospectus-url": {
+          "type": "string",
+          "description": "Prospectus URL"
+        },
+        "brochure-url": {
+          "type": "string",
+          "description": "Brochure URL"
+        },
+        "logo-url": {
+          "type": "string",
+          "description": "Logo URL"
+        }
+      },
+      "required": [
+        "symbol",
+        "offering-type",
+        "marketplace",
+        "external-id",
+        "active",
+        "is-update-only",
+        "ticket-type",
+        "unit-increment",
+        "name"
+      ],
+      "description": "Create an equity offering"
+    },
+    "EquityOffering": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "offering-type": {
+          "description": "",
+          "type": "string"
+        },
+        "marketplace": {
+          "description": "",
+          "type": "string"
+        },
+        "external-id": {
+          "description": "",
+          "type": "string"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-update-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "activated-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "order-window-closes-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "cancelled-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "ticket-type": {
+          "description": "",
+          "type": "string"
+        },
+        "min-ticket-size": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "max-ticket-size": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "unit-increment": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "name": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "industry": {
+          "description": "",
+          "type": "string"
+        },
+        "trade-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "settlement-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "anticipated-shares": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "min-price": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "max-price": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "prospectus-url": {
+          "description": "",
+          "type": "string"
+        },
+        "brochure-url": {
+          "description": "",
+          "type": "string"
+        },
+        "logo-url": {
+          "description": "",
+          "type": "string"
+        },
+        "created-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "updated-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "description": "EquityOffering model"
+    },
+    "patchInstrumentsEquityOfferingsId": {
+      "type": "object",
+      "properties": {
+        "active": {
+          "type": "boolean",
+          "description": "Active"
+        },
+        "is-update-only": {
+          "type": "boolean",
+          "description": "Is update only"
+        },
+        "order-window-closes-at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Order window closes at"
+        },
+        "min-ticket-size": {
+          "type": "number",
+          "format": "double",
+          "description": "Min ticket size"
+        },
+        "max-ticket-size": {
+          "type": "number",
+          "format": "double",
+          "description": "Max ticket size"
+        },
+        "unit-increment": {
+          "type": "number",
+          "format": "double",
+          "description": "Unit increment"
+        },
+        "name": {
+          "type": "string",
+          "description": "Name"
+        },
+        "description": {
+          "type": "string",
+          "description": "Description"
+        },
+        "industry": {
+          "type": "string",
+          "description": "Industry"
+        },
+        "trade-date": {
+          "type": "string",
+          "format": "date",
+          "description": "Trade date"
+        },
+        "settlement-date": {
+          "type": "string",
+          "format": "date",
+          "description": "Settlement date"
+        },
+        "anticipated-shares": {
+          "type": "integer",
+          "format": "int32",
+          "description": "Anticipated shares"
+        },
+        "min-price": {
+          "type": "number",
+          "format": "double",
+          "description": "Min price"
+        },
+        "max-price": {
+          "type": "number",
+          "format": "double",
+          "description": "Max price"
+        },
+        "prospectus-url": {
+          "type": "string",
+          "description": "Prospectus URL"
+        },
+        "brochure-url": {
+          "type": "string",
+          "description": "Brochure URL"
+        },
+        "logo-url": {
+          "type": "string",
+          "description": "Logo URL"
+        }
+      },
+      "description": "Update an equity offering"
+    },
+    "EquityOption": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "listed-market": {
+          "description": "",
+          "type": "string"
+        },
+        "strike-price": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "underlying-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "expiration-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "exercise-style": {
+          "description": "",
+          "type": "string"
+        },
+        "shares-per-contract": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "option-type": {
+          "description": "",
+          "type": "string"
+        },
+        "option-chain-type": {
+          "description": "",
+          "type": "string"
+        },
+        "expiration-type": {
+          "description": "",
+          "type": "string"
+        },
+        "settlement-type": {
+          "description": "",
+          "type": "string"
+        },
+        "halted-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "stops-trading-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "market-time-instrument-collection": {
+          "description": "",
+          "type": "string"
+        },
+        "days-to-expiration": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "expires-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "is-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "old-security-number": {
+          "description": "",
+          "type": "string"
+        },
+        "streamer-symbol": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "EquityOption model"
+    },
+    "patchInstrumentsEquityOptionsSymbol": {
+      "type": "object",
+      "properties": {
+        "is-halted": {
+          "type": "string",
+          "description": "if instrument was halted or not"
+        }
+      },
+      "description": "Update an equity option"
+    },
+    "postInstrumentsEquityDeliverables": {
+      "type": "object",
+      "properties": {
+        "root-symbol": {
+          "type": "string",
+          "description": "Root symbol"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "Symbol"
+        },
+        "deliverable-type": {
+          "type": "string",
+          "description": "Deliverable type"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "Amount"
+        },
+        "percent": {
+          "type": "string",
+          "description": "Percent"
+        },
+        "is-am-settled": {
+          "type": "boolean",
+          "description": "Is AM settled"
+        }
+      },
+      "required": [
+        "root-symbol",
+        "symbol",
+        "deliverable-type",
+        "amount",
+        "percent",
+        "is-am-settled"
+      ],
+      "description": "Create an equity deliverable"
+    },
+    "EquityDeliverable": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "deliverable-type": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "amount": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "percent": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "EquityDeliverable model"
+    },
+    "patchInstrumentsEquityDeliverablesId": {
+      "type": "object",
+      "properties": {
+        "root-symbol": {
+          "type": "string",
+          "description": "Root symbol"
+        },
+        "symbol": {
+          "type": "string",
+          "description": "Symbol"
+        },
+        "deliverable-type": {
+          "type": "string",
+          "description": "Deliverable type"
+        },
+        "amount": {
+          "type": "number",
+          "format": "double",
+          "description": "Amount"
+        },
+        "percent": {
+          "type": "string",
+          "description": "Percent"
+        },
+        "is-am-settled": {
+          "type": "boolean",
+          "description": "Is AM settled"
+        }
+      },
+      "description": "Update an equity deliverable"
+    },
+    "DestinationVenueSymbol": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "destination-venue": {
+          "description": "",
+          "type": "string"
+        },
+        "max-quantity-precision": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "max-price-precision": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "routable": {
+          "description": "",
+          "type": "boolean"
+        },
+        "currency": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument": {
+          "description": "",
+          "type": "object"
+        }
+      },
+      "description": "DestinationVenueSymbol model"
+    },
+    "Future": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "product-code": {
+          "description": "",
+          "type": "string"
+        },
+        "contract-size": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "tick-size": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "notional-multiplier": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "main-fraction": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "sub-fraction": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "display-factor": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "last-trade-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "expiration-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "closing-only-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "active-month": {
+          "description": "",
+          "type": "boolean"
+        },
+        "next-active-month": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "first-notice-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "stops-trading-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "product-group": {
+          "description": "",
+          "type": "string"
+        },
+        "exchange": {
+          "description": "",
+          "type": "string"
+        },
+        "roll-target-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "streamer-exchange-code": {
+          "description": "",
+          "type": "string"
+        },
+        "streamer-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "back-month-first-calendar-symbol": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-tradeable": {
+          "description": "",
+          "type": "boolean"
+        },
+        "true-underlying-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "exchange-data": {
+          "description": "",
+          "type": "object"
+        },
+        "future-etf-equivalent": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "share-quantity": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        },
+        "future-product": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "root-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "code": {
+              "description": "",
+              "type": "string"
+            },
+            "description": {
+              "description": "",
+              "type": "string"
+            },
+            "exchange": {
+              "description": "",
+              "type": "string"
+            },
+            "product-type": {
+              "description": "",
+              "type": "string"
+            },
+            "listed-months": {
+              "description": "",
+              "type": "string"
+            },
+            "active-months": {
+              "description": "",
+              "type": "string"
+            },
+            "notional-multiplier": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "tick-size": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "display-factor": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "base-tick": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "sub-tick": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "streamer-exchange-code": {
+              "description": "",
+              "type": "string"
+            },
+            "small-notional": {
+              "description": "",
+              "type": "boolean"
+            },
+            "back-month-first-calendar-symbol": {
+              "description": "",
+              "type": "boolean"
+            },
+            "first-notice": {
+              "description": "",
+              "type": "boolean"
+            },
+            "cash-settled": {
+              "description": "",
+              "type": "boolean"
+            },
+            "contract-limit": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "security-group": {
+              "description": "",
+              "type": "string"
+            },
+            "product-subtype": {
+              "description": "",
+              "type": "string"
+            },
+            "true-underlying-code": {
+              "description": "",
+              "type": "string"
+            },
+            "market-sector": {
+              "description": "",
+              "type": "string"
+            },
+            "price-format": {
+              "description": "",
+              "type": "string"
+            },
+            "supported": {
+              "description": "",
+              "type": "boolean"
+            }
+          }
+        },
+        "tick-sizes": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "threshold": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        },
+        "option-tick-sizes": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "threshold": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        },
+        "spread-tick-sizes": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "threshold": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "Future model"
+    },
+    "FutureOptionProduct": {
+      "type": "object",
+      "properties": {
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "cash-settled": {
+          "description": "",
+          "type": "boolean"
+        },
+        "code": {
+          "description": "",
+          "type": "string"
+        },
+        "display-factor": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "exchange": {
+          "description": "",
+          "type": "string"
+        },
+        "product-type": {
+          "description": "",
+          "type": "string"
+        },
+        "expiration-type": {
+          "description": "",
+          "type": "string"
+        },
+        "settlement-delay-days": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "product-subtype": {
+          "description": "",
+          "type": "string"
+        },
+        "market-sector": {
+          "description": "",
+          "type": "string"
+        },
+        "supported": {
+          "description": "",
+          "type": "boolean"
+        }
+      },
+      "description": "FutureOptionProduct model"
+    },
+    "patchInstrumentsFutureOptionProductsId": {
+      "type": "object",
+      "properties": {
+        "supported": {
+          "type": "boolean",
+          "description": "Whether the future option product is supported"
+        }
+      },
+      "description": "Changes attributes of a future option product"
+    },
+    "FutureOption": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "underlying-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "product-code": {
+          "description": "",
+          "type": "string"
+        },
+        "expiration-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "option-root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "strike-price": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "exchange": {
+          "description": "",
+          "type": "string"
+        },
+        "streamer-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "option-type": {
+          "description": "",
+          "type": "string"
+        },
+        "exercise-style": {
+          "description": "",
+          "type": "string"
+        },
+        "is-vanilla": {
+          "description": "",
+          "type": "boolean"
+        },
+        "is-primary-deliverable": {
+          "description": "",
+          "type": "boolean"
+        },
+        "future-price-ratio": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "multiplier": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "underlying-count": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "is-confirmed": {
+          "description": "",
+          "type": "boolean"
+        },
+        "notional-value": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "display-factor": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "settlement-type": {
+          "description": "",
+          "type": "string"
+        },
+        "strike-factor": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "maturity-date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "is-exercisable-weekly": {
+          "description": "",
+          "type": "boolean"
+        },
+        "last-trade-time": {
+          "description": "",
+          "type": "string"
+        },
+        "days-to-expiration": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "is-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        },
+        "stops-trading-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "expires-at": {
+          "description": "",
+          "type": "string",
+          "format": "date-time"
+        },
+        "future-option-product": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "root-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "cash-settled": {
+              "description": "",
+              "type": "boolean"
+            },
+            "code": {
+              "description": "",
+              "type": "string"
+            },
+            "display-factor": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "exchange": {
+              "description": "",
+              "type": "string"
+            },
+            "product-type": {
+              "description": "",
+              "type": "string"
+            },
+            "expiration-type": {
+              "description": "",
+              "type": "string"
+            },
+            "settlement-delay-days": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "product-subtype": {
+              "description": "",
+              "type": "string"
+            },
+            "market-sector": {
+              "description": "",
+              "type": "string"
+            },
+            "supported": {
+              "description": "",
+              "type": "boolean"
+            }
+          }
+        }
+      },
+      "description": "FutureOption model"
+    },
+    "FutureProduct": {
+      "type": "object",
+      "properties": {
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "code": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "exchange": {
+          "description": "",
+          "type": "string"
+        },
+        "product-type": {
+          "description": "",
+          "type": "string"
+        },
+        "listed-months": {
+          "description": "",
+          "type": "string"
+        },
+        "active-months": {
+          "description": "",
+          "type": "string"
+        },
+        "notional-multiplier": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "tick-size": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "display-factor": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "base-tick": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "sub-tick": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "streamer-exchange-code": {
+          "description": "",
+          "type": "string"
+        },
+        "small-notional": {
+          "description": "",
+          "type": "boolean"
+        },
+        "back-month-first-calendar-symbol": {
+          "description": "",
+          "type": "boolean"
+        },
+        "first-notice": {
+          "description": "",
+          "type": "boolean"
+        },
+        "cash-settled": {
+          "description": "",
+          "type": "boolean"
+        },
+        "contract-limit": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "security-group": {
+          "description": "",
+          "type": "string"
+        },
+        "product-subtype": {
+          "description": "",
+          "type": "string"
+        },
+        "true-underlying-code": {
+          "description": "",
+          "type": "string"
+        },
+        "market-sector": {
+          "description": "",
+          "type": "string"
+        },
+        "price-format": {
+          "description": "",
+          "type": "string"
+        },
+        "supported": {
+          "description": "",
+          "type": "boolean"
+        }
+      },
+      "description": "FutureProduct model"
+    },
+    "patchInstrumentsFutureProductsId": {
+      "type": "object",
+      "properties": {
+        "supported": {
+          "type": "boolean",
+          "description": "Whether the future product is supported"
+        }
+      },
+      "description": "Changes attributes of a future product"
+    },
+    "FutureSpread": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "product-code": {
+          "description": "",
+          "type": "string"
+        },
+        "spread-type": {
+          "description": "",
+          "type": "string"
+        },
+        "min-price-increment": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "price-threshold": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "high-price-increment": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "main-fraction": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "sub-fraction": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "notional-value": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "price-display": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "display-factor": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "exchange": {
+          "description": "",
+          "type": "string"
+        },
+        "legs": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "quantity": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "quantity-direction": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        }
+      },
+      "description": "FutureSpread model"
+    },
+    "PriceMarkup": {
+      "type": "object",
+      "properties": {
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "percentage": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "description": "PriceMarkup model"
+    },
+    "QuantityDecimalPrecision": {
+      "type": "object",
+      "properties": {
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "value": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "minimum-increment-precision": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        }
+      },
+      "description": "QuantityDecimalPrecision model"
+    },
+    "postInstrumentsSpreadDefinitions": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "The exchange symbol used to route the order package."
+        },
+        "security-id": {
+          "type": "string",
+          "description": "SecurityID used by CME for order routing"
+        },
+        "exchange": {
+          "type": "string",
+          "description": "The exchange the spread is traded on.",
+          "enum": [
+            "CME"
+          ],
+          "default": "CME"
+        },
+        "spread-definition-legs": {
+          "type": "array",
+          "description": "An array of symbols from the exchange by which to create spread. Spreads that include unsupported symbols by tastyworks will be rejected",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quantity": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The quantity of the contract for this leg."
+              },
+              "security-id": {
+                "type": "string",
+                "description": "The security id for this spread leg."
+              },
+              "action": {
+                "type": "string",
+                "description": "The action of the leg. Buy or Sell, do not include open or close.",
+                "enum": [
+                  "Buy",
+                  "Sell"
+                ]
+              }
+            },
+            "required": [
+              "quantity",
+              "security-id",
+              "action"
+            ]
+          }
+        }
+      },
+      "required": [
+        "symbol",
+        "spread-definition-legs"
+      ],
+      "description": "Creates a spread definition from components. This spread definition can be used to route package orders to the Chicago Mercantile Exchange. Unsupported products will be rejected."
+    },
+    "SpreadDefinition": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "spread-name": {
+          "description": "",
+          "type": "string"
+        },
+        "exchange": {
+          "description": "",
+          "type": "string"
+        },
+        "buy-side": {
+          "description": "",
+          "type": "boolean"
+        },
+        "spread-definition-legs": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "action": {
+              "description": "",
+              "type": "string"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "quantity": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "description": "SpreadDefinition model"
+    },
+    "postInstrumentsSpreadDefinitionCreationRequests": {
+      "type": "object",
+      "properties": {
+        "spread-legs": {
+          "type": "array",
+          "description": "An array of TW symbols from which to look up the potentional spread.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "quantity": {
+                "type": "integer",
+                "format": "int32",
+                "description": "The quantity of the contract for this leg."
+              },
+              "symbol": {
+                "type": "string",
+                "description": "The tastyworks symbol for this spread leg."
+              },
+              "action": {
+                "type": "string",
+                "description": "The action of the leg. Buy or Sell, do not include open or close.",
+                "enum": [
+                  "Buy",
+                  "Sell"
+                ]
+              }
+            },
+            "required": [
+              "quantity",
+              "symbol",
+              "action"
+            ]
+          }
+        },
+        "global-request-id": {
+          "type": "string"
+        },
+        "order-time": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "spread-legs",
+        "global-request-id",
+        "order-time"
+      ],
+      "description": "Sends a spread definition request to CME. Returns status of the creation request. Schedules a job which checks if the spread was created."
+    },
+    "SettlementPrice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "value": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        },
+        "final": {
+          "description": "",
+          "type": "boolean"
+        },
+        "closing-year": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "is-am-settlement": {
+          "description": "",
+          "type": "boolean"
+        }
+      },
+      "description": "SettlementPrice model"
+    },
+    "postInstrumentsSettlementPrices": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string"
+        },
+        "instrument-type": {
+          "type": "string",
+          "description": "Instrument type"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Settlement date"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        },
+        "is-am-settlement": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "symbol",
+        "instrument-type",
+        "date",
+        "value"
+      ],
+      "description": "Create a new settlement price"
+    },
+    "patchInstrumentsSettlementPricesSymbol": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "format": "double"
+        },
+        "is-am-settlement": {
+          "type": "boolean"
+        }
+      },
+      "description": "Update a settlement price"
+    },
+    "postInstrumentsFixingPrices": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string"
+        },
+        "instrument-type": {
+          "type": "string",
+          "description": "Instrument type"
+        },
+        "date": {
+          "type": "string",
+          "format": "date",
+          "description": "Settlement date"
+        },
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "required": [
+        "symbol",
+        "instrument-type",
+        "date",
+        "value"
+      ],
+      "description": "Create a new fixing price"
+    },
+    "FixingPrice": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "date": {
+          "description": "",
+          "type": "string",
+          "format": "date"
+        },
+        "value": {
+          "description": "",
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "description": "FixingPrice model"
+    },
+    "patchInstrumentsFixingPricesId": {
+      "type": "object",
+      "properties": {
+        "value": {
+          "type": "number",
+          "format": "double"
+        }
+      },
+      "required": [
+        "value"
+      ],
+      "description": "Update a fixing price"
+    },
+    "Warrant": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "instrument-type": {
+          "description": "",
+          "type": "string"
+        },
+        "cusip": {
+          "description": "",
+          "type": "string"
+        },
+        "listed-market": {
+          "description": "",
+          "type": "string"
+        },
+        "description": {
+          "description": "",
+          "type": "string"
+        },
+        "is-closing-only": {
+          "description": "",
+          "type": "boolean"
+        },
+        "active": {
+          "description": "",
+          "type": "boolean"
+        }
+      },
+      "description": "Warrant model"
+    },
+    "patchInstrumentsWarrantsSymbol": {
+      "type": "object",
+      "properties": {
+        "is-closing-only": {
+          "type": "boolean",
+          "description": "Set the warrant to closing only"
+        },
+        "cusip": {
+          "type": "string",
+          "description": "Committee on Uniform Security Identification Procedures alpha numeric string"
+        }
+      },
+      "description": "Update a warrant definition"
+    },
+    "FuturesNestedOptionChainSerializer": {
+      "type": "object",
+      "properties": {
+        "futures": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "root-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "maturity-date": {
+              "description": "",
+              "type": "string",
+              "format": "date"
+            },
+            "expiration-date": {
+              "description": "",
+              "type": "string",
+              "format": "date"
+            },
+            "days-to-expiration": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "active-month": {
+              "description": "",
+              "type": "boolean"
+            },
+            "next-active-month": {
+              "description": "",
+              "type": "boolean"
+            },
+            "stops-trading-at": {
+              "description": "",
+              "type": "string",
+              "format": "date-time"
+            },
+            "expires-at": {
+              "description": "",
+              "type": "string",
+              "format": "date-time"
+            }
+          }
+        },
+        "option-chains": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "underlying-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "root-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "exercise-style": {
+              "description": "",
+              "type": "string"
+            },
+            "expirations": {
+              "description": "",
+              "type": "object",
+              "properties": {
+                "underlying-symbol": {
+                  "description": "",
+                  "type": "string"
+                },
+                "root-symbol": {
+                  "description": "",
+                  "type": "string"
+                },
+                "option-root-symbol": {
+                  "description": "",
+                  "type": "string"
+                },
+                "option-contract-symbol": {
+                  "description": "",
+                  "type": "string"
+                },
+                "asset": {
+                  "description": "",
+                  "type": "string"
+                },
+                "expiration-date": {
+                  "description": "",
+                  "type": "string",
+                  "format": "date"
+                },
+                "days-to-expiration": {
+                  "description": "",
+                  "type": "integer",
+                  "format": "int32"
+                },
+                "expiration-type": {
+                  "description": "",
+                  "type": "string"
+                },
+                "settlement-type": {
+                  "description": "",
+                  "type": "string"
+                },
+                "notional-value": {
+                  "description": "",
+                  "type": "number",
+                  "format": "double"
+                },
+                "display-factor": {
+                  "description": "",
+                  "type": "number",
+                  "format": "double"
+                },
+                "strike-factor": {
+                  "description": "",
+                  "type": "number",
+                  "format": "double"
+                },
+                "stops-trading-at": {
+                  "description": "",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "expires-at": {
+                  "description": "",
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "tick-sizes": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "description": "",
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "threshold": {
+                      "description": "",
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "symbol": {
+                      "description": "",
+                      "type": "string"
+                    }
+                  }
+                },
+                "strikes": {
+                  "description": "",
+                  "type": "object",
+                  "properties": {
+                    "strike-price": {
+                      "description": "",
+                      "type": "number",
+                      "format": "double"
+                    },
+                    "call": {
+                      "description": "",
+                      "type": "string"
+                    },
+                    "call-streamer-symbol": {
+                      "description": "",
+                      "type": "string"
+                    },
+                    "put": {
+                      "description": "",
+                      "type": "string"
+                    },
+                    "put-streamer-symbol": {
+                      "description": "",
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "FuturesNestedOptionChainSerializer model"
+    },
+    "NestedOptionChainSerializer": {
+      "type": "object",
+      "properties": {
+        "underlying-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "option-chain-type": {
+          "description": "",
+          "type": "string"
+        },
+        "shares-per-contract": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "tick-sizes": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "value": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "threshold": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        },
+        "deliverables": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "root-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "deliverable-type": {
+              "description": "",
+              "type": "string"
+            },
+            "description": {
+              "description": "",
+              "type": "string"
+            },
+            "amount": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "instrument-type": {
+              "description": "",
+              "type": "string"
+            },
+            "percent": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        },
+        "expirations": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "expiration-type": {
+              "description": "",
+              "type": "string"
+            },
+            "expiration-date": {
+              "description": "",
+              "type": "string",
+              "format": "date"
+            },
+            "days-to-expiration": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "settlement-type": {
+              "description": "",
+              "type": "string"
+            },
+            "strikes": {
+              "description": "",
+              "type": "object",
+              "properties": {
+                "strike-price": {
+                  "description": "",
+                  "type": "number",
+                  "format": "double"
+                },
+                "call": {
+                  "description": "",
+                  "type": "string"
+                },
+                "call-streamer-symbol": {
+                  "description": "",
+                  "type": "string"
+                },
+                "put": {
+                  "description": "",
+                  "type": "string"
+                },
+                "put-streamer-symbol": {
+                  "description": "",
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "description": "NestedOptionChainSerializer model"
+    },
+    "CompactOptionChainSerializer": {
+      "type": "object",
+      "properties": {
+        "underlying-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "root-symbol": {
+          "description": "",
+          "type": "string"
+        },
+        "option-chain-type": {
+          "description": "",
+          "type": "string"
+        },
+        "settlement-type": {
+          "description": "",
+          "type": "string"
+        },
+        "shares-per-contract": {
+          "description": "",
+          "type": "integer",
+          "format": "int32"
+        },
+        "expiration-type": {
+          "description": "",
+          "type": "string"
+        },
+        "deliverables": {
+          "description": "",
+          "type": "object",
+          "properties": {
+            "id": {
+              "description": "",
+              "type": "integer",
+              "format": "int32"
+            },
+            "root-symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "deliverable-type": {
+              "description": "",
+              "type": "string"
+            },
+            "description": {
+              "description": "",
+              "type": "string"
+            },
+            "amount": {
+              "description": "",
+              "type": "number",
+              "format": "double"
+            },
+            "symbol": {
+              "description": "",
+              "type": "string"
+            },
+            "instrument-type": {
+              "description": "",
+              "type": "string"
+            },
+            "percent": {
+              "description": "",
+              "type": "string"
+            }
+          }
+        },
+        "symbols": {
+          "description": "",
+          "type": "string"
+        },
+        "streamer-symbols": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "CompactOptionChainSerializer model"
+    },
+    "SurveillanceSymbol": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "description": "",
+          "type": "string"
+        }
+      },
+      "description": "SurveillanceSymbol model"
+    },
+    "postSurveillanceSymbols": {
+      "type": "object",
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "description": "Symbol to monitor"
+        },
+        "enabled-reason": {
+          "type": "string",
+          "description": "Description for reason to monitor this symbol (e.g.: low volume)"
+        }
+      },
+      "required": [
+        "symbol",
+        "enabled-reason"
+      ],
+      "description": "Creates a new surveillance symbol record from the request parameters"
+    },
+    "patchSurveillanceSymbolsId": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "type": "string",
+          "description": "Status",
+          "enum": [
+            "Active",
+            "Inactive"
+          ]
+        },
+        "enabled-reason": {
+          "type": "string",
+          "description": "Reason to enable monitoring of this symbol (e.g.: low volume)"
+        },
+        "disabled-reason": {
+          "type": "string",
+          "description": "Reason to disable monitoring of this symbol (e.g.: volume increased)"
+        }
+      },
+      "required": [
+        "status",
+        "enabled-reason",
+        "disabled-reason"
+      ],
+      "description": "Update monitoring status of a surveillance symbol record"
+    }
+  }
+}

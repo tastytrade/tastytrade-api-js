@@ -3,6 +3,7 @@ import axios from "axios"
 import qs from 'qs'
 import { recursiveDasherizeKeys } from "../utils/json-util.js"
 import _ from 'lodash'
+import type Logger from "../logger.js"
 
 const ParamsSerializer = {
   serialize: function (queryParams: object) {
@@ -10,10 +11,12 @@ const ParamsSerializer = {
   }
 }
 
-export default class TastytradeHttpClient{
+export default class TastytradeHttpClient {
+    private readonly logger: Logger
     public readonly session: TastytradeSession
 
-    constructor(private readonly baseUrl: string) {
+    constructor(private readonly baseUrl: string, logger: Logger) {
+      this.logger = logger
       this.session = new TastytradeSession()
     }
 
@@ -47,6 +50,7 @@ export default class TastytradeHttpClient{
         paramsSerializer: ParamsSerializer
        }, _.isEmpty)
 
+      this.logger.info('Making request', config)
       return axios.request(config)
     }
 

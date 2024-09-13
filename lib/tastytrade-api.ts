@@ -17,8 +17,18 @@ import SymbolSearchService from "./services/symbol-search-service.js"
 import TransactionsService from "./services/transactions-service.js"
 import WatchlistsService from "./services/watchlists-service.js"
 import TastytradeSession from "./models/tastytrade-session.js"
+import type Logger from "./logger.js"
+import { TastytradeLogger, LogLevel } from "./logger.js"
+
+export type ClientConfig = {
+  baseUrl: string,
+  accountStreamerUrl: string,
+  logger?: Logger,
+  logLevel?: LogLevel
+}
 
 export default class TastytradeClient {
+  public readonly logger: TastytradeLogger
   public readonly httpClient: TastytradeHttpClient
 
   public readonly accountStreamer: AccountStreamer
@@ -37,9 +47,10 @@ export default class TastytradeClient {
   public readonly transactionsService: TransactionsService
   public readonly watchlistsService: WatchlistsService
 
-  constructor(readonly baseUrl: string, readonly accountStreamerUrl: string) {
-    this.httpClient = new TastytradeHttpClient(baseUrl)
-    this.accountStreamer = new AccountStreamer(accountStreamerUrl, this.session)
+  constructor(config: ClientConfig) {
+    this.logger = new TastytradeLogger(config.logger, config.logLevel)
+    this.httpClient = new TastytradeHttpClient(config.baseUrl, this.logger)
+    this.accountStreamer = new AccountStreamer(config.accountStreamerUrl, this.session, this.logger)
 
     this.sessionService = new SessionService(this.httpClient)
     this.accountStatusService = new AccountStatusService(this.httpClient)
@@ -63,3 +74,5 @@ export default class TastytradeClient {
 
 export { MarketDataStreamer, MarketDataSubscriptionType, type MarketDataListener, type CandleSubscriptionOptions, CandleType }
 export { AccountStreamer, STREAMER_STATE, type Disposer, type StreamerStateObserver }
+export { TastytradeLogger, LogLevel }
+export type { Logger }
