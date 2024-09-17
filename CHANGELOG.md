@@ -6,6 +6,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [5.0.0] - 2024-09-17
+
+The `TastytradeClient` constructor now takes a single config object instead of 2 urls.
+
+### Changed
+
+- Add optional logging; update example app [#44](https://github.com/tastytrade/tastytrade-api-js/pull/44)
+- Add future option quote streaming example to README
+
+### Fixed
+
+- Update README.md [#42](https://github.com/tastytrade/tastytrade-api-js/pull/35)
+- README corrections
+- typo on json account node name [#39](https://github.com/tastytrade/tastytrade-api-js/pull/39)
+
 ## [4.0.0] - 2024-03-12
 
 ### Changed

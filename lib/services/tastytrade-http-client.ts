@@ -12,10 +12,10 @@ const ParamsSerializer = {
 }
 
 export default class TastytradeHttpClient {
-    private readonly logger: Logger
+    private readonly logger?: Logger
     public readonly session: TastytradeSession
 
-    constructor(private readonly baseUrl: string, logger: Logger) {
+    constructor(private readonly baseUrl: string, logger?: Logger) {
       this.logger = logger
       this.session = new TastytradeSession()
     }
@@ -50,7 +50,7 @@ export default class TastytradeHttpClient {
         paramsSerializer: ParamsSerializer
        }, _.isEmpty)
 
-      this.logger.info('Making request', config)
+      this.logger?.info('Making request', config)
       return axios.request(config)
     }
 

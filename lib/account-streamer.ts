@@ -311,7 +311,7 @@ export class AccountStreamer {
     this.queued = []
   }
 
-  private readonly handleOpen = (event: WebSocket.Event) => {
+  private readonly handleOpen = (_event: WebSocket.Event) => {
     if (this.startResolve === null) {
       return
     }
