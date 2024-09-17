@@ -7,7 +7,7 @@ import { useMemo } from 'react'
 function MyApp({ Component, pageProps }: AppProps) {
 
   const context = useMemo(
-    () => new TastytradeContext('https://api.tastyworks.com', 'wss://streamer.cert.tastyworks.com'),
+    () => new TastytradeContext('https://api.cert.tastyworks.com', 'wss://streamer.cert.tastyworks.com'),
     []
   );
   return (

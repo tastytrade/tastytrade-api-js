@@ -39,6 +39,7 @@ const Layout = observer((props: any) => {
       <Toaster
         toastOptions={{
           duration: 5000,
+          position: 'bottom-right',
           success: {
             duration: 10000
           }

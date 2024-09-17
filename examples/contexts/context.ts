@@ -1,18 +1,20 @@
 // src/context/state.ts
 import { createContext } from 'react';
-import TastytradeClient, { MarketDataStreamer } from "tastytrade-api"
+import TastytradeClient, { LogLevel, MarketDataStreamer } from "tastytrade-api"
 import { makeAutoObservable } from 'mobx';
 import _ from 'lodash'
 
+const SANDBOX_BASE_URL = 'https://api.cert.tastyworks.com'
+const SANDBOX_STREAMER_URL = 'wss://streamer.cert.tastyworks.com'
+
 class TastytradeContext {
-    static Instance = new TastytradeContext('https://api.cert.tastyworks.com', 'wss://streamer.cert.tastyworks.com');
     public tastytradeApi: TastytradeClient
     public accountNumbers: string[] = []
     public readonly marketDataStreamer: MarketDataStreamer = new MarketDataStreamer()
     
     constructor(baseUrl: string, accountStreamerUrl: string) {
       makeAutoObservable(this)
-      this.tastytradeApi = new TastytradeClient(baseUrl, accountStreamerUrl)
+      this.tastytradeApi = new TastytradeClient({ baseUrl, accountStreamerUrl, logger: console, logLevel: LogLevel.INFO })
       makeAutoObservable(this.tastytradeApi.session)
     }
 
@@ -21,6 +23,6 @@ class TastytradeContext {
     }
 }
 
-const AppContext = createContext(TastytradeContext.Instance)
+const AppContext = createContext<TastytradeContext>(new TastytradeContext(SANDBOX_BASE_URL, SANDBOX_STREAMER_URL))
 
 export { AppContext, TastytradeContext };

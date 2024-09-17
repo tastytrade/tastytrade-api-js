@@ -4,6 +4,7 @@ import type { JsonMap, JsonValue } from './utils/json-util.js'
 import { JsonBuilder } from './utils/json-util.js'
 import TastytradeSession from './models/tastytrade-session.js'
 import { MinTlsVersion } from './utils/constants.js'
+import type Logger from './logger.js'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -42,6 +43,7 @@ function removeElement<T>(array: T[], element: T): void {
 }
 
 export class AccountStreamer {
+  private readonly logger: Logger
   private websocket: WebSocket | null = null
   private startResolve: ((result: boolean) => void) | null = null
   private startReject: ((reason?: any) => void) | null = null
@@ -65,13 +67,17 @@ export class AccountStreamer {
     [(status: string) => void, (error: string) => void]
   > = new Map()
 
-  private readonly logger = console
-
   /**
    * 
    * @param url Url of the account streamer service
    */
-  constructor(private readonly url: string, private readonly session: TastytradeSession) {}
+  constructor(
+    private readonly url: string,
+    private readonly session: TastytradeSession,
+    logger: Logger
+  ) {
+    this.logger = logger
+    }
 
   get streamerState(): STREAMER_STATE {
     return this._streamerState
@@ -237,6 +243,7 @@ export class AccountStreamer {
       // Queue up and send on open
       this.queued.push(message)
     } else {
+      this.logger.info('Sending message: ', message)
       websocket.send(message)
     }
 
@@ -304,12 +311,12 @@ export class AccountStreamer {
     this.queued = []
   }
 
-  private readonly handleOpen = (event: WebSocket.Event) => {
+  private readonly handleOpen = (_event: WebSocket.Event) => {
     if (this.startResolve === null) {
       return
     }
 
-    this.logger.info('AccountStreamer opened', event)
+    this.logger.info('AccountStreamer opened')
 
     this.startResolve(true)
     this.startResolve = this.startReject = null
@@ -320,7 +327,7 @@ export class AccountStreamer {
   }
 
   private readonly handleClose = (event: WebSocket.CloseEvent) => {
-    this.logger.info('AccountStreamer closed', event)
+    this.logger.info('AccountStreamer closed')
     if (this.websocket === null) {
       return
     }
@@ -335,7 +342,7 @@ export class AccountStreamer {
       return
     }
 
-    this.logger.warn('AccountStreamer error', event)
+    this.logger.error('AccountStreamer error', event)
 
     this.lastErrorEvent = event
     this.streamerState = STREAMER_STATE.Error
@@ -370,7 +377,7 @@ export class AccountStreamer {
   }
 
   private readonly handleOneMessage = (json: JsonMap) => {
-    this.logger.info(json)
+    this.logger.info('Message received: ', json)
 
     const action = json.action as string
     this.streamerMessageObservers.forEach(observer => observer(json))
