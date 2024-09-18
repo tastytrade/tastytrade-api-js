@@ -9,9 +9,9 @@ yarn:
 
 ## Quickstart
 ```js
-import TastytradeApi from "@tastytrade/api"
+import TastytradeClient from "@tastytrade/api"
 
-const tastytradeApi = new TastytradeApi(baseUrl, accountStreamerUrl)
+const tastytradeApi = new TastytradeClient({ baseUrl, accountStreamerUrl })
 const loginResponse = await tastytradeApi.sessionService.login(usernameOrEmail, password)
 const accounts = await tastytradeApi.accountsAndCustomersService.getCustomerAccounts()
 const accountPositions = await tastytradeApi.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
@@ -78,7 +78,7 @@ To subscribe to equities quotes, the `symbol` is just the ticker symbol, like `A
 
 ### Account Streamer
 ```js
-import TastytradeApi from "@tastytrade/api"
+import TastytradeClient from "@tastytrade/api"
 import _ from 'lodash'
 
 function handleStreamerMessage(json) {
@@ -89,7 +89,7 @@ function handleStreamerStateChange(streamerState) {
   console.log('streamer state changed: ', streamerState)
 }
 
-const tastytradeClient = new TastytradeApi(baseUlr, accountStreamerUrl)
+const tastytradeClient = new TastytradeClient({ baseUrl, accountStreamerUrl })
 const accountStreamer = tastytradeClient.accountStreamer
 const loginResponse = await tastytradeClient.sessionService.login(usernameOrEmail, password)
 const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
