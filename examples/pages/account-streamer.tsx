@@ -1,5 +1,5 @@
 import type { NextPage } from 'next'
-import { STREAMER_STATE } from 'tastytrade-api'
+import { STREAMER_STATE } from '@tastytrade/api'
 import { useContext, useEffect, useState } from 'react'
 import _ from 'lodash'
 import toast from 'react-hot-toast'

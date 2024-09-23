@@ -1,6 +1,6 @@
 // src/context/state.ts
 import { createContext } from 'react';
-import TastytradeClient, { LogLevel, MarketDataStreamer } from "tastytrade-api"
+import TastytradeClient, { LogLevel, MarketDataStreamer } from "@tastytrade/api"
 import { makeAutoObservable } from 'mobx';
 import _ from 'lodash'
 

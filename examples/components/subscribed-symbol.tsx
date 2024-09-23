@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react'
 import _ from 'lodash'
 import { AppContext } from '../contexts/context'
-import { MarketDataSubscriptionType } from "tastytrade-api"
+import { MarketDataSubscriptionType } from "@tastytrade/api"
 
 export default function SubscribedSymbol(props: any) {
   const [bidPrice, setBidPrice] = useState(NaN)
