@@ -4,6 +4,7 @@ import UseHttpRequest from '../components/use-http-request';
 import _ from 'lodash'
 import CustomTable from '../components/custom-table';
 import Button from '../components/button';
+import Input from '../components/input';
 
 function parseError(error:any){
     if (error.message === 'Network Error'){
@@ -80,12 +81,7 @@ export default function symbolSearch() {
     <div className='w-3/12'>
         <h2 className="text-center mb-4">Symbol Search</h2>
         <div>Enter symbol</div>
-        <input
-            type='text'
-            className="p-2 w-full border border-gray-400 mb-2"
-            onKeyUp={handleKeyPress}
-            required
-          />
+        <Input className="p-2 w-full border border-gray-400 mb-2" onKeyUp={handleKeyPress} />
         <Button onClick={handleSearch} title="Search" />
         {error && <div>{error}</div>}
         {renderResults()}
