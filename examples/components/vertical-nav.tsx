@@ -15,6 +15,7 @@ export default function VerticalNavBar() {
         <VerticalNavLink href = "/symbol-search" title = "Symbol Search"/>
         <VerticalNavLink href = "/quote-streamer" title = "Quote Data"/>
         <VerticalNavLink href = "/account-streamer" title = "Account Data"/>
+        <VerticalNavLink href = "/charts" title = "Charts"/>
       </ul>
   </nav>
   )
