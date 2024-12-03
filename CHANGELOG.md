@@ -6,6 +6,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [6.0.0] - 2024-11-22
+
+Added a `QuoteStreamer` which wraps the DxLink streamer javascript package.
+
+### Changed
+
+- Removed the deprecated MarketDataStreamer
+- Updated README.md with instructions on using the new QuoteStreamer
+
 ## [5.0.0] - 2024-09-17
 
 The `TastytradeClient` constructor now takes a single config object instead of 2 urls.

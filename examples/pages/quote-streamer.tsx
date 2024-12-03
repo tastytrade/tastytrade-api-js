@@ -13,17 +13,12 @@ const Home: NextPage = () => {
   const appContext = useContext(AppContext)
 
   useEffect(() => {
-    appContext.tastytradeApi.accountsAndCustomersService.getApiQuoteToken()
-      .then(response => {
-        if (appContext.marketDataStreamer.isConnected) {
-          return
-        }
-        appContext.marketDataStreamer.connect(response['dxlink-url'], response.token)
-        setLoading(false)
-      })
+    appContext.tastytradeApi.quoteStreamer.connect().then(() => {
+      setLoading(false)
+    })
 
     return () => {
-      appContext.marketDataStreamer.disconnect()
+      appContext.tastytradeApi.quoteStreamer.disconnect()
     }
   }, []);
 
@@ -49,7 +44,7 @@ const Home: NextPage = () => {
       <h1 className="my-3 text-xl font-bold">
         DxLink Quotes Demo
       </h1>
-      <div className='my-1'>Type a symbol into the input and click 'Add Symbol'</div>
+      <div className='my-1'>Type a symbol into the input and click &apos;Add Symbol&apos;</div>
 
       <div>
         <input

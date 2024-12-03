@@ -7,7 +7,7 @@ import CustomTable from '../components/custom-table';
 export default function Transactions() {
     const context = useContext(AppContext);
 
-    const { isLoading, errorMessage, executeRequest, responseData } = UseHttpRequest(async () => (
+    const { isLoading, errorMessage, responseData } = UseHttpRequest(async () => (
         context.tastytradeApi.transactionsService.getAccountTransactions(context.accountNumbers![0])
       ), true)
     
@@ -42,5 +42,5 @@ export default function Transactions() {
         {errorMessage && <div>{errorMessage}</div>}
         <CustomTable rows={transactions} renderItem={renderTransactionRow}/>
       </div>
-    );
-};
+    )
+}

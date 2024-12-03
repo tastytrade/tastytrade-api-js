@@ -42,12 +42,8 @@ const AccountStreamerPage: NextPage = () => {
       setStreamerState(accountStreamer.streamerState)
     })
 
-    const streamerMessageDisposer = accountStreamer.addMessageObserver((type, action, status) => {
-      if (!_.isNil(type)) {
-        toast.success(`Received ${type} message`)
-      } else {
-        toast(`Received message with action: ${action}, status: ${status}`)
-      }
+    const streamerMessageDisposer = accountStreamer.addMessageObserver((json: object) => {
+      toast.success(`Received message: ${json}`)
     })
 
     return () => {
@@ -105,7 +101,7 @@ const AccountStreamerPage: NextPage = () => {
         <div className='my-5'>
           <div>Your account numbers:</div>
           {context.accountNumbers!.map((accountNumber) => (
-            <div>{accountNumber}</div>
+            <div key={accountNumber}>{accountNumber}</div>
           ))}
         </div>
         {_renderSubscribe()}

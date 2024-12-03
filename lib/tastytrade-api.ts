@@ -1,6 +1,5 @@
 import TastytradeHttpClient from "./services/tastytrade-http-client.js"
 import { AccountStreamer, STREAMER_STATE, type Disposer, type StreamerStateObserver } from './account-streamer.js'
-import MarketDataStreamer, { type CandleSubscriptionOptions, CandleType, MarketDataSubscriptionType, type MarketDataListener } from "./market-data-streamer.js"
 
 //Services:
 import SessionService from "./services/session-service.js"
@@ -19,6 +18,7 @@ import WatchlistsService from "./services/watchlists-service.js"
 import TastytradeSession from "./models/tastytrade-session.js"
 import type Logger from "./logger.js"
 import { TastytradeLogger, LogLevel } from "./logger.js"
+import QuoteStreamer, { MarketDataSubscriptionType, CandleType } from "./quote-streamer.js"
 
 export type ClientConfig = {
   baseUrl: string,
@@ -32,6 +32,7 @@ export default class TastytradeClient {
   public readonly httpClient: TastytradeHttpClient
 
   public readonly accountStreamer: AccountStreamer
+  public readonly quoteStreamer: QuoteStreamer
 
   public readonly sessionService: SessionService
   public readonly accountStatusService: AccountStatusService
@@ -50,7 +51,6 @@ export default class TastytradeClient {
   constructor(config: ClientConfig) {
     this.logger = new TastytradeLogger(config.logger, config.logLevel)
     this.httpClient = new TastytradeHttpClient(config.baseUrl, this.logger)
-    this.accountStreamer = new AccountStreamer(config.accountStreamerUrl, this.session, this.logger)
 
     this.sessionService = new SessionService(this.httpClient)
     this.accountStatusService = new AccountStatusService(this.httpClient)
@@ -65,6 +65,10 @@ export default class TastytradeClient {
     this.symbolSearchService = new SymbolSearchService(this.httpClient)
     this.transactionsService = new TransactionsService(this.httpClient)
     this.watchlistsService = new WatchlistsService(this.httpClient)
+
+
+    this.accountStreamer = new AccountStreamer(config.accountStreamerUrl, this.session, this.logger)
+    this.quoteStreamer = new QuoteStreamer(this.accountsAndCustomersService, this.logger)
   }
 
   get session(): TastytradeSession {
@@ -72,7 +76,7 @@ export default class TastytradeClient {
   }
 }
 
-export { MarketDataStreamer, MarketDataSubscriptionType, type MarketDataListener, type CandleSubscriptionOptions, CandleType }
+export { MarketDataSubscriptionType, CandleType }
 export { AccountStreamer, STREAMER_STATE, type Disposer, type StreamerStateObserver }
 export { TastytradeLogger, LogLevel }
 export type { Logger }

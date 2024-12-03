@@ -18,46 +18,20 @@ const accountPositions = await tastytradeApi.balancesAndPositionsService.getPosi
 ```
 
 ### Market Data
-The MarketDataStreamer in this package is deprecated. We recommend using DxFeed's [@dxfeed/dxlink-api](https://github.com/dxFeed/dxLink/blob/main/dxlink-javascript/dxlink-api/README.md) instead.
+We have provided a wrapper for DxFeed's `@dxfeed/dxlink-api` package for retrieving quotes and candles. As long as you are logged in, it will fetch a quote auth token for you and connect to the DxLink streamer just by calling `connect()`.
 
-Here's a node example of how you can subscribe to some future option quotes using `@dxfeed/dxlink-api`:
 ```js
-/**
- * Below code assumes you've hit GET /api-quote-tokens and received a token
- * You should also hit GET /futures-option-chains/{future_contract_code}/nested to get the future options you want to subscribe to
- * There is an equivalent GET /option-chains/{underlying_ticker_symbol}/nested for equity options
- */
+const tastytradeApi = new TastytradeClient({ baseUrl, accountStreamerUrl })
+await tastytradeApi.sessionService.login(usernameOrEmail, password)
+await tastytradeApi.quoteStreamer.connect()
+appContext.tastytradeApi.quoteStreamer.addEventListener((events: any[]) => {
+  // Do whatever you want with events here
+}
 
-const WebSocket = require('isomorphic-ws')
-const { DXLinkWebSocketClient, DXLinkFeed, FeedDataFormat } = require('@dxfeed/dxlink-api')
-global.WebSocket = WebSocket
-
-const token = '<api quote token>'
-const client = new DXLinkWebSocketClient()
-client.connect('wss://tasty-openapi-ws.dxfeed.com/realtime')
-client.setAuthToken(token)
-
-const feed = new DXLinkFeed(client, 'AUTO')
-
-// Note: Calling feed.configure is optional - omitting it means DxLink will return all fields
-feed.configure({
-  acceptAggregationPeriod: 10,
-  acceptDataFormat: FeedDataFormat.COMPACT,
-  acceptEventFields: {
-    Quote: ['eventSymbol', 'askPrice', 'bidPrice']
-  },
-})
-
-feed.addEventListener((events) => {
-  events.map(event => {
-    console.log(event)
-  })
-})
-
-feed.addSubscriptions({
-  type: 'Quote',
-  symbol: './EW4Q24C5750:XCME', // Please note: we don't update this README daily. This symbol may be expired. You'll have to find an unexpired symbol.
-})
+// You need to subscribe to events before you start receiving events
+tastytradeApi.quoteStreamer.subscribe(['AAPL'])
+// Subscribe to 5 minute candles starting from 1 year ago
+tastytradeApi.quoteStreamer.subscribeCandles('AAPL', new Date().setFullYear(2023), 5, CandleType.Minute)
 ```
 
 To run the above code, save it to a file and run `node <filename>.js` in a terminal.

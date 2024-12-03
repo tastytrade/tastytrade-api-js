@@ -4,14 +4,13 @@ import VerticalNavBar from './vertical-nav'
 import CustomLink, {TopNavLink} from './custom-link'
 import { AppContext } from '../contexts/context'
 import { observer } from 'mobx-react-lite'
-import Link from 'next/link'
 import { useRouter } from 'next/router'
 
 const Layout = observer((props: any) => {
   const appContext = useContext(AppContext)
   const router = useRouter()
 
-  const doLogout = (e: any) => {
+  const doLogout = (_e: any) => {
     appContext.tastytradeApi.sessionService.logout()
       .then(_result => router.push('/'))
   }

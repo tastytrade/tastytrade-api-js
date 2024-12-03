@@ -26,7 +26,7 @@ interface ObjectPropertiesTable {
 
 export function ObjectPropertiesTable(props: ObjectPropertiesTable) {
   const keys = Object.keys(props.item)
-  const renderRow = (key: string, index: number) => {
+  const renderRow = (key: string, _index: number) => {
     return (
       <div className='flex flex-row'>
         <div>{key}</div>
