@@ -11,13 +11,26 @@ const ParamsSerializer = {
   }
 }
 
+export type TastytradeHttpClientConfig = {
+  baseUrl: string
+  sessionToken?: string
+}
+
 export default class TastytradeHttpClient {
     private readonly logger?: Logger
+    private readonly baseUrl: string
     public readonly session: TastytradeSession
 
-    constructor(private readonly baseUrl: string, logger?: Logger) {
+    constructor(config: string | TastytradeHttpClientConfig, logger?: Logger) {
       this.logger = logger
       this.session = new TastytradeSession()
+
+      if (typeof config === 'string') {
+        this.baseUrl = config
+      } else {
+        this.baseUrl = config.baseUrl
+        this.session.authToken = config.sessionToken ?? null
+      }
     }
 
     private getDefaultHeaders(): any {

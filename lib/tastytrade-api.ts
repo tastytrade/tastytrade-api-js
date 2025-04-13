@@ -24,7 +24,8 @@ export type ClientConfig = {
   baseUrl: string,
   accountStreamerUrl: string,
   logger?: Logger,
-  logLevel?: LogLevel
+  logLevel?: LogLevel,
+  sessionToken?: string
 }
 
 export default class TastytradeClient {
@@ -48,9 +49,10 @@ export default class TastytradeClient {
   public readonly watchlistsService: WatchlistsService
 
   constructor(config: ClientConfig) {
-    this.logger = new TastytradeLogger(config.logger, config.logLevel)
-    this.httpClient = new TastytradeHttpClient(config.baseUrl, this.logger)
-    this.accountStreamer = new AccountStreamer(config.accountStreamerUrl, this.session, this.logger)
+    const { baseUrl, accountStreamerUrl, logger, logLevel, sessionToken } = config
+    this.logger = new TastytradeLogger(logger, logLevel)
+    this.httpClient = new TastytradeHttpClient({ baseUrl, sessionToken }, this.logger)
+    this.accountStreamer = new AccountStreamer(accountStreamerUrl, this.session, this.logger)
 
     this.sessionService = new SessionService(this.httpClient)
     this.accountStatusService = new AccountStatusService(this.httpClient)
