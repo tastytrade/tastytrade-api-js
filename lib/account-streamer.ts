@@ -47,6 +47,7 @@ export class AccountStreamer {
   private websocket: WebSocket | null = null
   private startResolve: ((result: boolean) => void) | null = null
   private startReject: ((reason?: any) => void) | null = null
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   private requestCounter: number = 0
   private queued: string[] = []
 
