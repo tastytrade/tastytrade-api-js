@@ -37,5 +37,6 @@ module.exports = defineConfig([{
         }],
 
         "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off"
     },
 }]);
