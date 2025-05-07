@@ -20,11 +20,9 @@ export class JsonBuilder {
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function recursiveDasherizeKeys(body: any) {
   let dasherized = _.mapKeys(body, (_value, key) => dasherize(key))
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   dasherized = _.mapValues(dasherized, (value: any) => {
     if (_.isPlainObject(value)) {
       return recursiveDasherizeKeys(value)

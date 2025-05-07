@@ -47,7 +47,7 @@ export class AccountStreamer {
   private websocket: WebSocket | null = null
   private startResolve: ((result: boolean) => void) | null = null
   private startReject: ((reason?: any) => void) | null = null
-  private requestCounter: number = 0
+  private requestCounter = 0
   private queued: string[] = []
 
   private heartbeatTimerId: number | NodeJS.Timeout | null = null
@@ -68,7 +68,7 @@ export class AccountStreamer {
   > = new Map()
 
   /**
-   * 
+   *
    * @param url Url of the account streamer service
    */
   constructor(
@@ -77,7 +77,7 @@ export class AccountStreamer {
     logger: Logger
   ) {
     this.logger = logger
-    }
+  }
 
   get streamerState(): STREAMER_STATE {
     return this._streamerState
@@ -86,7 +86,7 @@ export class AccountStreamer {
   set streamerState(streamerState: STREAMER_STATE) {
     this._streamerState = streamerState
 
-    this.streamerStateObservers.forEach(observer => {
+    this.streamerStateObservers.forEach((observer) => {
       observer(streamerState)
     })
   }
@@ -97,8 +97,8 @@ export class AccountStreamer {
 
   /**
    * Adds a custom callback that fires when the streamer state changes
-   * @param observer 
-   * @returns 
+   * @param observer
+   * @returns
    */
   addStreamerStateObserver(observer: StreamerStateObserver): Disposer {
     this.streamerStateObservers.push(observer)
@@ -188,11 +188,9 @@ export class AccountStreamer {
     }
 
     this.logger.info('Scheduling heartbeat with interval: ', HEARTBEAT_INTERVAL)
-    const scheduler = typeof window === 'undefined' ? setTimeout : window.setTimeout
-    this.heartbeatTimerId = scheduler(
-      this.sendHeartbeat,
-      HEARTBEAT_INTERVAL
-    )
+    const scheduler =
+      typeof window === 'undefined' ? setTimeout : window.setTimeout
+    this.heartbeatTimerId = scheduler(this.sendHeartbeat, HEARTBEAT_INTERVAL)
   }
 
   get isHeartbeatScheduled() {
@@ -221,7 +219,7 @@ export class AccountStreamer {
    * Send a message via websocket
    * @param json JsonBuilder
    * @param includeSessionToken Attaches session token to message if true
-   * @returns 
+   * @returns
    */
   send(json: JsonBuilder, includeSessionToken = true): number {
     this.requestCounter += 1
@@ -252,9 +250,9 @@ export class AccountStreamer {
 
   /**
    * Used by other methods to send a specific `action` message
-   * @param action 
-   * @param value 
-   * @returns 
+   * @param action
+   * @param value
+   * @returns
    */
   public subscribeTo(action: string, value?: JsonValue): number {
     const json = new JsonBuilder()
@@ -304,7 +302,7 @@ export class AccountStreamer {
     }
 
     const websocket = this.websocket
-    queued.forEach(msg => {
+    queued.forEach((msg) => {
       websocket.send(msg)
     })
 
@@ -380,7 +378,7 @@ export class AccountStreamer {
     this.logger.info('Message received: ', json)
 
     const action = json.action as string
-    this.streamerMessageObservers.forEach(observer => observer(json))
+    this.streamerMessageObservers.forEach((observer) => observer(json))
     if (action) {
       if (action === MessageAction.HEARTBEAT) {
         // schedule next heartbeat
