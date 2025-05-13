@@ -5,7 +5,7 @@ const config = {
   testEnvironment: 'node',
   extensionsToTreatAsEsm: ['.ts'],
   moduleNameMapper: {
-    '^(\\.{1,2}/.*)\\.js$': '$1',
+    '^(\\.{1,2}/.*)\\.js$': '$1'
   },
   transform: {
     // '^.+\\.[tj]sx?$' to process js/ts with `ts-jest`
@@ -13,11 +13,11 @@ const config = {
     '^.+\\.tsx?$': [
       'ts-jest',
       {
-        useESM: true,
-      },
-    ],
+        useESM: true
+      }
+    ]
   },
-  transformIgnorePatterns: ['<rootDir>/node_modules/'],
-};
+  transformIgnorePatterns: ['<rootDir>/node_modules/']
+}
 
-export default config;
+export default config
