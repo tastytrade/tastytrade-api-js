@@ -1,16 +1,16 @@
-const { defineConfig } = require('eslint/config');
+const { defineConfig } = require('eslint/config')
 
-const tsParser = require('@typescript-eslint/parser');
-const typescriptEslint = require('@typescript-eslint/eslint-plugin');
-const js = require('@eslint/js');
+const tsParser = require('@typescript-eslint/parser')
+const typescriptEslint = require('@typescript-eslint/eslint-plugin')
+const js = require('@eslint/js')
 
-const { FlatCompat } = require('@eslint/eslintrc');
+const { FlatCompat } = require('@eslint/eslintrc')
 
 const compat = new FlatCompat({
   baseDirectory: __dirname,
   recommendedConfig: js.configs.recommended,
-  allConfig: js.configs.all,
-});
+  allConfig: js.configs.all
+})
 
 module.exports = defineConfig([
   {
@@ -20,11 +20,11 @@ module.exports = defineConfig([
     ),
 
     languageOptions: {
-      parser: tsParser,
+      parser: tsParser
     },
 
     plugins: {
-      '@typescript-eslint': typescriptEslint,
+      '@typescript-eslint': typescriptEslint
     },
 
     rules: {
@@ -35,12 +35,12 @@ module.exports = defineConfig([
         {
           argsIgnorePattern: '^_',
           varsIgnorePattern: '^_',
-          caughtErrorsIgnorePattern: '^_',
-        },
+          caughtErrorsIgnorePattern: '^_'
+        }
       ],
 
       '@typescript-eslint/no-non-null-assertion': 'off',
-      '@typescript-eslint/no-explicit-any': 'off',
-    },
-  },
-]);
+      '@typescript-eslint/no-explicit-any': 'off'
+    }
+  }
+])
