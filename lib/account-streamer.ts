@@ -21,7 +21,7 @@ enum MessageAction {
   USER_MESSAGE_SUBSCRIBE = 'user-message-subscribe'
 }
 
-const HEARTBEAT_INTERVAL = 20000 // 20 seconds
+const DEFAULT_HEARTBEAT_INTERVAL = 2000 // 20 seconds
 
 const SOURCE = 'tastytrade-api-js-sdk'
 
@@ -74,7 +74,8 @@ export class AccountStreamer {
   constructor(
     private readonly url: string,
     private readonly session: TastytradeSession,
-    logger: Logger
+    logger: Logger,
+    private readonly heartbeatInterval: number = DEFAULT_HEARTBEAT_INTERVAL
   ) {
     this.logger = logger
   }
@@ -187,10 +188,12 @@ export class AccountStreamer {
       return
     }
 
-    this.logger.info('Scheduling heartbeat with interval: ', HEARTBEAT_INTERVAL)
-    const scheduler =
-      typeof window === 'undefined' ? setTimeout : window.setTimeout
-    this.heartbeatTimerId = scheduler(this.sendHeartbeat, HEARTBEAT_INTERVAL)
+    this.logger.info('Scheduling heartbeat with interval: ', this.heartbeatInterval)
+    const scheduler = typeof window === 'undefined' ? setTimeout : window.setTimeout
+    this.heartbeatTimerId = scheduler(
+      this.sendHeartbeat,
+      this.heartbeatInterval
+    )
   }
 
   get isHeartbeatScheduled() {
