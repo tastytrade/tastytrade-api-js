@@ -118,7 +118,7 @@ export default class InstrumentsService {
         return extractResponseData(futureOptionChain)
     }
 
-    //Option-chains: Allows an API client to fetch futures option chains.
+    //Option-chains: Allows an API client to fetch equity option chains.
     async getNestedOptionChain(symbol: string){
         //Returns an option chain given an underlying symbol,
         //i.e. AAPL in a nested form to minimize redundant processing
