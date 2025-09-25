@@ -1,5 +1,5 @@
-import SessionService from "../../../lib/services/session-service";
-import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
+import SessionService from "../../lib/services/session-service";
+import TastytradeHttpClient from "../../lib/services/tastytrade-http-client";
 import nock from 'nock'
 
 const BaseUrl = 'https://fakeurl.org'
@@ -26,7 +26,7 @@ describe('login', () => {
   it('sets the correct auth token', async function() {
     stubLogin(responseData)
 
-    const client = new TastytradeHttpClient(BaseUrl)
+    const client = new TastytradeHttpClient({ baseUrl: BaseUrl })
     const sessionService = new SessionService(client)
     await sessionService.login('fakeusername', 'fakepassword')
     expect(client.session.authToken).toBe(expectedToken)
@@ -51,7 +51,7 @@ describe('loginWithRememberToken', () => {
   it('sets the correct auth token', async function() {
     stubLogin(responseData)
 
-    const client = new TastytradeHttpClient(BaseUrl)
+    const client = new TastytradeHttpClient({ baseUrl: BaseUrl })
     const sessionService = new SessionService(client)
     await sessionService.loginWithRememberToken('fakeUsername', 'fakeRememberToken')
     expect(client.session.authToken).toBe(expectedToken)
@@ -74,7 +74,7 @@ describe('validate', () => {
         }
     })
 
-    const client = new TastytradeHttpClient(BaseUrl)
+    const client = new TastytradeHttpClient({ baseUrl: BaseUrl })
     client.session.authToken = expectedToken
     const sessionService = new SessionService(client)
     await sessionService.validate()
@@ -88,7 +88,7 @@ describe('logout', () => {
     nock(BaseUrl)
       .delete('/sessions')
       .reply(204, {})
-    const client = new TastytradeHttpClient(BaseUrl)
+    const client = new TastytradeHttpClient({ baseUrl: BaseUrl })
     client.session.authToken = 'faketoken'
     const sessionService = new SessionService(client)
     await sessionService.logout()

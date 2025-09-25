@@ -5,6 +5,7 @@ import { JsonBuilder } from './utils/json-util.js'
 import TastytradeSession from './models/tastytrade-session.js'
 import { MinTlsVersion } from './utils/constants.js'
 import type Logger from './logger.js'
+import type AccessToken from './models/access-token.js'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -74,6 +75,7 @@ export class AccountStreamer {
   constructor(
     private readonly url: string,
     private readonly session: TastytradeSession,
+    private readonly accessToken: AccessToken,
     logger: Logger,
     private readonly heartbeatInterval: number = DEFAULT_HEARTBEAT_INTERVAL
   ) {
@@ -92,8 +94,14 @@ export class AccountStreamer {
     })
   }
 
-  private get authToken() {
-    return this.session.authToken
+  private get authHeader() {
+    if (this.session.isValid) {
+      return this.session.authToken
+    }
+    if (this.accessToken.isValid) {
+      return this.accessToken.authorizationHeader
+    }
+    return null
   }
 
   /**
@@ -123,7 +131,7 @@ export class AccountStreamer {
 
   /**
    * Entrypoint for beginning a websocket session
-   * You must have a valid tastytrade authToken before calling this method
+   * You must have a valid tastytrade session or access token before calling this method
    * @returns Promise that resolves when the "opened" message is received (see handleOpen)
    */
   async start(): Promise<boolean> {
@@ -230,12 +238,11 @@ export class AccountStreamer {
     json.add('source', SOURCE)
 
     if (includeSessionToken) {
-      const sessionToken = this.authToken
-      if (!sessionToken) {
-        throw new Error('sessionToken not set')
+      if (!this.authHeader) {
+        throw new Error('session or access token not set')
       }
 
-      json.add('auth-token', sessionToken)
+      json.add('auth-token', this.authHeader)
     }
 
     const message = JSON.stringify(json.json)
