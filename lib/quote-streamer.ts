@@ -47,6 +47,12 @@ export default class QuoteStreamer {
   constructor(private readonly accountsAndCustomersService: AccountsAndCustomersService, private readonly logger: Logger) {
   }
 
+  /**
+   * Connects to the DxLink WebSocket and sets up the feed
+   * Make sure to call disconnect() when done
+   * Calls `getApiQuoteToken` to get the connection URL and auth token
+   * Make sure you have a valid session or access token before calling this
+   */
   async connect() {
     const tokenResponse = await this.accountsAndCustomersService.getApiQuoteToken()
     this.dxLinkUrl = _.get(tokenResponse, 'dxlink-url')
