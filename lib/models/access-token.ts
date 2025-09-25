@@ -1,8 +1,8 @@
 import _ from 'lodash'
 
 export default class AccessToken {
-    public token: string = ''
-    public expiresIn: number = 0
+    public token = ''
+    public expiresIn = 0
 
     get isExpired(): boolean {
         return this.isEmpty || Date.now() >= this.expiration.getTime();

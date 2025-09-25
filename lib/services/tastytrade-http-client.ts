@@ -5,7 +5,6 @@ import qs from 'qs'
 import { recursiveDasherizeKeys } from "../utils/json-util.js"
 import _ from 'lodash'
 import type Logger from "../logger.js"
-import extractResponseData from "../utils/response-util.js";
 import type { ClientConfig } from "../tastytrade-api.js"
 
 const ParamsSerializer = {
