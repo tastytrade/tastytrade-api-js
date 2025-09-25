@@ -1,4 +1,4 @@
-import TastytradeHttpClient from "../../lib/services/tastytrade-http-client";
+import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import nock from 'nock'
 
 const BaseUrl = 'https://fakeurl.org'

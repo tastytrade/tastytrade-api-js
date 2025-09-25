@@ -1,5 +1,5 @@
-import SessionService from "../../lib/services/session-service";
-import TastytradeHttpClient from "../../lib/services/tastytrade-http-client";
+import SessionService from "../../../lib/services/session-service";
+import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 import nock from 'nock'
 
 const BaseUrl = 'https://fakeurl.org'
