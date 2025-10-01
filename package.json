@@ -1,6 +1,6 @@
 {
   "name": "@tastytrade/api",
-  "version": "5.0.0",
+  "version": "6.0.0",
   "type": "module",
   "module": "dist/tastytrade-api.js",
   "types": "dist/tastytrade-api.d.ts",
