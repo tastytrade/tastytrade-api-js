@@ -7,7 +7,7 @@ import { ObjectPropertiesTable } from '../components/custom-table';
 export default function AccountStatus() {
   const context = useContext(AppContext);
 
-  const { isLoading, errorMessage, executeRequest, responseData } = UseHttpRequest(async () => (
+  const { isLoading, errorMessage, responseData } = UseHttpRequest(async () => (
     context.tastytradeApi.accountStatusService.getAccountStatus(context.accountNumbers![0])
   ), true)
 
@@ -35,5 +35,5 @@ export default function AccountStatus() {
       {errorMessage && <div>{errorMessage}</div>}
       <ObjectPropertiesTable item={accountStatus}/>
   </div>
-  );
-};
+  )
+}

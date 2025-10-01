@@ -1,7 +1,7 @@
 import SessionService from "../../../lib/services/session-service"
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
 
-const client = new TastytradeHttpClient(process.env.BASE_URL!)
+const client = new TastytradeHttpClient({ baseUrl: process.env.BASE_URL! })
 const sessionService = new SessionService(client)
 
 describe('login', () => {

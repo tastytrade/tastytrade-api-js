@@ -7,7 +7,7 @@ import CustomTable from '../components/custom-table';
 export default function Orders() {
     const context = useContext(AppContext);
 
-    const { isLoading, errorMessage, executeRequest, responseData } = UseHttpRequest(async () => (
+    const { isLoading, errorMessage, responseData } = UseHttpRequest(async () => (
         context.tastytradeApi.orderService.getLiveOrders(context.accountNumbers![0])
       ), true)
     
@@ -50,5 +50,5 @@ export default function Orders() {
         {errorMessage && <div>{errorMessage}</div>}
         {renderOrders()}
       </div>
-    );
-};
+    )
+}

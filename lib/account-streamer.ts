@@ -5,6 +5,7 @@ import { JsonBuilder } from './utils/json-util.js'
 import TastytradeSession from './models/tastytrade-session.js'
 import { MinTlsVersion } from './utils/constants.js'
 import type Logger from './logger.js'
+import type AccessToken from './models/access-token.js'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -21,7 +22,7 @@ enum MessageAction {
   USER_MESSAGE_SUBSCRIBE = 'user-message-subscribe'
 }
 
-const HEARTBEAT_INTERVAL = 20000 // 20 seconds
+const DEFAULT_HEARTBEAT_INTERVAL = 2000 // 20 seconds
 
 const SOURCE = 'tastytrade-api-js-sdk'
 
@@ -74,7 +75,9 @@ export class AccountStreamer {
   constructor(
     private readonly url: string,
     private readonly session: TastytradeSession,
-    logger: Logger
+    private readonly accessToken: AccessToken,
+    logger: Logger,
+    private readonly heartbeatInterval: number = DEFAULT_HEARTBEAT_INTERVAL
   ) {
     this.logger = logger
   }
@@ -91,8 +94,14 @@ export class AccountStreamer {
     })
   }
 
-  private get authToken() {
-    return this.session.authToken
+  private get authHeader() {
+    if (this.session.isValid) {
+      return this.session.authToken
+    }
+    if (this.accessToken.isValid) {
+      return this.accessToken.authorizationHeader
+    }
+    return null
   }
 
   /**
@@ -122,7 +131,7 @@ export class AccountStreamer {
 
   /**
    * Entrypoint for beginning a websocket session
-   * You must have a valid tastytrade authToken before calling this method
+   * You must have a valid tastytrade session or access token before calling this method
    * @returns Promise that resolves when the "opened" message is received (see handleOpen)
    */
   async start(): Promise<boolean> {
@@ -187,10 +196,12 @@ export class AccountStreamer {
       return
     }
 
-    this.logger.info('Scheduling heartbeat with interval: ', HEARTBEAT_INTERVAL)
-    const scheduler =
-      typeof window === 'undefined' ? setTimeout : window.setTimeout
-    this.heartbeatTimerId = scheduler(this.sendHeartbeat, HEARTBEAT_INTERVAL)
+    this.logger.info('Scheduling heartbeat with interval: ', this.heartbeatInterval)
+    const scheduler = typeof window === 'undefined' ? setTimeout : window.setTimeout
+    this.heartbeatTimerId = scheduler(
+      this.sendHeartbeat,
+      this.heartbeatInterval
+    )
   }
 
   get isHeartbeatScheduled() {
@@ -227,12 +238,11 @@ export class AccountStreamer {
     json.add('source', SOURCE)
 
     if (includeSessionToken) {
-      const sessionToken = this.authToken
-      if (!sessionToken) {
-        throw new Error('sessionToken not set')
+      if (!this.authHeader) {
+        throw new Error('session or access token not set')
       }
 
-      json.add('auth-token', sessionToken)
+      json.add('auth-token', this.authHeader)
     }
 
     const message = JSON.stringify(json.json)

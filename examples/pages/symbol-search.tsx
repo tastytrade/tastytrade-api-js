@@ -2,7 +2,6 @@ import React, {useState, useContext} from 'react'
 import {AppContext} from '../contexts/context';
 import UseHttpRequest from '../components/use-http-request';
 import _ from 'lodash'
-import CustomTable from '../components/custom-table';
 import Button from '../components/button';
 
 function parseError(error:any){
@@ -17,13 +16,13 @@ function parseError(error:any){
     }
 }
 
-export default function symbolSearch() {
+export default function SymbolSearch() {
     const [symbol, setSymbol] = useState('');
     const [symbolData, setSymbolData] = useState<null | object>(null)
     const [error, setError] = useState("");
     const context = useContext(AppContext);
 
-    const { isLoading, errorMessage, executeRequest, responseData } = UseHttpRequest(async (symbol) => (
+    const { executeRequest } = UseHttpRequest(async (symbol) => (
       context.tastytradeApi.symbolSearchService.getSymbolData(symbol)
     ), false);
   
@@ -65,7 +64,7 @@ export default function symbolSearch() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
-                {Object.entries(symbolData).map(([key, value], index) => (
+                {Object.entries(symbolData).map(([_key, value], index) => (
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap">{value.symbol}</td>
                     <td className="px-6 py-4 whitespace-nowrap">{value.description}</td>
@@ -91,4 +90,4 @@ export default function symbolSearch() {
         {renderResults()}
     </div>
   )
-};
+}

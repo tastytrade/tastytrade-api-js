@@ -7,7 +7,7 @@ import CustomTable from '../components/custom-table';
 export default function Positions() {
   const context = useContext(AppContext);
 
-  const { isLoading, errorMessage, executeRequest, responseData } = UseHttpRequest(async () => (
+  const { isLoading, responseData } = UseHttpRequest(async () => (
     context.tastytradeApi.balancesAndPositionsService.getPositionsList(context.accountNumbers![0])
   ), true)
 
@@ -39,5 +39,5 @@ export default function Positions() {
       <div className='text-lg font-bold mb-4'>Positions for {context.accountNumbers[0]}</div>
         <CustomTable rows={positions} renderItem={renderPositionRow}/>
   </div>
-  );
-};
+  )
+}

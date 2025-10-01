@@ -14,11 +14,16 @@ export enum LogLevel {
 
 export class TastytradeLogger implements Logger {
   public logLevel: LogLevel
-  private logger: Logger | null = null
+  public logger: Logger | null = null
 
   constructor(logger?: Logger, logLevel?: LogLevel) {
     this.logger = logger ?? null
     this.logLevel = logLevel ?? LogLevel.ERROR
+  }
+
+  public updateConfig(config: Partial<{logger: Logger, logLevel: LogLevel}>) {
+    const loggerConfig = _.pick(config, ['logger', 'logLevel'])
+    Object.assign(this, loggerConfig)
   }
 
   error(...data: any[]): void {

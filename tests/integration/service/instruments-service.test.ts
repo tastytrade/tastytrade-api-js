@@ -3,7 +3,7 @@ import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client"
 import SessionService from "../../../lib/services/session-service"
 import _ from 'lodash'
 
-const client = new TastytradeHttpClient(process.env.BASE_URL!)
+const client = new TastytradeHttpClient({ baseUrl: process.env.BASE_URL! })
 const instrumentsService = new InstrumentsService(client)
 
 beforeAll(async () => {
