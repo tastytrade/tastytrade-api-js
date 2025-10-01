@@ -1,4 +1,3 @@
-import { AccountStreamer } from "../../lib/account-streamer";
 import { TastytradeLogger } from "../../lib/logger";
 import TastytradeHttpClient from "../../lib/services/tastytrade-http-client";
 import SessionService from "../../lib/services/session-service";
