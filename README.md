@@ -47,6 +47,27 @@ const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerA
 
 The client will automatically generate and refresh access tokens as needed. No need to call `login()` when using OAuth.
 
+### Targeting a Specific API Version
+New Api versions are outlined in our [Release Notes](https://developer.tastytrade.com/release-notes/) docs.
+
+You can optionally target a specific API version by providing `targetApiVersion` when instantiating the client:
+
+```js
+import TastytradeClient from "@tastytrade/api"
+
+const tastytradeClient = new TastytradeClient({
+  ...TastytradeClient.ProdConfig,
+  targetApiVersion: '20250813' // YYYYMMDD format
+})
+```
+
+This will add an `Accept-Version` header to all API requests. If not specified, the latest API version will be used.
+
+You can also override default headers via `axios`:
+```
+axios.defaults.headers.common['Accept-Version'] = '20250813';
+```
+
 ### Market Data
 We provide a wrapper for DxFeed's `@dxfeed/dxlink-api` package for retrieving quotes and candles. Once logged in, call `connect()` to fetch a quote auth token and connect to the DxLink streamer.
 
