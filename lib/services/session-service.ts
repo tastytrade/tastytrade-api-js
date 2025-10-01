@@ -42,6 +42,6 @@ export default class SessionService {
     async logout(){
         const response = await this.httpClient.deleteData('/sessions', {});// added this for the integration tests?
         this.httpClient.session.clear()
-        return extractResponseData(response);
+        return { status: response.status };
     }
 }

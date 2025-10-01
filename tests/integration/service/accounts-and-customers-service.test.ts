@@ -16,7 +16,7 @@ describe('getCustomerAccounts', () => {
     expect(response.length).toBeGreaterThan(0)
     expect(response[0].account["account-number"]).toBeDefined();
     expect(response[0].account["margin-or-cash"]).toBeDefined();
-    expect(response[0].account["investment-objective"]).toBeDefined();
+    expect(response[0].account["regulatory-domain"]).toBeDefined();
   })
 })
 
@@ -33,7 +33,7 @@ describe('getCustomerAccountResources', () => {
     expect(response.length).toBeGreaterThan(0)
     expect(response[0].account["account-number"]).toBeDefined();
     expect(response[0].account["margin-or-cash"]).toBeDefined();
-    expect(response[0].account["investment-objective"]).toBeDefined();
+    expect(response[0].account["regulatory-domain"]).toBeDefined();
   })
 })
 
