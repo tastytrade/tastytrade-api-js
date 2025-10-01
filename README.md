@@ -2,41 +2,83 @@
 
 ## Installation
 npm:
-`npm i @tastytrade/api`
+```bash
+npm i @tastytrade/api
+```
 
 yarn:
-`yarn add @tastytrade/api`
+```bash
+yarn add @tastytrade/api
+```
 
 ## Quickstart
+
+### Session-based Authentication
+Session auth is deprecated for Api users. Please migrate to Oauth (instructions below). You can create an Oauth application for your own account by going to [my.tastytrade.com](https://my.tastytrade.com/app.html#/manage/api-access/open-api/).
+
 ```js
 import TastytradeClient from "@tastytrade/api"
 
-const tastytradeApi = new TastytradeClient({ baseUrl, accountStreamerUrl })
-const loginResponse = await tastytradeApi.sessionService.login(usernameOrEmail, password)
-const accounts = await tastytradeApi.accountsAndCustomersService.getCustomerAccounts()
-const accountPositions = await tastytradeApi.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
+// Use built-in configs or provide your own
+const tastytradeClient = new TastytradeClient(TastytradeClient.ProdConfig)
+// Or for sandbox: new TastytradeClient(TastytradeClient.SandboxConfig)
+
+await tastytradeClient.sessionService.login(usernameOrEmail, password)
+const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
+const accountPositions = await tastytradeClient.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
 ```
 
-### Market Data
-We have provided a wrapper for DxFeed's `@dxfeed/dxlink-api` package for retrieving quotes and candles. As long as you are logged in, it will fetch a quote auth token for you and connect to the DxLink streamer just by calling `connect()`.
+### OAuth Authentication
+For OAuth-based authentication, provide `clientSecret`, `refreshToken`, and `oauthScopes` when instantiating the client:
 
 ```js
-const tastytradeApi = new TastytradeClient({ baseUrl, accountStreamerUrl })
-await tastytradeApi.sessionService.login(usernameOrEmail, password)
-await tastytradeApi.quoteStreamer.connect()
-appContext.tastytradeApi.quoteStreamer.addEventListener((events: any[]) => {
-  // Do whatever you want with events here
-}
+import TastytradeClient from "@tastytrade/api"
 
-// You need to subscribe to events before you start receiving events
-tastytradeApi.quoteStreamer.subscribe(['AAPL'])
+const tastytradeClient = new TastytradeClient({
+  ...TastytradeClient.ProdConfig,
+  clientSecret: 'your-client-secret',
+  refreshToken: 'your-refresh-token',
+  oauthScopes: ['read', 'trade'] // Specify required scopes
+})
+
+// Access tokens are automatically generated and refreshed
+const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
+```
+
+The client will automatically generate and refresh access tokens as needed. No need to call `login()` when using OAuth.
+
+### Market Data
+We provide a wrapper for DxFeed's `@dxfeed/dxlink-api` package for retrieving quotes and candles. Once logged in, call `connect()` to fetch a quote auth token and connect to the DxLink streamer.
+
+**Important:** Call `connect()` before `subscribe()`.
+
+```js
+import TastytradeClient, { CandleType } from "@tastytrade/api"
+
+const tastytradeClient = new TastytradeClient(TastytradeClient.ProdConfig)
+await tastytradeClient.sessionService.login(usernameOrEmail, password)
+
+// Add event listener before connecting
+tastytradeClient.quoteStreamer.addEventListener((events) => {
+  console.log('Received market data:', events)
+})
+
+// Connect first
+await tastytradeClient.quoteStreamer.connect()
+
+// Then subscribe to symbols
+tastytradeClient.quoteStreamer.subscribe(['AAPL', 'TSLA'])
+
 // Subscribe to 5 minute candles starting from 1 year ago
-tastytradeApi.quoteStreamer.subscribeCandles('AAPL', new Date().setFullYear(2023), 5, CandleType.Minute)
+tastytradeClient.quoteStreamer.subscribeCandles('AAPL', new Date().setFullYear(new Date().getFullYear() - 1), 5, CandleType.Minute)
+
+// Disconnect when done
+await tastytradeClient.quoteStreamer.disconnect()
 ```
 
 To run the above code, save it to a file and run `node <filename>.js` in a terminal.
 
-When adding a subscription, the `symbol` value should be the `put-streamer-symbol` or `call-streamer-symbol` returned by the `GET /futures-option-chains/{future_contract_code}/nested` endpoint. For example:
+When subscribing to options, use the `put-streamer-symbol` or `call-streamer-symbol` from the `GET /futures-option-chains/{future_contract_code}/nested` endpoint:
 ```js
 // GET /futures-option-chains/ES/nested response:
 {
@@ -48,7 +90,7 @@ When adding a subscription, the `symbol` value should be the `put-streamer-symbo
 }
 ```
 
-To subscribe to equities quotes, the `symbol` is just the ticker symbol, like `AAPL`.
+For equities quotes, use the ticker symbol (e.g., `AAPL`).
 
 ### Account Streamer
 ```js
@@ -101,6 +143,13 @@ API_ACCOUNT_NUMBER=<your cert account number>
 ```
 
 These values should match whatever username/password/account you set up in the tastytrade sandbox environment. Head to developer.tastyworks.com to get that set up.
+
+Run tests:
+```bash
+npm test                # Run all tests
+npm run unit-test       # Run unit tests only
+npm run integration-test # Run integration tests only
+```
 
 ## Running example app
 ```sh
