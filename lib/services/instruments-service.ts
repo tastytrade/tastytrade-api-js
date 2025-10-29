@@ -40,7 +40,7 @@ export default class InstrumentsService {
         }
 
         //Returns a set of equity options given one or more symbols
-        const queryParams = { symbols, active, withExpired }
+        const queryParams = { symbol: symbols, active, withExpired }
         const equityOptions = (await this.httpClient.getData(`/instruments/equity-options`, {}, queryParams))
         return extractResponseData(equityOptions)
     }
