@@ -18,20 +18,6 @@ function createClient() {
 }
 
 describe('needsTokenRefresh', () => {
-  it('returns false if session is valid', function() {
-    const client = createClient()
-    client.session.authToken = 'faketoken'
-    expect(client.needsTokenRefresh).toBe(false)
-  })
-
-  it('returns false if refresh token is missing', function() {
-    const client = new TastytradeHttpClient({
-      baseUrl: BaseUrl,
-      accountStreamerUrl: AccountStreamerUrl
-    })
-    expect(client.needsTokenRefresh).toBe(false)
-  })
-
   it('returns false if accessToken is valid', function() {
     const client = createClient()
     client.accessToken.token = 'validtoken'
@@ -48,12 +34,6 @@ describe('needsTokenRefresh', () => {
 })
 
 describe('authHeader', () => {
-  it('returns session auth token if session is valid', function() {
-    const client = createClient()
-    client.session.authToken = 'faketoken'
-    expect(client.authHeader).toEqual('faketoken')
-  })
-
   it('returns access token if AccessToken is valid', function() {
     const client = createClient()
     client.accessToken.token = 'validtoken'
@@ -61,7 +41,7 @@ describe('authHeader', () => {
     expect(client.authHeader).toEqual('Bearer validtoken')
   })
 
-  it('returns null if neither is valid', function() {
+  it('returns null if access token is invalid', function() {
     const client = createClient()
     expect(client.authHeader).toEqual(null)
   })

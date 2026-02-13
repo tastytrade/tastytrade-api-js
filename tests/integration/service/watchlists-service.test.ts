@@ -1,14 +1,13 @@
 import WatchlistsService from "../../../lib/services/watchlists-service"
 import TastytradeHttpClient from "../../../lib/services/tastytrade-http-client";
-import SessionService from "../../../lib/services/session-service";
 
-const client = new TastytradeHttpClient({ baseUrl: process.env.BASE_URL! })
+const client = new TastytradeHttpClient({
+  baseUrl: process.env.BASE_URL!,
+  clientSecret: process.env.OAUTH_CLIENT_SECRET!,
+  refreshToken: process.env.OAUTH_REFRESH_TOKEN!,
+  oauthScopes: ['read']
+})
 const watchlistsService = new WatchlistsService(client)
-
-beforeAll(async () => {
-  const sessionService = new SessionService(client)
-  await sessionService.login(process.env.API_USERNAME!, process.env.API_PASSWORD!)
-});
 
 describe('getPairsWatchlists', () => {
   it('responds with the correct data', async function() {

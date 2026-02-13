@@ -13,23 +13,10 @@ yarn add @tastytrade/api
 
 ## Quickstart
 
-### Session-based Authentication
-Session auth is deprecated for Api users. Please migrate to Oauth (instructions below). You can create an Oauth application for your own account by going to [my.tastytrade.com](https://my.tastytrade.com/app.html#/manage/api-access/open-api/).
+Please upgrade to the latest version 7.0. See [UPGRADING.md](UPGRADING.md) for migration guide
 
-```js
-import TastytradeClient from "@tastytrade/api"
-
-// Use built-in configs or provide your own
-const tastytradeClient = new TastytradeClient(TastytradeClient.ProdConfig)
-// Or for sandbox: new TastytradeClient(TastytradeClient.SandboxConfig)
-
-await tastytradeClient.sessionService.login(usernameOrEmail, password)
-const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
-const accountPositions = await tastytradeClient.balancesAndPositionsService.getPositionsList(accounts[0].account['account-number'])
-```
-
-### OAuth Authentication
-For OAuth-based authentication, provide `clientSecret`, `refreshToken`, and `oauthScopes` when instantiating the client:
+### Initialization
+You must provide `clientSecret`, `refreshToken`, and `oauthScopes` when instantiating the client:
 
 ```js
 import TastytradeClient from "@tastytrade/api"
@@ -45,7 +32,7 @@ const tastytradeClient = new TastytradeClient({
 const accounts = await tastytradeClient.accountsAndCustomersService.getCustomerAccounts()
 ```
 
-The client will automatically generate and refresh access tokens as needed. No need to call `login()` when using OAuth.
+The client will automatically generate and refresh access tokens as needed.
 
 ### Targeting a Specific API Version
 New Api versions are outlined in our [Release Notes](https://developer.tastytrade.com/release-notes/) docs.

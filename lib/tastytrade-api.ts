@@ -1,9 +1,7 @@
 import TastytradeHttpClient from "./services/tastytrade-http-client.js"
 import { AccountStreamer, STREAMER_STATE, type Disposer, type StreamerStateObserver } from './account-streamer.js'
-import _ from 'lodash'
 
 //Services:
-import SessionService from "./services/session-service.js"
 import AccountStatusService from "./services/account-status-service.js"
 import AccountsAndCustomersService from "./services/accounts-and-customers-service.js"
 import BalancesAndPositionsService from "./services/balances-and-positions-service.js"
@@ -16,7 +14,6 @@ import RiskParametersService from "./services/risk-parameters-service.js"
 import SymbolSearchService from "./services/symbol-search-service.js"
 import TransactionsService from "./services/transactions-service.js"
 import WatchlistsService from "./services/watchlists-service.js"
-import TastytradeSession from "./models/tastytrade-session.js"
 import type Logger from "./logger.js"
 import { TastytradeLogger, LogLevel } from "./logger.js"
 import QuoteStreamer, { MarketDataSubscriptionType, CandleType } from "./quote-streamer.js"
@@ -25,20 +22,20 @@ import type AccessToken from "./models/access-token.js"
 export type ClientConfig = {
   baseUrl: string,
   accountStreamerUrl: string,
-  clientSecret?: string,
-  refreshToken?: string,
-  oauthScopes?: string[],
+  clientSecret: string,
+  refreshToken: string,
+  oauthScopes: string[],
   logger?: Logger,
   logLevel?: LogLevel
   targetApiVersion?: string
 }
 
 export default class TastytradeClient {
-  public static readonly ProdConfig: ClientConfig = {
+  public static readonly ProdConfig: Partial<ClientConfig> = {
     baseUrl: 'https://api.tastyworks.com',
     accountStreamerUrl: 'wss://streamer.tastyworks.com',
   }
-  public static readonly SandboxConfig: ClientConfig = {
+  public static readonly SandboxConfig: Partial<ClientConfig> = {
     baseUrl: 'https://api.cert.tastyworks.com',
     accountStreamerUrl: 'wss://streamer.cert.tastyworks.com',
   }
@@ -48,7 +45,6 @@ export default class TastytradeClient {
   public readonly accountStreamer: AccountStreamer
   public readonly quoteStreamer: QuoteStreamer
 
-  public readonly sessionService: SessionService
   public readonly accountStatusService: AccountStatusService
   public readonly accountsAndCustomersService: AccountsAndCustomersService
   public readonly balancesAndPositionsService: BalancesAndPositionsService
@@ -66,7 +62,6 @@ export default class TastytradeClient {
     this.logger = new TastytradeLogger(config.logger, config.logLevel)
     this.httpClient = new TastytradeHttpClient(config, this.logger)
 
-    this.sessionService = new SessionService(this.httpClient)
     this.accountStatusService = new AccountStatusService(this.httpClient)
     this.accountsAndCustomersService = new AccountsAndCustomersService(this.httpClient)
     this.balancesAndPositionsService = new BalancesAndPositionsService(this.httpClient)
@@ -81,17 +76,13 @@ export default class TastytradeClient {
     this.watchlistsService = new WatchlistsService(this.httpClient)
 
 
-    this.accountStreamer = new AccountStreamer(config.accountStreamerUrl, this.session, this.accessToken, this.logger)
+    this.accountStreamer = new AccountStreamer(config.accountStreamerUrl, this.httpClient, this.logger)
     this.quoteStreamer = new QuoteStreamer(this.accountsAndCustomersService, this.logger)
   }
 
   public updateConfig(config: Partial<ClientConfig>) {
     this.httpClient.updateConfig(config)
     this.logger.updateConfig(config)
-  }
-
-  get session(): TastytradeSession {
-    return this.httpClient.session
   }
 
   get accessToken(): AccessToken {
