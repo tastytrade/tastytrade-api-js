@@ -13,10 +13,12 @@ yarn add @tastytrade/api
 
 ## Quickstart
 
-Please upgrade to the latest version 7.0. See [UPGRADING.md](UPGRADING.md) for migration guide
+Please upgrade to the latest version 7.0. See [UPGRADING.md](UPGRADING.md) for migration guide.
 
 ### Initialization
-You must provide `clientSecret`, `refreshToken`, and `oauthScopes` when instantiating the client:
+You must provide `clientSecret`, `refreshToken`, and `oauthScopes` when instantiating the client.
+
+For instructions on obtaining a client secret and refresh token, refer to our [Oauth2 guide](https://developer.tastytrade.com/oauth/).
 
 ```js
 import TastytradeClient from "@tastytrade/api"
