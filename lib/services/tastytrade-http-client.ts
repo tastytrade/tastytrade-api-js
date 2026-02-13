@@ -1,4 +1,3 @@
-import TastytradeSession from "../models/tastytrade-session.js"
 import AccessToken from "../models/access-token.js"
 import axios from "axios"
 import qs from 'qs'
@@ -18,18 +17,19 @@ const ApiVersionRegex = /^\d{8}$/
 export default class TastytradeHttpClient {
     private readonly logger?: Logger
     public baseUrl: string
-    public clientSecret?: string
-    public refreshToken?: string
-    public oauthScopes?: string[]
+    public clientSecret: string
+    public refreshToken: string
+    public oauthScopes: string[]
     public readonly accessToken: AccessToken
-    public readonly session: TastytradeSession
     private _targetApiVersion?: string
 
-    constructor(clientConfig: Partial<ClientConfig>, logger?: Logger) {
+    constructor(clientConfig: ClientConfig, logger?: Logger) {
       this.logger = logger
       this.baseUrl = clientConfig.baseUrl!
       this.accessToken = new AccessToken()
-      this.session = new TastytradeSession()
+      this.clientSecret = clientConfig.clientSecret
+      this.refreshToken = clientConfig.refreshToken
+      this.oauthScopes = clientConfig.oauthScopes
       this.updateConfig(clientConfig)
     }
 
@@ -42,19 +42,10 @@ export default class TastytradeHttpClient {
     }
 
     get needsTokenRefresh(): boolean {
-      if (this.session.isValid) {
-        return false
-      }
-      if (_.isNil(this.refreshToken) || _.isNil(this.clientSecret)) {
-        return false
-      }
       return this.accessToken.isExpired
     }
 
     get authHeader(): string | null {
-      if (this.session.isValid) {
-        return this.session.authToken
-      }
       if (this.accessToken.isValid) {
         return this.accessToken.authorizationHeader
       }

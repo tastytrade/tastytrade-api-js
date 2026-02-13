@@ -1,6 +1,6 @@
 // src/context/state.ts
 import { createContext } from 'react';
-import TastytradeClient, { LogLevel } from "tastytrade-api"
+import TastytradeClient, { ClientConfig, LogLevel } from 'tastytrade-api'
 import { makeAutoObservable } from 'mobx';
 import _ from 'lodash'
 
@@ -13,12 +13,13 @@ class TastytradeContext {
     
     constructor(baseUrl: string, accountStreamerUrl: string) {
       makeAutoObservable(this)
-      this.tastytradeApi = new TastytradeClient({ baseUrl, accountStreamerUrl, logger: console, logLevel: LogLevel.INFO })
-      makeAutoObservable(this.tastytradeApi.session)
-    }
-
-    get isLoggedIn() {
-      return this.tastytradeApi.session.isValid
+      const config = {
+        ...TastytradeClient.ProdConfig,
+        clientSecret: process.env.NEXT_PUBLIC_OAUTH_CLIENT_SECRET,
+        refreshToken: process.env.NEXT_PUBLIC_OAUTH_REFRESH_TOKEN,
+        oauthScopes: ['read']
+      } as ClientConfig
+      this.tastytradeApi = new TastytradeClient(config)
     }
 }
 

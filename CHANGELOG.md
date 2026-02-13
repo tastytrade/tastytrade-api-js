@@ -6,6 +6,36 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [7.0.0] - 2026-02-13
+
+**⚠️ BREAKING CHANGES - See [UPGRADING.md](UPGRADING.md) for migration guide**
+
+### Added
+
+- Added automatic token refresh in AccountStreamer.send() method
+
+### Changed
+
+- BREAKING: TastytradeHttpClient constructor now requires full ClientConfig instead of Partial<ClientConfig>
+- BREAKING: OAuth fields in ClientConfig are now required (not optional): clientSecret, refreshToken, and oauthScopes
+- BREAKING: AccountStreamer constructor now accepts TastytradeHttpClient instead of separate TastytradeSession and AccessToken parameters
+- BREAKING: AccountStreamer.send(), subscribeTo(), and subscribeToUser() methods are now async and return Promise<number>
+- BREAKING: ClientConfig type requires clientSecret, refreshToken, and oauthScopes (no longer optional)
+- TastytradeClient.ProdConfig and SandboxConfig now return Partial<ClientConfig> instead of full ClientConfig
+- TastytradeHttpClient.needsTokenRefresh getter now only checks access token expiration (removed session checks)
+- TastytradeHttpClient.authHeader getter now only returns access token (removed session token logic)
+- AccountStreamer.authHeader getter now delegates to httpClient.authHeader
+- AccountStreamer.subscribeToUser() now returns rejected promise with error message for invalid user IDs
+- Updated JSDoc in AccountStreamer to remove session references
+
+### Removed
+
+- BREAKING: Removed lib/models/tastytrade-session.ts - session-based authentication no longer supported
+- BREAKING: Removed lib/services/session-service.ts - no more login(), logout(), or validate() methods
+- BREAKING: Removed session property from TastytradeHttpClient
+- BREAKING: Removed sessionService property from TastytradeClient
+- BREAKING: Removed session getter from TastytradeClient
+
 ## [6.0.0] - 2025-10-01
 
 ### Added

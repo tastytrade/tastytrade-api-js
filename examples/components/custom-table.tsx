@@ -7,11 +7,11 @@ interface Props{
 }
 
 export default function CustomTable(props:Props) {
-  const renderRow = (item: any, index: number) => {
+  const renderRow = (item: any, index: number) => (
     <div key={index}>
       {props.renderItem(item, index)}
     </div>
-  }
+  )
 
   return (
     <>

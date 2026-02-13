@@ -8,7 +8,7 @@ export default function VerticalNavBar() {
     <nav className="w-40 bg-gray-100 flex flex-col h-full justify-center">
       <ul className="space-y-2">
         <VerticalNavLink href = "/portfolio" title = "Portfolio"/>
-        <VerticalNavLink href = "/balances" title = "Balances"/>
+        <VerticalNavLink href = "/" title = "Balances"/>
         <VerticalNavLink href = "/orders" title = "Orders"/>
         <VerticalNavLink href = "/transactions" title = "Transactions"/>
         <VerticalNavLink href = "/account-status" title = "Account Status"/>

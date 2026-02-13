@@ -10,28 +10,12 @@ const Layout = observer((props: any) => {
   const appContext = useContext(AppContext)
   const router = useRouter()
 
-  const doLogout = (_e: any) => {
-    appContext.tastytradeApi.sessionService.logout()
-      .then(_result => router.push('/'))
-  }
-
-  const renderLogout = () => {
-    return (
-      <div className='cursor-pointer text-gray-300 hover:text-white text-sm font-medium' onClick={doLogout}>Logout</div>
-    )
-  }
-
-  const renderLogin = () => <TopNavLink href = "/" title = "Login"/>
-  
   return (
     <div>
       <nav className="bg-gray-900">
         <div className="mx-auto px-4 flex justify-between h-16">
           <div className="flex items-center">
             <CustomLink href = "/" title = "TastyTrade OpenAPI" css = "text-white font-bold text-xl"/>
-          </div>
-          <div className="flex items-center space-x-4">
-            {appContext.isLoggedIn ? renderLogout() : renderLogin()}
           </div>
         </div>
       </nav>

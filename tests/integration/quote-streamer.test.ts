@@ -1,18 +1,17 @@
 import { TastytradeLogger } from "../../lib/logger";
 import TastytradeHttpClient from "../../lib/services/tastytrade-http-client";
-import SessionService from "../../lib/services/session-service";
 import AccountsAndCustomersService from "../../lib/services/accounts-and-customers-service";
 import QuoteStreamer from "../../lib/quote-streamer";
 
-const client = new TastytradeHttpClient({ baseUrl: process.env.BASE_URL! })
+const client = new TastytradeHttpClient({
+  baseUrl: process.env.BASE_URL!,
+  clientSecret: process.env.OAUTH_CLIENT_SECRET!,
+  refreshToken: process.env.OAUTH_REFRESH_TOKEN!,
+  oauthScopes: ['read']
+})
 const customerService = new AccountsAndCustomersService(client)
 const quoteStreamer = new QuoteStreamer(customerService, new TastytradeLogger())
 
-
-beforeAll(async () => {
-  const sessionService = new SessionService(client)
-  await sessionService.login(process.env.API_USERNAME!, process.env.API_PASSWORD!)
-});
 
 afterAll(async () => {
   await quoteStreamer.disconnect()

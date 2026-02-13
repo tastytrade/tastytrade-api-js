@@ -2,10 +2,9 @@ import WebSocket from 'isomorphic-ws'
 import _ from 'lodash'
 import type { JsonMap, JsonValue } from './utils/json-util.js'
 import { JsonBuilder } from './utils/json-util.js'
-import TastytradeSession from './models/tastytrade-session.js'
 import { MinTlsVersion } from './utils/constants.js'
 import type Logger from './logger.js'
-import type AccessToken from './models/access-token.js'
+import TastytradeHttpClient from './services/tastytrade-http-client.js'
 
 export enum STREAMER_STATE {
   Open = 0,
@@ -71,11 +70,13 @@ export class AccountStreamer {
   /**
    *
    * @param url Url of the account streamer service
+   * @param httpClient Instance of TastytradeHttpClient
+   * @param logger Logger to use
+   * @param heartbeatInterval Interval at which to auto-send heartbeat messages
    */
   constructor(
     private readonly url: string,
-    private readonly session: TastytradeSession,
-    private readonly accessToken: AccessToken,
+    private readonly httpClient: TastytradeHttpClient,
     logger: Logger,
     private readonly heartbeatInterval: number = DEFAULT_HEARTBEAT_INTERVAL
   ) {
@@ -95,13 +96,7 @@ export class AccountStreamer {
   }
 
   private get authHeader() {
-    if (this.session.isValid) {
-      return this.session.authToken
-    }
-    if (this.accessToken.isValid) {
-      return this.accessToken.authorizationHeader
-    }
-    return null
+    return this.httpClient.authHeader
   }
 
   /**
@@ -131,7 +126,7 @@ export class AccountStreamer {
 
   /**
    * Entrypoint for beginning a websocket session
-   * You must have a valid tastytrade session or access token before calling this method
+   * You must have a valid tastytrade access token before calling this method
    * @returns Promise that resolves when the "opened" message is received (see handleOpen)
    */
   async start(): Promise<boolean> {
@@ -232,18 +227,16 @@ export class AccountStreamer {
    * @param includeSessionToken Attaches session token to message if true
    * @returns
    */
-  send(json: JsonBuilder, includeSessionToken = true): number {
+  async send(json: JsonBuilder): Promise<number> {
     this.requestCounter += 1
     json.add(REQUEST_ID, this.requestCounter)
     json.add('source', SOURCE)
 
-    if (includeSessionToken) {
-      if (!this.authHeader) {
-        throw new Error('session or access token not set')
-      }
-
-      json.add('auth-token', this.authHeader)
+    if (this.httpClient.needsTokenRefresh) {
+      await this.httpClient.generateAccessToken()
     }
+
+    json.add('auth-token', this.authHeader)
 
     const message = JSON.stringify(json.json)
     const websocket = this.websocket
@@ -264,7 +257,7 @@ export class AccountStreamer {
    * @param value
    * @returns
    */
-  public subscribeTo(action: string, value?: JsonValue): number {
+  public async subscribeTo(action: string, value?: JsonValue): Promise<number> {
     const json = new JsonBuilder()
     json.add('action', action)
     if (!_.isUndefined(value)) {
@@ -278,12 +271,12 @@ export class AccountStreamer {
    * @param userExternalId "external-id" from login response
    * @returns Promise that resolves when ack is received
    */
-  public subscribeToUser(userExternalId: string) {
+  public async subscribeToUser(userExternalId: string): Promise<number> {
     if (!userExternalId) {
-      return
+      return Promise.reject(`Must provide user external id. You provided: ${userExternalId}`)
     }
 
-    this.subscribeTo(MessageAction.USER_MESSAGE_SUBSCRIBE, userExternalId)
+    return this.subscribeTo(MessageAction.USER_MESSAGE_SUBSCRIBE, userExternalId)
   }
 
   /**
@@ -298,7 +291,7 @@ export class AccountStreamer {
 
     const value: JsonValue =
       accountNumbers.length > 1 ? accountNumbers : accountNumbers[0]
-    const requestId = this.subscribeTo(MessageAction.CONNECT, value)
+    const requestId = await this.subscribeTo(MessageAction.CONNECT, value)
 
     return new Promise<string>((resolve, reject) => {
       this.requestPromises.set(requestId, [resolve, reject])
