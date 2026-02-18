@@ -22,6 +22,7 @@ describe('needsTokenRefresh', () => {
     const client = createClient()
     client.accessToken.token = 'validtoken'
     client.accessToken.expiresIn = 3600
+    client.accessToken.createdAt = new Date()
     expect(client.needsTokenRefresh).toBe(false)
   })
 
@@ -29,6 +30,7 @@ describe('needsTokenRefresh', () => {
     const client = createClient()
     client.accessToken.token = 'validtoken'
     client.accessToken.expiresIn = 0
+    client.accessToken.createdAt = new Date()
     expect(client.needsTokenRefresh).toBe(true)
   })
 })

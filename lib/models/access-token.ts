@@ -3,6 +3,7 @@ import _ from 'lodash'
 export default class AccessToken {
     public token = ''
     public expiresIn = 0
+    public createdAt: Date | null = null
 
     get isExpired(): boolean {
         return this.isEmpty || Date.now() >= this.expiration.getTime();
@@ -17,13 +18,15 @@ export default class AccessToken {
     }
 
     get expiration() {
+        if (!this.createdAt) return new Date()
         // Set expiration a bit earlier to account for clock skew
-        return new Date(Date.now() + ((this.expiresIn - 30) * 1000));
+        return new Date(this.createdAt.getTime() + ((this.expiresIn - 30) * 1000));
     }
 
     public updateFromTokenResponse(tokenResponse: any): void {
       this.token = _.get(tokenResponse, "data.access_token");
       this.expiresIn = _.get(tokenResponse, "data.expires_in");
+      this.createdAt = new Date()
     }
 
     get authorizationHeader(): string | null {
@@ -36,5 +39,6 @@ export default class AccessToken {
     clear() {
         this.token = ''
         this.expiresIn = 0
+        this.createdAt = null
     }
 }
