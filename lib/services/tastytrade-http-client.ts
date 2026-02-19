@@ -89,7 +89,7 @@ export default class TastytradeHttpClient {
         grant_type: 'refresh_token'
       }
 
-      const config = this.axiosConfig('post', '/oauth/token', params)
+      const config = this.axiosConfig('post', '/oauth/token', params, this.getDefaultHeaders())
       this.logger?.info('Making request', config)
       const tokenResponse = await axios.request(config)
       this.accessToken.updateFromTokenResponse(tokenResponse)

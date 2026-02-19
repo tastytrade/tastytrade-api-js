@@ -20,15 +20,18 @@ function createClient() {
 describe('needsTokenRefresh', () => {
   it('returns false if accessToken is valid', function() {
     const client = createClient()
-    client.accessToken.token = 'validtoken'
-    client.accessToken.expiresIn = 3600
+    client.accessToken.updateFromTokenResponse({ data: { access_token: 'validtoken', expires_in: 3600 } })
     expect(client.needsTokenRefresh).toBe(false)
   })
 
   it('returns true if accessToken is expired', function() {
     const client = createClient()
-    client.accessToken.token = 'validtoken'
-    client.accessToken.expiresIn = 0
+    client.accessToken.updateFromTokenResponse({ data: { access_token: 'validtoken', expires_in: 0 } })
+    expect(client.needsTokenRefresh).toBe(true)
+  })
+
+  it('returns true if accessToken is empty', function() {
+    const client = createClient()
     expect(client.needsTokenRefresh).toBe(true)
   })
 })
@@ -36,9 +39,14 @@ describe('needsTokenRefresh', () => {
 describe('authHeader', () => {
   it('returns access token if AccessToken is valid', function() {
     const client = createClient()
-    client.accessToken.token = 'validtoken'
-    client.accessToken.expiresIn = 3600
+    client.accessToken.updateFromTokenResponse({ data: { access_token: 'validtoken', expires_in: 3600 } })
     expect(client.authHeader).toEqual('Bearer validtoken')
+  })
+
+  it('returns null if AccessToken is expired', function() {
+    const client = createClient()
+    client.accessToken.updateFromTokenResponse({ data: { access_token: 'validtoken', expires_in: 0 } })
+    expect(client.authHeader).toEqual(null)
   })
 
   it('returns null if access token is invalid', function() {
@@ -89,9 +97,7 @@ describe('updateConfig', () => {
     const client = createClient()
     const targetApiVersion = '20250925'
     client.updateConfig({ targetApiVersion })
-    client.accessToken.token = 'validtoken'
-    client.accessToken.expiresIn = 3600
-
+    client.accessToken.updateFromTokenResponse({ data: { access_token: 'validtoken', expires_in: 3600 } })
 
     expect(client.targetApiVersion).toEqual(targetApiVersion)
     console.log('client.accessToken.token: ', client.accessToken.token, ' client.accessToken.expiresIn: ', client.accessToken.expiresIn)
