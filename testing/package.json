@@ -1,0 +1,19 @@
+{
+  "name": "testing",
+  "version": "1.0.0",
+  "description": "",
+  "license": "ISC",
+  "author": "",
+  "type": "module",
+  "main": "index.ts",
+  "scripts": {
+    "start": "tsc && node dist/index.js"
+  },
+  "devDependencies": {
+    "@tastytrade/api": "^7.0.1",
+    "dayjs": "^1.11.19",
+    "lodash": "^4.17.23",
+    "tsx": "^4.0.0",
+    "typescript": "^5.8.0"
+  }
+}
