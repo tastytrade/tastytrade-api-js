@@ -228,8 +228,14 @@ export class AccountStreamer {
    * @returns
    */
   async send(json: JsonBuilder): Promise<number> {
+
+    // Grab the next requestId
+    // This is saved as a const to ensure there is no path which could result in
+    // this.requestCounter being changed under us if we yield awaiting a new token.
     this.requestCounter += 1
-    json.add(REQUEST_ID, this.requestCounter)
+    const requestId = this.requestCounter
+
+    json.add(REQUEST_ID, requestId)
     json.add('source', SOURCE)
 
     if (this.httpClient.needsTokenRefresh) {
@@ -248,7 +254,7 @@ export class AccountStreamer {
       websocket.send(message)
     }
 
-    return this.requestCounter
+    return requestId
   }
 
   /**
@@ -388,10 +394,14 @@ export class AccountStreamer {
         this.scheduleHeartbeatTimer()
       }
 
-      const promiseCallbacks = this.requestPromises.get(
-        json[REQUEST_ID] as number
-      )
+      // Unpack the request id from the response.
+      // This may be returned as a string, so we use Number() to ensure it is converted
+      const reqId = Number(json[REQUEST_ID]);
+
+      const promiseCallbacks = this.requestPromises.get(reqId);
       if (promiseCallbacks) {
+        this.requestPromises.delete(reqId);
+
         const [resolve, reject] = promiseCallbacks
         const status = json.status as string
         if (status === 'ok') {
